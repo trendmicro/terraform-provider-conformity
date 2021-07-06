@@ -1,0 +1,1 @@
+resource "conformity_report_config" "report" {}
