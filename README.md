@@ -2,7 +2,7 @@
 
 #### 1. Navigate to project directory:
 ```sh
-cd /path/terraform-provider-cloudconformity
+cd /path/terraform-provider-conformity
 ```
 #### 2. Install dependencies:
 ```sh
