@@ -1,0 +1,1 @@
+resource "conformity_group" "group_1" {}
