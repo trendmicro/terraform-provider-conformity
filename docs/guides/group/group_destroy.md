@@ -14,7 +14,7 @@ Provides instruction on how to destroy groups and tags on Cloud Conformity Accou
 
 #### 1. Navigate to folder group directory:
 ```sh
-cd /path/guardrail-conformity-tf-provider/example/group
+cd /path/terraform-provider-conformity/example/group
 ```
 #### 2. Run terraform destroy:
 ```sh

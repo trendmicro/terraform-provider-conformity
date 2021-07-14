@@ -14,7 +14,7 @@ Provides instruction on how to destroy Azure Cloud Conformity Account using Terr
 
 #### 1. Navigate to folder Azure directory:
 ```sh
-cd /path/guardrail-conformity-tf-provider/example/azure
+cd /path/terraform-provider-conformity/example/azure
 ```
 #### 2. Run terraform destroy:
 ```sh

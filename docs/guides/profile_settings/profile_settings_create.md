@@ -29,9 +29,9 @@ region = "AWS-ACCOUNT-REGION"
 ```
 Note: You can always change the values declared according to your choice.
 
-4. Add filter or configuration values according to your requirements `main.tf` under `/path/guardrail-conformity-tf-provider/example/profile_settings/PATH-TO-PROFILE-CONFIG` directory.
+4. Add filter or configuration values according to your requirements `main.tf` under `/path/terraform-provider-conformity/example/profile_settings/PATH-TO-PROFILE-CONFIG` directory.
 Note: Change the `PATH-TO-PROFILE-CONFIG` value according to the configuration you want to create (e.g. existing_profile, multiple_extra_settings, values_string_int, with_rules, without_rules).
-Example Path: `/path/guardrail-conformity-tf-provider/example/profile_settings/with_rules`
+Example Path: `/path/terraform-provider-conformity/example/profile_settings/with_rules`
 
 Example template to guide your configuration:
 
@@ -127,7 +127,7 @@ Note: if you want to test the example folder `existing profile`, add the profile
 
 #### 1. Navigate to project directory:
 ```sh
-cd /path/guardrail-conformity-tf-provider/
+cd /path/terraform-provider-conformity/
 ```
 #### 2. Install dependencies:
 ```sh

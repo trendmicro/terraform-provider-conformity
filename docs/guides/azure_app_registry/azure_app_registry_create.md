@@ -33,7 +33,7 @@ If no web browser is available or the web browser fails to open, use device code
 Sign in with keys.
 1. Navigate to azure_app_registry directory and look for `provider.tf`:
 ```sh
-cd /path/guardrail-conformity-tf-provider/example/azure_app_registry
+cd /path/terraform-provider-conformity/example/azure_app_registry
 ```
 2. Edit the azurerm resource and uncomment the subscription_id, client_id, client_secret and tenant_id.
    
@@ -67,7 +67,7 @@ Note: You can always change the values declared according to your choice.
 
 #### 1. Navigate to project directory:
 ```sh
-cd /path/guardrail-conformity-tf-provider/example/azure_app_registry
+cd /path/terraform-provider-conformity/example/azure_app_registry
 ```
 #### 2. Now, you can run terraform code:
 ```sh

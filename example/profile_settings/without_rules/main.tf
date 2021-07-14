@@ -3,7 +3,7 @@ resource "conformity_profile" "profile_settings"{
   name = "conformity-without-rules"
 
   // OPtional | type : string
-  description = "conformity guardrail development - without rules"
+  description = "conformity development - without rules"
 
 
 }

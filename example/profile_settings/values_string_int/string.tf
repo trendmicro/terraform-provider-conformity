@@ -1,6 +1,6 @@
 # conformity_profile.profile_settings:
 resource "conformity_profile" "string_settings" {
-    description = "conformity guardrail development - string value"
+    description = "conformity development - string value"
     name        = "conformity-string-rules"
 
     # type ttl

@@ -33,7 +33,7 @@ terraform {
   required_providers {
     conformity = {
       version = "0.1.0"
-      source  = "cloudone.com/cloud/conformity"
+      source  = "trendmicro.com/cloudone/conformity"
     }
       aws = {
       source  = "hashicorp/aws"

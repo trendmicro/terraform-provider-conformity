@@ -14,7 +14,7 @@ Provides instruction on how to destroy invite SSO user to your organiation using
 
 #### 1. Navigate to folder sso_user directory:
 ```sh
-cd /path/guardrail-conformity-tf-provider/example/sso_user/user
+cd /path/terraform-provider-conformity/example/sso_user/user
 ```
 #### 2. Run terraform destroy:
 ```sh

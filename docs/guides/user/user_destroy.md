@@ -14,7 +14,7 @@ Provides instruction on how to destroy invite user to your organiation using Ter
 
 #### 1. Navigate to folder user directory:
 ```sh
-cd /path/guardrail-conformity-tf-provider/example/user/user
+cd /path/terraform-provider-conformity/example/user/user
 ```
 #### 2. Run terraform destroy:
 ```sh

@@ -11,12 +11,12 @@ terraform plan
 terraform apply -auto-approve
 
 cat << EOF >> update.tfvars
-name = "Guardrail-update"
+name = "trendmicro-update"
 environment = "Staging-update"
 EOF
 
 terraform apply -var-file="update.tfvars" -auto-approve
-# terraform apply --var "name=Guardrail-update" --var "environment=Staging-update" -auto-approve
+# terraform apply --var "name=trendmicro-update" --var "environment=Staging-update" -auto-approve
 # Uncomment this to destroy the resources
 # terraform destroy -auto-approve
 # rm -rf .terraform
