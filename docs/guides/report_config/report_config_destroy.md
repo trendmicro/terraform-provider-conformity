@@ -14,7 +14,7 @@ Provides instruction on how to destroy Report Configs using Terraform.
 
 #### 1. Navigate to folder report_config directory:
 ```sh
-cd /path/guardrail-conformity-tf-provider/example/report_config/main
+cd /path/terraform-provider-conformity/example/report_config/main
 ```
 #### 2. Run terraform destroy:
 ```sh

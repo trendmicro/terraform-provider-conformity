@@ -20,7 +20,7 @@ resource "conformity_report_config" "report" {
 
   configuration { 
     // optional | type: array of strings
-    emails = ["conformity@cloudone.com","cloudocnformity@cloudone.com"] 
+    emails = ["userone@trendmicro.com","usertwo@trendmicro.com"]
     // optional | type: string
     frequency = "* * *"
     // required | type: string 
@@ -131,4 +131,4 @@ terraform show -no-color >> main.tf
 | Name | Type |
 |------|------|
 
-| conformity_user.user | resource |
+| conformity_report_config.report | resource |

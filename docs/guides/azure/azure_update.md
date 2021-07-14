@@ -13,7 +13,7 @@ Provides instruction on how to update Azure Cloud Conformity account name or env
 ##### Import resources
 1. Navigate to folder Azure directory:
 ```sh
-cd /path/guardrail-conformity-tf-provider/example/azure
+cd /path/terraform-provider-conformity/example/azure
 ```
 2. Import the resources.
 Azure Account - Can import based on the `Account ID` that can be found under the Conformity web console.
@@ -69,7 +69,7 @@ variable "region"{
 }
  variable "azure_name"{
      type    = string
-     default = "guardrail_azure"
+     default = "trendmicro_azure"
  }
 variable "azure_environment"{
     type    = string

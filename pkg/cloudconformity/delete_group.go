@@ -4,12 +4,12 @@ import (
 	"fmt"
 )
 
-//   allows you to get the details of the specified group with accounts that you have access to
+// allows an ADMIN to delete the specified group
 func (c *Client) DeleteGroup(groupId string) (*deleteResponse, error) {
 
 	deleteGroupResponse := deleteResponse{}
 
-	_, err := c.ClientRequest(Delete{}, fmt.Sprintf("/v1/groups/%s", groupId), nil, &deleteGroupResponse)
+	_, err := c.ClientRequest(Delete{}, fmt.Sprintf("/v1/groups/%s", groupId), nil, "", &deleteGroupResponse)
 	if err != nil {
 		return nil, err
 	}

@@ -14,7 +14,7 @@ Provides instruction on how to destroy Cloud Conformity Account using Terraform.
 
 #### 1. Navigate to folder aws directory:
 ```sh
-cd /path/guardrail-conformity-tf-provider/example/aws
+cd /path/terraform-provider-conformity/example/aws
 ```
 #### 2. Run terraform destroy:
 ```sh

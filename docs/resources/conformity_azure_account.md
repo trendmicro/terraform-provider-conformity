@@ -64,5 +64,5 @@ terraform show -no-color >> main.tf
 |------|-------------|------|---------|:--------:|
 | <a name="input_apikey"></a> [apikey](#input\_apikey) | n/a | `string` | `""` | no |
 | <a name="input_azure_active_directory_id"></a> [azure\_active\_directory\_id](#input\_azure\_active\_directory\_id) | n/a | `string` | `""` | no |
-| <a name="input_azure_environment"></a> [azure\_environment](#input\_azure\_environment) | variable "azure\_name"{ type    = string default = "guardrail\_azure" } | `string` | `"staging"` | no |
+| <a name="input_azure_environment"></a> [azure\_environment](#input\_azure\_environment) | variable "azure\_name"{ type    = string default = "trendmicro\_azure" } | `string` | `"staging"` | no |
 | <a name="input_region"></a> [region](#input\_region) | n/a | `string` | `""` | no |

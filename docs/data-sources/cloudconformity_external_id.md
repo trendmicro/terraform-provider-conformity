@@ -19,7 +19,7 @@ output "external_id" {
 
 resource "conformity_aws_account" "aws"{
 
-    name        = "Guardrail"
+    name        = "Trendmicro Account"
     environment = "Staging"
     external_id = "${data.conformity_external_id.all.external_id}"
     role_arn    = "..."
@@ -28,4 +28,4 @@ resource "conformity_aws_account" "aws"{
 
 ## Attributes Reference
 
- - `id` - The external ID.
+ - `id` (String) - (Required) The external ID.

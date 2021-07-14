@@ -35,9 +35,11 @@ func Provider() *schema.Provider {
 			"conformity_sso_user":              resourceConformitySsoLegacyUser(),
 			"conformity_report_config":         resourceConformityReportConfig(),
 			"conformity_communication_setting": resourceConformityCommSetting(),
+			"conformity_profile":               resourceConformityProfile(),
 		},
 		DataSourcesMap: map[string]*schema.Resource{
-			"conformity_external_id": dataSourceExternalId(),
+			"conformity_external_id":   dataSourceExternalId(),
+			"conformity_apply_profile": dataSourceApplyProfile(),
 		},
 		ConfigureContextFunc: providerConfigure,
 	}

@@ -257,3 +257,79 @@ type CommunicationSettings struct {
 type CommunicationResponse struct {
 	Data []communicationData `json:"data"`
 }
+
+type profileAttributes struct {
+	Description string `json:"description,omitempty"`
+	Name        string `json:"name,omitempty"`
+}
+type RuleSettingsData struct {
+	ID   string `json:"id,omitempty"`
+	Type string `json:"type,omitempty"`
+}
+type ProfileRelationships struct {
+	RuleSettings struct {
+		Data []RuleSettingsData `json:"data"`
+	} `json:"ruleSettings,omitempty"`
+}
+
+type IncludedExceptions struct {
+	FilterTags []string `json:"filterTags,omitempty"`
+	Resources  []string `json:"resources,omitempty"`
+	Tags       []string `json:"tags,omitempty"`
+}
+type ProfileValues struct {
+	Label   string `json:"label,omitempty"`
+	Value   string `json:"value,omitempty"`
+	Enabled bool   `json:"enabled,omitempty"`
+}
+type IncludedExtraSettings struct {
+	Countries bool             `json:"countries,omitempty"`
+	Multiple  bool             `json:"multiple,omitempty"`
+	Name      string           `json:"name,omitempty"`
+	Regions   bool             `json:"regions,omitempty"`
+	Type      string           `json:"type,omitempty"`
+	Value     interface{}      `json:"value,omitempty"`
+	Values    []*ProfileValues `json:"values,omitempty"`
+}
+type IncludedAttributes struct {
+	Enabled       bool                    `json:"enabled"`
+	Provider      string                  `json:"provider"`
+	RiskLevel     string                  `json:"riskLevel"`
+	Exceptions    *IncludedExceptions     `json:"exceptions,omitempty"`
+	ExtraSettings []IncludedExtraSettings `json:"extraSettings,omitempty"`
+}
+
+type ProfileIncluded struct {
+	ID         string             `json:"id,omitempty"`
+	Type       string             `json:"type,omitempty"`
+	Attributes IncludedAttributes `json:"attributes,omitempty"`
+}
+
+type ProfileSettings struct {
+	Data struct {
+		Attributes    profileAttributes    `json:"attributes,omitempty"`
+		Relationships ProfileRelationships `json:"relationships,omitempty"`
+		Type          string               `json:"type,omitempty"`
+		ID            string               `json:"id,omitempty"`
+	} `json:"data"`
+	Included []ProfileIncluded `json:"included,omitempty"`
+}
+type ApplyProfileInclude struct {
+	Exceptions bool `json:"exceptions"`
+}
+type ApplyProfileSettings struct {
+	Meta struct {
+		AccountIds []string             `json:"accountIds"`
+		Mode       string               `json:"mode"`
+		Notes      string               `json:"notes"`
+		Types      []string             `json:"types"`
+		Include    *ApplyProfileInclude `json:"include,omitempty"`
+	} `json:"meta"`
+}
+
+type ApplyProfileResponse struct {
+	Meta struct {
+		Message string `json:"message"`
+		Status  string `json:"status"`
+	} `json:"meta"`
+}

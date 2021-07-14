@@ -14,7 +14,7 @@ Provides instruction on how to update AWS Cloud Conformity account name or envir
 
 #### 1. Navigate to folder aws directory:
 ```sh
-cd /path/guardrail-conformity-tf-provider/example/aws
+cd /path/terraform-provider-conformity/example/aws
 ```
 #### 2. Edit terraform.tfvars values according to the changes you want.
 

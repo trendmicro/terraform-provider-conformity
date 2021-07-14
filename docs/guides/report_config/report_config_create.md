@@ -32,7 +32,7 @@ region = "AWS-ACCOUNT-REGION"
 ```
 Note: You can always change the values declared according to your choice.
 
-3. Add filter or configuration values according to your requirements `main.tf` under `/path/guardrail-conformity-tf-provider/example/report_config/main` directory.
+3. Add filter or configuration values according to your requirements `main.tf` under `/path/terraform-provider-conformity/example/report_config/main` directory.
 
 Example template to guide your configuration:
 
@@ -141,7 +141,7 @@ resource "conformity_report_config" "report" {
 
 #### 1. Navigate to project directory:
 ```sh
-cd /path/guardrail-conformity-tf-provider/
+cd /path/terraform-provider-conformity/
 ```
 #### 2. Install dependencies:
 ```sh

@@ -2,12 +2,12 @@ resource "conformity_communication_setting" "slack_setting" {
     
     slack {
         channel               = "#git-main"
-        channel_name          = "ConformityCloudTest"
+        channel_name          = "Conformity"
         display_introduced_by = true
         display_resource      = true
         display_tags          = true
         display_extra_data    = true
-        url                   = "https://hooks.slack.com/services/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"
+        url                   = "Your Slack Webhook URL"
     }
 
     filter {

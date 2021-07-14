@@ -14,7 +14,7 @@ Provides instruction on how to update account ID and/or level under access list 
 
 #### 1. Navigate to folder user directory:
 ```sh
-cd /path/guardrail-conformity-tf-provider/example/user/user
+cd /path/terraform-provider-conformity/example/user/user
 ```
 #### 2. Edit terraform.tfvars values according to the changes you want.
 

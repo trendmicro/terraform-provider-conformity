@@ -12,7 +12,7 @@ Provides a Cloud Conformity Account.
 ```terraform
 resource "conformity_aws_account" "aws"{
 
-    name        = "Guardrail"
+    name        = "Trendmicro Account"
     environment = "Staging"
     external_id = "..."
     role_arn    = "..."
@@ -20,17 +20,17 @@ resource "conformity_aws_account" "aws"{
 ```
 
 ## Argument reference
- - `name` - (Required) The name of your account.
- - `environment` - (Required) The environment for your account.
- - `external_id` - (Required) The external ID for your Cloud Conformity organisation.
+ - `name` (String) - (Required) The name of your account.
+ - `environment` (String) - (Required) The environment for your account.
+ - `external_id` (String) - (Required) The external ID for your Cloud Conformity organisation.
 
 
 ## Attributes Reference
 
 In addition to all the arguments above, the following attributes are imported from `cloudconformity_external_id` and `aws_cloudformation_stack` resources.
 
- - `ExternalId` - (Required) The external ID. Imported from `cloudconformity_external_id`.
- - `role_arn` - (Required) The ARN of the role your account can assume. Imported from `aws_cloudformation_stack`.
+ - `ExternalId` (String) - (Required) The external ID. Imported from `cloudconformity_external_id`.
+ - `role_arn` (String) - (Required) The ARN of the role your account can assume. Imported from `aws_cloudformation_stack`.
   
 ## Import
 AWS Account - Can import based on the `Account ID` that can be found under the Conformity web console.
