@@ -20,9 +20,6 @@ Provides instruction on how to configure Providers to Update Azure Cloud Conform
 
 ## Example Usage for `terraform.tfvars`
 ```
-  apikey = "CLOUD-CONFORMITY-API-KEY"
-  region = "ACCOUNT-REGION"
-
 # Uncomment this section if you want to login or run terraform using keys.
 #  subscription_id = "SUBSCRIPTION-ID"
 #  client_id       = "CLIENT_ID"
@@ -35,20 +32,11 @@ Note: You can always change the values declared according to your choice.
 ```hcl
 terraform {
   required_providers {
-    conformity = {
-      version = "0.1.0"
-      source  = "trendmicro.com/cloudone/conformity"
-    }
       azurerm = {
       source  = "hashicorp/azurerm"
-      version = "=2.46.0"
+      version = ">= 2.62.1"
     }
   }
-}
-
-provider "conformity" {
-  region = var.region
-  apikey = var.apikey
 }
 
 provider "azurerm" {
@@ -63,8 +51,6 @@ provider "azurerm" {
 ```
 
 ## Argument Reference
- - `apikey` - (Required) This is the Cloud Conformity API Key. 
- - `region` - (Required) The region your organisation resides in. See https://github.com/cloudconformity/documentation-api for the available regions.
  - `subscription_id` - (Optional) This is the Azure Account subscription ID. 
  - `client_id` - (Optional) This is the Azure Account client ID. 
  - `client_secret` - (Optional) This is the Azure Account client secret ID. 

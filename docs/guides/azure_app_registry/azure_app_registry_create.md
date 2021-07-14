@@ -10,7 +10,6 @@ Provides instruction on how to create Azure App Registry on Azure account using 
 
 ## Things needed:
 1. Azure login Access
-2. Cloud Conformity API Key
 
 #### Step 1
 
@@ -62,27 +61,7 @@ Note: You can always change the values declared according to your choice.
 
 ##### Terraform Configuration
 
-1. Create `terraform.tfvars` on `example/azure_app_registry` folder and add the following values:
-
-```
-apikey = "CLOUD-CONFORMITY-API-KEY"
-region = "AWS-ACCOUNT-REGION"
-```
-
-Example Usage:
-```
-  apikey = "CLOUD-CONFORMITY-API-KEY"
-  region = "AWS-ACCOUNT-REGION"
-
-# Uncomment this section if you want to login or run terraform using keys.
-#  subscription_id = "SUBSCRIPTION-ID"
-#  client_id       = "CLIENT_ID"
-#  client_secret   = "CLIENT_SECRET"
-#  tenant_id       = "TENANT_ID"
-```
-Note: You can always change the values declared according to your choice.
-
-#### Step 2
+#### Step 1
 
 ##### Run Terraform
 
@@ -104,7 +83,7 @@ terraform output azuread_application_password
 ```
 c. Save the outputs especially the `active_directory_tenant_id`, `app_registration_application_id` and the `app_registration_key` output from the previous number (Step 2, Number 3, Letter B).
 
-#### Step 3
+#### Step 2
 
 ##### Grant Admin 
 1. Log into Azure console.
@@ -114,7 +93,7 @@ c. Save the outputs especially the `active_directory_tenant_id`, `app_registrati
 5. Select API permissions.
 6. Click `Grant admin consent for [AD name]` to grant admin consent for all the permissions.
 
-#### Step 4
+#### Step 3
 
 ##### Add Azure Account on Cloud Conformity Console
 1. Go to Cloud Conformity Console.

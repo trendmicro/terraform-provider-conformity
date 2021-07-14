@@ -18,8 +18,8 @@ resource "conformity_group" "group" {
 ```
 
 ## Argument reference
- - `name` - (Required) The name of your account.
- - `tags` - (Required) The tag name that you want to add.
+ - `name` (String) - (Required) The name of your account.
+ - `tags` (String) - (Required) The tag name that you want to add.
 
 ## Import
 Conformity group - Can import based on the Group ID that can be found under the Conformity web console.

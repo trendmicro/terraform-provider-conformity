@@ -1,3 +1,20 @@
-## 0.1.0 (Unreleased)
+## 0.2.0
 
-BACKWARDS INCOMPATIBILITIES / NOTES:
+FEATURES:
+
+* **New Resource:** `conformity_profile`
+* **New Data Source:** `conformity_apply_profile`
+
+## 0.1.0
+
+FEATURES:
+
+* **New Data Source:** `conformity_external_id`
+* **New Resource:** `conformity_aws_account`
+* **New Resource:** `conformity_azure_account`
+* **New Resource:** `conformity_group`
+* **New Resource:** `conformity_user`
+* **New Resource:** `conformity_sso_user`
+* **New Resource:** `conformity_report_config`
+* **New Resource:** `conformity_communication_setting`
+

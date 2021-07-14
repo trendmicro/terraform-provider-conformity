@@ -34,21 +34,21 @@ resource "conformity_user" "user" {
 
 ## Argument reference
 
- - `email` - (Required) The email of the user.
- - `first_name` - (Required) The first name of the user.
- - `last_name` - (Required) The last name of the user.
- - `role` - (Required) The role which the user is assigned to. Can be "ADMIN" "USER".
+ - `email` (String) - (Required) The email of the sso_user.
+ - `first_name` (String) - (Required) The first name of the sso_user.
+ - `last_name` (String) - (Required) The last name of the sso_user.
+ - `role` (String) - (Required) The role which the sso_user is assigned to. Can be "ADMIN" "USER".
  - `access_list` - (Required) List:
-      `access_list` - (Required) The account id within the organisation.
-      `level` - (Required) The level of access the user has to the account. Can be "NONE" "READONLY" "FULL".
+      `account` (String) - (Required) The account id within the organisation.
+      `level` (String) - (Required) The level of access the user has to the account. Can be "NONE" "READONLY" "FULL".
 
 ## Attributes Reference
 
 In addition to all the arguments above, the following attributes are added to the terraform state and can be used for output.
 
- - `last_login` - User last login.
- - `last_name` - User last name.
- - `mfa` - Shows 'true' if the user has MFA, otherwise 'false'.
+ - `last_login` (Int) - User last login.
+ - `last_name` (String) - User last name.
+ - `mfa` (Bool) - Shows 'true' if the user has MFA, otherwise 'false'.
   
 ## Import
 

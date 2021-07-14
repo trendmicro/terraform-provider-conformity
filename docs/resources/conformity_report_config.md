@@ -131,4 +131,4 @@ terraform show -no-color >> main.tf
 | Name | Type |
 |------|------|
 
-| conformity_user.user | resource |
+| conformity_report_config.report | resource |

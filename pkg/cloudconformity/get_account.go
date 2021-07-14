@@ -25,7 +25,7 @@ func (c *Client) GetAccount(accountId string) (*accountAccessAndDetails, error) 
 // return the role arn and externalId
 func (c *Client) GetAccountAccessSettings(accountId string) (*accountData, error) {
 	accountData := &accountData{}
-	_, err := c.ClientRequest(Get{}, fmt.Sprintf("/v1/accounts/%s/access", accountId), nil, accountData)
+	_, err := c.ClientRequest(Get{}, fmt.Sprintf("/v1/accounts/%s/access", accountId), nil, "", accountData)
 	if err != nil {
 		return nil, err
 	}
@@ -36,7 +36,7 @@ func (c *Client) GetAccountAccessSettings(accountId string) (*accountData, error
 // return the account name and evironment
 func (c *Client) GetAccountDetails(accountId string) (*accountDetails, error) {
 	accountDetails := &accountDetails{}
-	_, err := c.ClientRequest(Get{}, fmt.Sprintf("/v1/accounts/%s", accountId), nil, accountDetails)
+	_, err := c.ClientRequest(Get{}, fmt.Sprintf("/v1/accounts/%s", accountId), nil, "", accountDetails)
 	if err != nil {
 		return nil, err
 	}

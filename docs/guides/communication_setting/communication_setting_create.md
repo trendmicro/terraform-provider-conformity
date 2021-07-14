@@ -18,6 +18,7 @@ Provides instruction on how to create Communication Settings on Cloud Conformity
 1. To use Cloud Conformity and its resources, make sure that the values for certain variables are declared, Region, Account ID and API Key from Cloud Conformity Account are properly configured on the `terraform.tfvars`.
 
 2. Create `terraform.tfvars` on `example/communication_setting/PATH-TO-CHANNEL` folder.
+   
 3. Note: Change the `PATH-TO-CHANNEL` value according to the channel you want to create (e.g. email, ms-teams, slack multiple, sms, sns).
 Example Path: `example/communication_setting/email`
 
@@ -28,7 +29,7 @@ region = "AWS-ACCOUNT-REGION"
 ```
 Note: You can always change the values declared according to your choice.
 
-1. Add filter or configuration values according to your requirements `main.tf` under `/path/guardrail-conformity-tf-provider/example/communication_setting/PATH-TO-CHANNEL` directory.
+4. Add filter or configuration values according to your requirements `main.tf` under `/path/guardrail-conformity-tf-provider/example/communication_setting/PATH-TO-CHANNEL` directory.
 Note: Change the `PATH-TO-CHANNEL` value according to the channel you want to create (e.g. email, ms-teams, slack multiple, sms, sns).
 Example Path: `/path/guardrail-conformity-tf-provider/example/communication_setting/email`
 
