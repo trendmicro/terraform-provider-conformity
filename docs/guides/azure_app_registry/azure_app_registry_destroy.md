@@ -14,7 +14,7 @@ Provides instruction on how to destroy Azure App Registry on Azure Account using
 
 #### 1. Navigate to folder Azure App Registry directory:
 ```sh
-cd /path/guardrail-conformity-tf-provider/example/azure_app_registry
+cd /path/terraform-provider-conformity/example/azure_app_registry
 ```
 #### 2. Run terraform destroy:
 ```sh

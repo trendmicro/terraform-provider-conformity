@@ -1,6 +1,6 @@
 # conformity_profile.profile_settings:
 resource "conformity_profile" "profile_settings" {
-    description = "conformity guardrail development - rules included"
+    description = "conformity development - rules included"
     name        = "conformity-with-rules"
     # without extra settings 
     included {

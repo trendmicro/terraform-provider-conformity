@@ -12,8 +12,8 @@ Allows you to create Profile Settings on Cloud Conformity.
 ```terraform
 # conformity_profile.profile_settings:
 resource "conformity_profile" "profile_settings" {
-    description = "conformity guardrail development - rules included"
-    name        = "cloudready-with-rules"
+    description = "conformity development - rules included"
+    name        = "cloud-with-rules"
 
     # without extra settings 
     included {

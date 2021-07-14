@@ -10,7 +10,7 @@ resource "conformity_report_config" "report" {
     // optional | type: bool | default: false
     scheduled = "true"
     // optional | type: array of strings
-    emails = ["conformity@cloudone.com","cloudocnformity@cloudone.com"] 
+    emails = ["userone@trendmicro.com","usertwo@trendmicro.com"]
     // optional | type: string
     frequency = "* * *"
     // required | type: string 

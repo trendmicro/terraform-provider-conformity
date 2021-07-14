@@ -25,8 +25,8 @@ Example Usage:
 
 ```
 resource "conformity_profile" "profile_settings"{
-  name = "cloudready-without-rules"
-  description = "conformity guardrail development - without included"
+  name = "cloud-without-rules"
+  description = "conformity development - without included"
   }
 
 data "conformity_apply_profile" "profile"{

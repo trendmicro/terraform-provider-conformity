@@ -9,7 +9,7 @@ variable "region"{
 }
 # variable "azure_name"{
 #     type    = string
-#     default = "guardrail_azure"
+#     default = "trendmicro_azure"
 # }
 variable "azure_environment"{
     type    = string

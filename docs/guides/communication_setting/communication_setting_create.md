@@ -29,9 +29,9 @@ region = "AWS-ACCOUNT-REGION"
 ```
 Note: You can always change the values declared according to your choice.
 
-4. Add filter or configuration values according to your requirements `main.tf` under `/path/guardrail-conformity-tf-provider/example/communication_setting/PATH-TO-CHANNEL` directory.
+4. Add filter or configuration values according to your requirements `main.tf` under `/path/terraform-provider-conformity/example/communication_setting/PATH-TO-CHANNEL` directory.
 Note: Change the `PATH-TO-CHANNEL` value according to the channel you want to create (e.g. email, ms-teams, slack multiple, sms, sns).
-Example Path: `/path/guardrail-conformity-tf-provider/example/communication_setting/email`
+Example Path: `/path/terraform-provider-conformity/example/communication_setting/email`
 
 Example template to guide your configuration:
 
@@ -280,7 +280,7 @@ resource "conformity_communication_setting" "comm_setting" {
 
 #### 1. Navigate to project directory:
 ```sh
-cd /path/guardrail-conformity-tf-provider/
+cd /path/terraform-provider-conformity/
 ```
 #### 2. Install dependencies:
 ```sh

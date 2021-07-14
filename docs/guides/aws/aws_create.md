@@ -34,7 +34,7 @@ Note: You can always change the values declared according to your choice.
 
 #### 1. Navigate to project directory:
 ```sh
-cd /path/guardrail-conformity-tf-provider/
+cd /path/terraform-provider-conformity/
 ```
 #### 2. Install dependencies:
 ```sh

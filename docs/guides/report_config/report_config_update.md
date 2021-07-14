@@ -14,7 +14,7 @@ Provides instruction on how to update Report Configs on Cloud Conformity using T
 
 #### 1. Navigate to folder report_config directory:
 ```sh
-cd /path/guardrail-conformity-tf-provider/example/report_config/main
+cd /path/terraform-provider-conformity/example/report_config/main
 ```
 #### 2. Edit `main.tf` values according to the changes you want.
 

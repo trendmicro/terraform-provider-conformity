@@ -1,6 +1,6 @@
 # conformity_profile.profile_settings:
 resource "conformity_profile" "int_settings" {
-    description = "conformity guardrail development - int value"
+    description = "conformity development - int value"
     name        = "conformity-integer-rules"
 
     # type ttl

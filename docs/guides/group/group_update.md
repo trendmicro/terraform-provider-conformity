@@ -14,7 +14,7 @@ Provides instruction on how to add more tags or group or update their name on Cl
 
 #### 1. Navigate to folder group directory:
 ```sh
-cd /path/guardrail-conformity-tf-provider/example/group
+cd /path/terraform-provider-conformity/example/group
 ```
 #### 2. Edit terraform.tfvars values according to the changes you want.
 

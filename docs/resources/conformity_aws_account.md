@@ -12,7 +12,7 @@ Provides a Cloud Conformity Account.
 ```terraform
 resource "conformity_aws_account" "aws"{
 
-    name        = "Guardrail"
+    name        = "Trendmicro Account"
     environment = "Staging"
     external_id = "..."
     role_arn    = "..."
