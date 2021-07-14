@@ -7,7 +7,7 @@ resource "conformity_communication_setting" "teams_setting" {
         display_introduced_by = true
         display_resource      = true
         display_tags          = true
-        url                   = "https://cloudgroupph.webhook.office.com/webhookb2/b64d7af9-3d96-4f37-8a69-0edf527af2f2@795cfe74-f75f-45c1-ba46-5fb6590cc562/IncomingWebhook/15d0c241a569487ebbc1ae02bbc3cedc/8dd3ce28-2130-4336-bb0a-4a1989f618f0"
+        url                   = "https://cloudreadygroupph.webhook.office.com/webhookb2/b6467af9-3d96-4f37-8a69-0edf527af2f4@795cfe74-f75f-45c1-ba46-5fb6590cc562/IncomingWebhook/15d0c241a569487ebbc1ae02bbc3cedc/8dd3ce28-2130-4336-bb0a-9a1989f618f0"
     }
 
     filter {

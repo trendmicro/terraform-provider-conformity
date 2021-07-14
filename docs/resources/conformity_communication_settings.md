@@ -164,4 +164,4 @@ terraform import conformity_communication_setting.email_setting 80b880c9-336a-49
 | Name | Type |
 |------|------|
 
-| conformity_user.user | resource |
+| conformity_communication_setting.comm_setting | resource |

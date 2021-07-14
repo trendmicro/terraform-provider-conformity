@@ -24,6 +24,7 @@ var userDetails cloudconformity.UserDetails
 var userAccessDetails cloudconformity.UserAccessDetails
 var reportConfigDetails cloudconformity.ReportConfigDetails
 var communicationSetting cloudconformity.CommunicationSettings
+var profileSetting cloudconformity.ProfileSettings
 var testServer *httptest.Server
 
 func init() {
@@ -72,6 +73,7 @@ func createConformityMock() (*cloudconformity.Client, *httptest.Server) {
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusOK)
 		var getOrganizationalExternalId = regexp.MustCompile(`^/v1/organisation/external-id/$`)
+		var postApplyProfile = regexp.MustCompile(`^/v1/profiles/(.*)/apply$`)
 		var postAccount = regexp.MustCompile(`^/v1/accounts/$`)
 		var postAzureAccount = regexp.MustCompile(`^/v1/accounts/azure/$`)
 		var accountDetails = regexp.MustCompile(`^/v1/accounts/(.*)$`)
@@ -85,9 +87,18 @@ func createConformityMock() (*cloudconformity.Client, *httptest.Server) {
 		var getReportconfig = regexp.MustCompile(`^/v1/report-configs/(.*)$`)
 		var postCommunicationConfig = regexp.MustCompile(`^/v1/settings/communication/$`)
 		var getCommunicationConfig = regexp.MustCompile(`^/v1/settings/(.*)$`)
+		var postProfile = regexp.MustCompile(`^/v1/profiles/$`)
+		var getProfile = regexp.MustCompile(`^/v1/profiles/(.*)$`)
 		switch {
 		case getOrganizationalExternalId.MatchString(r.URL.Path):
 			w.Write([]byte(`{ "data": { "type": "external-ids", "id": "3ff84b20-0f4c-11eb-a7b7-7d9b3c0e866e" } }`))
+		case postApplyProfile.MatchString(r.URL.Path):
+			w.Write([]byte(`{
+				"meta": {
+					"status": "sent",
+					"message": "Profile will be applied to the accounts in background"
+				}
+			}`))
 		case postAccount.MatchString(r.URL.Path):
 			_ = readRequestBody(r, &accountPayload)
 			w.Write([]byte(`{ "data": { "type": "accounts", "id": "H19NxMi5-" } }`))
@@ -259,6 +270,79 @@ func createConformityMock() (*cloudconformity.Client, *httptest.Server) {
 			w.Write([]byte(`{
 					"meta": {
 					"status": "deleted" } }`))
+
+		case postProfile.MatchString(r.URL.Path) || (getProfile.MatchString(r.URL.Path) && r.Method == "PATCH"):
+			_ = readRequestBody(r, &profileSetting)
+			w.Write([]byte(`{ "data": {
+						"type": "profiles",
+						"id": "d9yHTrzP0" } }`))
+
+		case getProfile.MatchString(r.URL.Path) && r.Method == "GET":
+			w.Write([]byte(`{
+				"included": [
+				  {
+					"type": "rules",
+					"id": "RTM-002",
+					"attributes": {
+					  "enabled": true,
+					  "provider": "aws",
+					  "extraSettings": [
+						{
+						  "name": "ttl",
+						  "type": "ttl",
+						  "value": ` + fmt.Sprintf("%v", profileSetting.Included[0].Attributes.ExtraSettings[0].Value) + `,
+						  "ttl": true
+						}
+					  ]
+					}
+				  },
+				  {
+					"type": "rules",
+					"id": "SNS-002",
+					"attributes": {
+					  "enabled": true,
+					  "provider": "aws",
+					  "extraSettings": [
+						{
+							"name": "conformityOrganization",
+							"type": "choice-multiple-value",
+							"values": [{
+								"label": "All within this AWS Organization",
+								"value": "includeAwsOrganizationAccounts",
+								"enabled": true
+							}, {
+								"label": "All within this Conformity organization",
+								"value": "includeConformityOrganization"
+							}]
+						}
+					  ]
+					}
+				  }
+				],
+				"data": {
+				  "type": "profiles",
+				  "id": "d9yHTrzP0",
+				  "attributes": {
+					"name": "test-with-rules",
+					"description": "conformity development - rules included"
+				  },
+				  "relationships": {
+					"ruleSettings": {
+					  "data": [
+						{
+						  "type": "rules",
+						  "id": "RTM-002"
+						}
+					  ]
+					}
+				  }
+				}
+			  }`))
+
+		case getProfile.MatchString(r.URL.Path) && r.Method == "DELETE":
+			w.Write([]byte(`{
+				"meta": {
+				"status": "deleted" } }`))
 		}
 
 	}))

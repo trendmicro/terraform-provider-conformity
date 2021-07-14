@@ -1,0 +1,1 @@
+resource "conformity_communication_setting" "email_setting" {}

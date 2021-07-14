@@ -28,15 +28,15 @@ resource "aws_cloudformation_stack" "cloud-conformity" {
 
 ## Argument reference
 
- - `name` - (Required) The name of your CloudFormation Stack (Do not change the value).
- - `template_url` - (Required) Default CloudFormation template (Do not change the value).
- - `AccountId` - (Required) Default Cloud Conformity AWS Account ID (Do not change the value).
+ - `name` (String) - (Required) The name of your CloudFormation Stack (Do not change the value).
+ - `template_url` (String) - (Required) Default CloudFormation template (Do not change the value).
+ - `AccountId` (String) - (Required) Default Cloud Conformity AWS Account ID (Do not change the value).
 
 ## Attributes Reference
 
 In addition to all the arguments above, the following attributes are imported from `cloudconformity_external_id` resource.
 
- - `ExternalId` - (Required) The external ID. Imported from `cloudconformity_external_id`.
+ - `ExternalId` (String) - (Required) The external ID. Imported from `cloudconformity_external_id`.
 
 ## Import
 Cloudformation Stacks can be imported using the `name`. e.g.

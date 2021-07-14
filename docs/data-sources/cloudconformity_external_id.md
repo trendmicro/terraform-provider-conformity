@@ -28,4 +28,4 @@ resource "conformity_aws_account" "aws"{
 
 ## Attributes Reference
 
- - `id` - The external ID.
+ - `id` (String) - (Required) The external ID.

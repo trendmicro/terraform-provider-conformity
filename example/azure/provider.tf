@@ -3,6 +3,7 @@ terraform {
     conformity = {
       version = "0.1.0"
       source  = "trendmicro.com/cloudone/conformity"
+
     }
   }
 }

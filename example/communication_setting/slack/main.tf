@@ -2,7 +2,7 @@ resource "conformity_communication_setting" "slack_setting" {
     
     slack {
         channel               = "#git-main"
-        channel_name          = "ConformityCloudTest"
+        channel_name          = "ConformityCloudready"
         display_introduced_by = true
         display_resource      = true
         display_tags          = true
