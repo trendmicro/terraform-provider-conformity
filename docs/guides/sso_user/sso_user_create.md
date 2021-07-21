@@ -23,7 +23,7 @@ Notice the URL, you should be able to get the account ID e.g. https://cloudone.t
 1. To create an SSO Invite, create `terraform.tfvars` on `example/user/sso_user` folder and add the following values:
 
 ## Example Usage for `terraform.tfvars`
-```
+```hcl
 apikey = "CLOUD-CONFORMITY-API-KEY"
 region = "AWS-ACCOUNT-REGION"
 

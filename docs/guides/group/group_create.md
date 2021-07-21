@@ -18,7 +18,7 @@ Provides instruction on how to create or add groups and tags on Cloud Conformity
 1. To add groups and tags on Cloud Conformity, create `terraform.tfvars` on `example/group` folder and add the following values:
    
 ## Example Usage for `terraform.tfvars`
-```
+```hcl
 apikey = "CLOUD-CONFORMITY-API-KEY"
 region = "AWS-ACCOUNT-REGION"
 

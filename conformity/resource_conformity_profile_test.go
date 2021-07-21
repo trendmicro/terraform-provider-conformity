@@ -22,6 +22,7 @@ func TestAccResourceconformityProfile(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr("conformity_profile.rtm002", "name", "test-with-rules"),
 					resource.TestCheckResourceAttr("conformity_profile.rtm002", "included.0.id", "RTM-002"),
+					resource.TestCheckResourceAttr("conformity_profile.rtm002", "included.0.exceptions.0.tags.0", "some_tag"),
 					resource.TestCheckResourceAttr("conformity_profile.rtm002", "included.0.extra_settings.0.value", ttl),
 					resource.TestCheckResourceAttr("conformity_profile.rtm002", "included.1.extra_settings.0.values.0.value", "includeConformityOrganization"),
 				), ExpectNonEmptyPlan: true,
@@ -45,7 +46,11 @@ func testAccCheckConformityProfileBasic(ttl string) string {
 		included {
 			id         = "RTM-002"
 			provider   = "aws"
-
+			exceptions {
+				tags   = [
+					"some_tag",
+				]
+			}
 			extra_settings {
 				name      = "ttl"
 				type      = "ttl"

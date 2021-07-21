@@ -12,7 +12,7 @@ Allows you to apply profile and rule settings to a set of accounts under your or
 Upon applying this data source using terraform plan or terraform apply, Profile will be applied to the accounts in background.
 
 ## Example Usage
-```terraform
+```hcl
 data "conformity_apply_profile" "profile"{
 
   profile_id = "THE-ID-OF-THE-PROFILE-SETTINGS-THAT-YOU-WANT-TO-APPLY"

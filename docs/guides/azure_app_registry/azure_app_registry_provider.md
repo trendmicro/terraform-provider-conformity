@@ -19,7 +19,7 @@ Provides instruction on how to configure Providers to Update Azure Cloud Conform
 1. To configure the provider, make sure that conformity region, api key and azure access are properly configured on the `terraform.tfvars`.
 
 ## Example Usage for `terraform.tfvars`
-```
+```hcl
 # Uncomment this section if you want to login or run terraform using keys.
 #  subscription_id = "SUBSCRIPTION-ID"
 #  client_id       = "CLIENT_ID"

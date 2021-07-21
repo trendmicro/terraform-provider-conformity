@@ -23,7 +23,7 @@ Provides instruction on how to create Profile Settings on Cloud Conformity using
 Example Path: `example/profile_settings/with_rules`
 
 Add the following values on `terraform.tfvars`:
-```
+```hcl
 apikey = "CLOUD-CONFORMITY-API-KEY"
 region = "AWS-ACCOUNT-REGION"
 ```
@@ -35,7 +35,7 @@ Example Path: `/path/terraform-provider-conformity/example/profile_settings/with
 
 Example template to guide your configuration:
 
-```
+```hcl
 resource "conformity_profile" "profile"{
   // Optional | type: string
   name = ""

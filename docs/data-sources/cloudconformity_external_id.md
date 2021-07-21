@@ -10,7 +10,7 @@ description: |-
 Provides an external ID for your Cloud Conformity organisation.
 
 ## Example Usage
-```terraform
+```hcl
 data "conformity_external_id" "all"{}
 
 output "external_id" {

@@ -11,7 +11,7 @@ Allows you to create Communication Setting on Cloud Conformity.
 ## Example Usage
 You can create multiple channel.
 
-```terraform
+```hcl
 resource "conformity_communication_setting" "email_setting" {
 
     email {
@@ -63,8 +63,6 @@ output "email_setting" {
 ```
 
 ## Argument reference
-`channel` (List) - (Required) Channel type. Values can be: "email", "sms", "ms-teams", "slack", "sns", "pager-duty", "webhook". Possible channel List:
-
 - `email` - (Optional) Max number 1. List of possible values:
      * `users` (Array of String) - (Required) Array of users with at least readOnly access to the account.
 - `ms_teams` - (Optional) Max number 1. List of possible values:
@@ -144,24 +142,34 @@ Run `terraform show -no-color >> main.tf` to import the resources on the `main.t
 terraform show -no-color >> main.tf
 ```
 
-
-terraform import conformity_communication_setting.email_setting 80b880c9-336a-490d-b212-4e847956a62d:communication:email-RU_zXc1NF
-
 ## Requirements
 
 | Name | Version |
 |------|---------|
-| <a name="requirement_conformity"></a> [conformity](#requirement\_conformity) | 0.1.0 |
+| <a name="requirement_conformity"></a> [conformity](#requirement\_conformity) | 0.3.0 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| <a name="provider_conformity"></a> [conformity](#provider\_conformity) | 0.1.0 |
+| <a name="provider_conformity"></a> [conformity](#provider\_conformity) | 0.3.0 |
 
 ## Resources
 
 | Name | Type |
 |------|------|
 
-| conformity_communication_setting.comm_setting | resource |
+| conformity_communication_setting.setting | resource |
+
+## Inputs
+
+| Name | Description | Type | Default | Required |
+|------|-------------|------|---------|:--------:|
+| <a name="input_apikey"></a> [apikey](#input\_apikey) | n/a | `string` | `""` | yes |
+| <a name="input_region"></a> [region](#input\_region) | n/a | `string` | `""` | yes |
+
+## Outputs
+
+| Name | Description |
+|------|-------------|
+| <a name="output_setting"></a> [_setting](#output\_setting) | n/a |

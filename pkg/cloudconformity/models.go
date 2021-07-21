@@ -31,6 +31,136 @@ type cloudData struct {
 		SubscriptionId string `json:"subscriptionId"`
 	} `json:"azure"`
 }
+
+type GetRuleSettings struct {
+	Enabled       bool                   `json:"enabled"`
+	Id            string                 `json:"id"`
+	RiskLevel     string                 `json:"riskLevel"`
+	RuleExists    bool                   `json:"ruleExists"`
+	ExtraSettings []*RuleSettingExtra    `json:"extraSettings"`
+	Exceptions    *RuleSettingExceptions `json:"exceptions,omitempty"`
+}
+type GetAccountRuleSettings struct {
+	Data struct {
+		Id         string `json:"id"`
+		Type       string `json:"type"`
+		Attributes struct {
+			Settings struct {
+				Rules []GetRuleSettings `json:"rules"`
+			} `json:"settings"`
+		} `json:"attributes"`
+	} `json:"data"`
+}
+type RuleSettingExceptions struct {
+	FilterTags []string `json:"filterTags,omitempty"`
+	Resources  []string `json:"resources,omitempty"`
+	Tags       []string `json:"tags,omitempty"`
+}
+type MappingValues struct {
+	Type   string      `json:"type,omitempty"`
+	Name   string      `json:"name,omitempty"`
+	Value  string      `json:"value,omitempty"`
+	Values interface{} `json:"values,omitempty"`
+}
+type RuleSettingMapping struct {
+	Values []*MappingValues `json:"values"`
+}
+type RuleSettingValues struct {
+	Label   string `json:"label,omitempty"`
+	Value   string `json:"value,omitempty"`
+	Enabled bool   `json:"enabled,omitempty"`
+}
+type RuleSettingMultipleObject struct {
+	Value struct {
+		EventName        string `json:"eventName,omitempty"`
+		EventSource      string `json:"eventSource,omitempty"`
+		UserIdentityType string `json:"userIdentityType,omitempty"`
+	} `json:"value,omitempty"`
+}
+type RuleSettingExtra struct {
+	Name      string      `json:"name,omitempty"`
+	Type      string      `json:"type,omitempty"`
+	Regions   *bool       `json:"regions,omitempty"`
+	ValueKeys *[]string   `json:"valueKeys,omitempty"`
+	Value     interface{} `json:"value,omitempty"`
+	Values    interface{} `json:"values,omitempty"`
+	Mappings  interface{} `json:"mappings,omitempty"`
+}
+
+type RuleSetting struct {
+	// possible duplicated struct in ProfileSettings
+	// for now will use different struct
+	Enabled       bool                  `json:"enabled"`
+	Exceptions    RuleSettingExceptions `json:"exceptions"`
+	Id            string                `json:"id"`
+	Provider      string                `json:"provider"`
+	RiskLevel     string                `json:"riskLevel"`
+	RuleExists    bool                  `json:"ruleExists"`
+	ExtraSettings []RuleSettingExtra    `json:"extraSettings"`
+}
+type RuleSettingAttributes struct {
+	Note        string      `json:"note"`
+	RuleSetting RuleSetting `json:"ruleSetting"`
+}
+type AccountRuleSettings struct {
+	Data struct {
+		Id         string                `json:"id,omitempty"`
+		Attributes RuleSettingAttributes `json:"attributes"`
+	} `json:"data"`
+}
+
+type BotDisabledRegions struct {
+	AfSouth1     bool `json:"af-south-1,omitempty"`
+	ApSouth1     bool `json:"ap-south-1,omitempty"`
+	EuWest3      bool `json:"eu-west-3,omitempty"`
+	EuNorth1     bool `json:"eu-north-1,omitempty"`
+	EuWest2      bool `json:"eu-west-2,omitempty"`
+	EuSouth1     bool `json:"eu-south-1,omitempty"`
+	EuWest1      bool `json:"eu-west-1,omitempty"`
+	ApNorthEast3 bool `json:"ap-northeast-3,omitempty"`
+	ApNorthEast2 bool `json:"ap-northeast-2,omitempty"`
+	ApNorthEast1 bool `json:"ap-northeast-1,omitempty"`
+	MeSouth1     bool `json:"me-south-1,omitempty"`
+	SaEast1      bool `json:"sa-east-1,omitempty"`
+	CaCentral1   bool `json:"ca-central-1,omitempty"`
+	ApEast1      bool `json:"ap-east-1,omitempty"`
+	ApSouthEast1 bool `json:"ap-southeast-1,omitempty"`
+	ApSouthEast2 bool `json:"ap-southeast-2,omitempty"`
+	EuCentral1   bool `json:"eu-central-1,omitempty"`
+	UsEast1      bool `json:"us-east-1,omitempty"`
+	UsEast2      bool `json:"us-east-2,omitempty"`
+	UsWest1      bool `json:"us-west-1,omitempty"`
+	UsWest2      bool `json:"us-west-2,omitempty"`
+}
+
+type AccountBot struct {
+	Disabled        bool               `json:"disabled"`
+	Delay           int                `json:"delay,omitempty"`
+	DisabledRegions BotDisabledRegions `json:"disabledRegions,omitempty"`
+}
+
+type AccountBotSettingsData struct {
+	Attributes accountAtrributes `json:"attributes"`
+	Type       string            `json:"type"`
+	Id         string            `json:"id"`
+}
+type AccountBotSettingsReponse struct {
+	Data []AccountBotSettingsData `json:"data"`
+}
+
+type AccountBotSettingsRequest struct {
+	Data struct {
+		Type       string `json:"type"`
+		Attributes struct {
+			Settings AccountSettings `json:"settings,omitempty"`
+		} `json:"attributes"`
+	} `json:"data"`
+}
+
+type AccountSettings struct {
+	Bot AccountBot `json:"bot,omitempty"`
+}
+
 type accountAtrributes struct {
 	Name          string               `json:"name"`
 	Environment   string               `json:"environment"`
@@ -39,6 +169,7 @@ type accountAtrributes struct {
 	Configuration accountConfiguration `json:"configuration,omitempty"`
 	CoudType      string               `json:"cloud-type,omitempty"`
 	CloudData     cloudData            `json:"cloud-data,omitempty"`
+	Settings      AccountSettings      `json:"settings,omitempty"`
 }
 
 type accountData struct {
@@ -62,8 +193,9 @@ type accountDetails struct {
 	Id   string      `json:"id"`
 }
 type accountAccessAndDetails struct {
-	AccountDetails accountDetails `json:"accountDetails"`
-	AccessSettings accountData    `json:"accessDetails"`
+	AccountDetails accountDetails         `json:"accountDetails"`
+	AccessSettings accountData            `json:"accessDetails"`
+	RuleSettings   GetAccountRuleSettings `json:"ruleSettings"`
 }
 
 type deleteResponse struct {

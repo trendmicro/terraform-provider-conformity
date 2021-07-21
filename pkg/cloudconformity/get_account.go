@@ -2,6 +2,7 @@ package cloudconformity
 
 import (
 	"fmt"
+	"strings"
 )
 
 //get both Account access settings and details
@@ -15,8 +16,14 @@ func (c *Client) GetAccount(accountId string) (*accountAccessAndDetails, error) 
 	if err != nil {
 		return nil, err
 	}
+	ruleSettings, err := c.GetAccountRuleSettings(accountId)
+	if err != nil {
+		return nil, err
+	}
 	accountAccessAndDetails.AccountDetails = *accountDetails
 	accountAccessAndDetails.AccessSettings = *AccessSettings
+	accountAccessAndDetails.RuleSettings = *ruleSettings
+
 	return accountAccessAndDetails, nil
 
 }
@@ -41,4 +48,14 @@ func (c *Client) GetAccountDetails(accountId string) (*accountDetails, error) {
 		return nil, err
 	}
 	return accountDetails, nil
+}
+
+// allows you to get rule settings for all configured rules of the specified account
+func (c *Client) GetAccountRuleSettings(accountId string) (*GetAccountRuleSettings, error) {
+	ruleSettings := &GetAccountRuleSettings{}
+	_, err := c.ClientRequest(Get{}, fmt.Sprintf("/v1/accounts/%s/settings/rules", accountId), nil, "", ruleSettings)
+	if err != nil && !strings.Contains(err.Error(), "404") {
+		return nil, err
+	}
+	return ruleSettings, nil
 }

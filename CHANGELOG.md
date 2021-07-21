@@ -1,3 +1,9 @@
+## 0.3.0
+
+* **New Data Source:** `conformity_apply_profile`
+* add more types for rule settings
+* add bot settings
+
 ## 0.2.0
 
 FEATURES:

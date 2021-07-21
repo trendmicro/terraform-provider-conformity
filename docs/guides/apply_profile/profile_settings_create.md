@@ -23,7 +23,7 @@ Notice the URL, you should be able to get the account ID e.g. https://cloudone.t
 
 Example Usage:
 
-```
+```hcl
 resource "conformity_profile" "profile_settings"{
   name = "cloud-without-rules"
   description = "conformity development - without included"
@@ -56,7 +56,7 @@ To get the profile_id, you just need to navigate to the "Profiles" and look for 
 
 Example Usage:
 
-```terraform
+```hcl
 data "conformity_apply_profile" "profile"{
 
   profile_id = "THE-ID-OF-THE-PROFILE-SETTINGS-THAT-YOU-WANT-TO-APPLY"
