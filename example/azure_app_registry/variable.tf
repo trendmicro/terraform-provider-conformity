@@ -11,3 +11,6 @@ variable "client_secret"{
 variable "tenant_id"{
     default = ""
 }
+variable "end_date"{
+    default = ""
+}

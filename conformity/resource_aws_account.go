@@ -6,6 +6,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
 )
 
 func resourceAwsAccount() *schema.Resource {
@@ -38,6 +39,58 @@ func resourceAwsAccount() *schema.Resource {
 					Type: schema.TypeString,
 				},
 			},
+			"settings": {
+				Type:     schema.TypeSet,
+				Optional: true,
+				MinItems: 0,
+				MaxItems: 1,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"bot": BotSettingsSchema(),
+						"rule": {
+							Type:     schema.TypeList,
+							Optional: true,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"note": {
+										Type:     schema.TypeString,
+										Required: true,
+									},
+									"rule_id": {
+										Type:     schema.TypeString,
+										Required: true,
+									},
+									"settings": {
+										Type:     schema.TypeSet,
+										Required: true,
+										MaxItems: 1,
+										Elem: &schema.Resource{
+											Schema: map[string]*schema.Schema{
+												"enabled": {
+													Type:     schema.TypeBool,
+													Optional: true,
+													Default:  true,
+												},
+												"rule_exists": {
+													Type:     schema.TypeBool,
+													Optional: true,
+												},
+												"exceptions":     ExceptionsSchema(),
+												"extra_settings": ExtraSettingSchema(),
+												"risk_level": {
+													Type:         schema.TypeString,
+													Required:     true,
+													ValidateFunc: validation.StringInSlice([]string{"LOW", "MEDIUM", "HIGH", "VERY_HIGH", "EXTREME"}, false),
+												},
+											},
+										},
+									},
+								},
+							},
+						},
+					},
+				},
+			},
 		},
 		Importer: &schema.ResourceImporter{
 			StateContext: schema.ImportStatePassthroughContext,
@@ -56,6 +109,11 @@ func resourceAwsAccountCreate(ctx context.Context, d *schema.ResourceData, m int
 	payload.Data.Attributes.Access.Keys.RoleArn = d.Get("role_arn").(string)
 	payload.Data.Attributes.Access.Keys.ExternalId = d.Get("external_id").(string)
 	accountId, err := client.CreateAwsAccount(payload)
+	if err != nil {
+		return diag.FromErr(err)
+	}
+
+	err = updateAccountSettings("aws", accountId, d, client)
 	if err != nil {
 		return diag.FromErr(err)
 	}
@@ -92,6 +150,10 @@ func resourceAwsAccountRead(ctx context.Context, d *schema.ResourceData, m inter
 	if err := d.Set("tags", accountAccessAndDetails.AccountDetails.Data.Attributes.Tags); err != nil {
 		return diag.FromErr(err)
 	}
+	settings := flattenAccountSettings(accountAccessAndDetails.AccountDetails.Data.Attributes.Settings, accountAccessAndDetails.RuleSettings.Data.Attributes.Settings.Rules)
+	if err := d.Set("settings", settings); err != nil {
+		return diag.FromErr(err)
+	}
 	return diags
 }
 
@@ -99,6 +161,7 @@ func resourceAwsAccountUpdate(ctx context.Context, d *schema.ResourceData, m int
 	client := m.(*cloudconformity.Client)
 	// Warning or errors can be collected in a slice type
 	var diags diag.Diagnostics
+	accountId := d.Id()
 	if d.HasChange("name") || d.HasChange("environment") || d.HasChange("tags") {
 
 		payload := cloudconformity.AccountPayload{}
@@ -110,8 +173,14 @@ func resourceAwsAccountUpdate(ctx context.Context, d *schema.ResourceData, m int
 			payload.Data.Attributes.Tags = append(payload.Data.Attributes.Tags, tag.(string))
 		}
 
-		accountId := d.Id()
 		_, err := client.UpdateAccount(accountId, payload)
+		if err != nil {
+			return diag.FromErr(err)
+		}
+	}
+
+	if d.HasChange("settings") {
+		err := updateAccountSettings("aws", accountId, d, client)
 		if err != nil {
 			return diag.FromErr(err)
 		}

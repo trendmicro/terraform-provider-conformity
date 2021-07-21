@@ -9,7 +9,7 @@ description: |-
 Allows you to create Report Configs on Cloud Conformity. 
 
 ## Example Usage
-```terraform
+```hcl
 resource "conformity_report_config" "report" {
   // optional | type: string
   // if you want to create account-level report config, uncomment account_id value and provide account ID on the terraform.tfvars
@@ -118,13 +118,14 @@ terraform show -no-color >> main.tf
 
 | Name | Version |
 |------|---------|
-| <a name="requirement_conformity"></a> [conformity](#requirement\_conformity) | 0.1.0 |
+| <a name="requirement_conformity"></a> [conformity](#requirement\_conformity) | 0.3.0 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| <a name="provider_conformity"></a> [conformity](#provider\_conformity) | 0.1.0 |
+| <a name="provider_conformity"></a> [conformity](#provider\_conformity) | 0.3.0 |
+
 
 ## Resources
 
@@ -132,3 +133,10 @@ terraform show -no-color >> main.tf
 |------|------|
 
 | conformity_report_config.report | resource |
+
+## Inputs
+
+| Name | Description | Type | Default | Required |
+|------|-------------|------|---------|:--------:|
+| <a name="input_apikey"></a> [apikey](#input\_apikey) | n/a | `string` | `""` | yes |
+| <a name="input_region"></a> [region](#input\_region) | n/a | `string` | `""` | yes |

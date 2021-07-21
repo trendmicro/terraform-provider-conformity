@@ -9,7 +9,7 @@ description: |-
 Allows you to create Profile Settings on Cloud Conformity. 
 
 ## Example Usage
-```terraform
+```hcl
 # conformity_profile.profile_settings:
 resource "conformity_profile" "profile_settings" {
     description = "conformity development - rules included"
@@ -113,22 +113,22 @@ output "profile" {
      * `multiple` (Bool) - (Optional) Rule specific property.
      * `name` (String) - (Optional) (Keyword) Name of the extra setting.
      * `regions` (Bool) - (Optional) Rule specific property.
-     * `type` (String) - (Required) Rule specific property. Values can be: "multiple-string-values", "multiple-number-values" "multiple-aws-account-values", "choice-multiple-value" "choice-single-value", "single-number-value", "single-string-value", "ttl", "single-value-regex" and "tags".
+     * `type` (String) - (Required) Rule specific property. Values can be: "multiple-string-values", "multiple-number-values" "multiple-aws-account-values", "choice-multiple-value" "choice-single-value", "single-number-value", "single-string-value", "ttl", "single-value-regex", "countries", "multiple-ip-values" and "tags".
      * `value` (String) - (Optional) Customisable value for rules that take on single name/value pairs.
   
   Inside `extra_settings` there can be multiple declaration of `values` set.
   
  - `values` - (Optional) List: (Can be multiple declaration). An array (sometimes of objects) rules that take on a set of of values
-     *  `enabled` (Bool) - (Optional) 
-     *  `label` (String) - (Optional)
-     *  `value` (String) - (Required)
+     *  `enabled` (Bool) - (Optional) Defines if the checkbox is enabled or not.
+     *  `label` (String) - (Optional) Internal key.
+     *  `value` (String) - (Required) Description of the checkbox.
 
-        Note: There is a condition for `type` attribute. If the specified is attribute is `value`, the possible values are "choice-multiple-value" "choice-single-value", "single-number-value" and "single-string-value". If the specified is attribute is `values`, the declaration of it is inside the extra settings which can be a list and the possible values are "multiple-string-values", "multiple-number-values" and "multiple-aws-account-values". You cannot declare both `values` and `value` at the same time.See the table below:
+        Note: There is a condition for `type` attribute. If the specified is attribute is `value`, the possible values are "single-number-value", "single-string-value", "single-value-regex" and "ttl". If the specified is attribute is `values`, the declaration of it is inside the extra settings which can be a list and the possible values are "choice-multiple-value", "choice-single-value", "multiple-string-values", "multiple-number-values", "countries", "multiple-ip-values", "multiple-aws-account-values" and "tags". You cannot declare both `values` and `value` at the same time.See the table below:
 
 | type     | possible value                                                                                                                | Sample declaration                                                                                                                                                                                                                    |
 |----------|-------------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | `value`  | single-number-value, single-string-value, single-value-regex, ttl                                                             | included {     ….     exceptions {       ….     }       extra_settings {		 	….                     type = "ttl"         value = "72"       } }                                                                                           |
-| `values` | choice-multiple-value, choice-single-value, multiple-string-values, multiple-number-values, multiple-aws-account-values, tags | included {     ….     exceptions {       ….     }       extra_settings {		 	….                     type = "choice-multiple-value"           values {             ….           }           values {             ….            }       } } |
+| `values` | choice-multiple-value, choice-single-value, multiple-string-values, multiple-number-values, countries, multiple-ip-values, multiple-aws-account-values, tags | included {     ….     exceptions {       ….     }       extra_settings {		 	….                     type = "choice-multiple-value"           values {             ….           }           values {             ….            }       } } |
 
 ## Import
 Profile Settings - Can import based on the profile_id that can be found under the outputs upon creation or on the link on cloud conformity console.
@@ -158,13 +158,13 @@ terraform show -no-color >> main.tf
 
 | Name | Version |
 |------|---------|
-| <a name="requirement_conformity"></a> [conformity](#requirement\_conformity) | 0.1.0 |
+| <a name="requirement_conformity"></a> [conformity](#requirement\_conformity) | 0.3.0 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| <a name="provider_conformity"></a> [conformity](#provider\_conformity) | 0.1.0 |
+| <a name="provider_conformity"></a> [conformity](#provider\_conformity) | 0.3.0 |
 
 ## Resources
 
@@ -172,3 +172,16 @@ terraform show -no-color >> main.tf
 |------|------|
 
 | conformity_profile.profile_settings | resource |
+
+## Inputs
+
+| Name | Description | Type | Default | Required |
+|------|-------------|------|---------|:--------:|
+| <a name="input_apikey"></a> [apikey](#input\_apikey) | n/a | `string` | `""` | yes |
+| <a name="input_region"></a> [region](#input\_region) | n/a | `string` | `""` | yes |
+
+## Outputs
+
+| Name | Description |
+|------|-------------|
+| <a name="output_profile"></a> [profile](#output\_profile) | n/a |

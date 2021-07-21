@@ -19,7 +19,7 @@ Provides instruction on how to configure Providers to create AWS and Cloud Confo
 1. To configure the provider, make sure that the AWS Access Key, Secret Access Key, and Region where the resources will be created and API Key from Cloud Conformity Account are properly configured on the `terraform.tfvars`.
 
 ## Example Usage for `terraform.tfvars`
-```
+```hcl
 apikey = "CLOUD-CONFORMITY-API-KEY"
 region = "AWS-ACCOUNT-REGION"
 access_key="ACCESS-KEY"
@@ -32,7 +32,7 @@ Note: You can always change the values declared according to your choice.
 terraform {
   required_providers {
     conformity = {
-      version = "0.1.0"
+      version = "0.3.0"
       source  = "trendmicro.com/cloudone/conformity"
     }
       aws = {

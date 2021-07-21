@@ -9,7 +9,7 @@ description: |-
 Allows you to add a SSO user to your organisation. This resource does not apply to users who are part of the Cloud One Platform.
 
 ## Example Usage
-```terraform
+```hcl
 resource "conformity_sso_user" "user" {
 
   first_name = var.first_name
@@ -79,13 +79,13 @@ terraform show -no-color >> main.tf
 
 | Name | Version |
 |------|---------|
-| <a name="requirement_conformity"></a> [conformity](#requirement\_conformity) | 0.1.0 |
+| <a name="requirement_conformity"></a> [conformity](#requirement\_conformity) | 0.3.0 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| <a name="provider_conformity"></a> [conformity](#provider\_conformity) | 0.1.0 |
+| <a name="provider_conformity"></a> [conformity](#provider\_conformity) | 0.3.0 |
 
 ## Resources
 

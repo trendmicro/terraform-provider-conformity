@@ -19,7 +19,7 @@ Provides instruction on how to create Report Configs on Cloud Conformity using T
 
 2. Create `terraform.tfvars` on `example/report_config` folder and add the following values:
 
-```
+```hcl
 apikey = "CLOUD-CONFORMITY-API-KEY"
 region = "AWS-ACCOUNT-REGION"
 
@@ -36,7 +36,7 @@ Note: You can always change the values declared according to your choice.
 
 Example template to guide your configuration:
 
-```
+```hcl
 resource "conformity_report_config" "report" {
   // required | type: string
   account_id = "" 
