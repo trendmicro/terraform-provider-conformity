@@ -35,7 +35,7 @@ Example Path: `/path/terraform-provider-conformity/example/communication_setting
 
 Example template to guide your configuration:
 
-```
+```hcl
 resource "conformity_communication_setting" "comm_setting" {
   
   email {

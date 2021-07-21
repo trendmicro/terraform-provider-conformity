@@ -41,6 +41,9 @@ terraform state show conformity_azure_account.azure
 ```hcl
 terraform show -no-color >> main.tf
 ```
+
+NOTE: This will import ID and Subscription ID of the Azure Cloud Conformity Account.
+
 #### Step 2
 
 ##### Preapare resources and run terraform
@@ -90,14 +93,48 @@ variable "azure_active_directory_id"{
 3. Add some values on the resources such as `environment`, `tags` (if not yet added), and `azure_active_directory_id`. Comment out the `id` resource value. Here's example usage:
 ```
 resource "conformity_azure_account" "azure" {
-    # id                = "random-id-here"
-    name                = "Azure Account name"
-    environment         = var.azure_environment
-    subscription_id     = "3b901120-subscription-id-28ad4cd8"
+    subscription_id = "YOUR-SUBSCRIPTION-ID-FROM-IMPORT"
+    name            = var.azure_name
+    environment     = var.azure_environment
     active_directory_id = var.azure_active_directory_id
-    tags                = ["tag1","tag2"]
+    settings {
+        // implement multiple string values
+        rule {
+            rule_id = "Resources-001"
+            note    = "test note"
+            settings {
+                enabled     = true
+                risk_level  = "MEDIUM"
+                rule_exists = false
+                exceptions {
+                    filter_tags = []
+                    resources   = []
+                    tags        = [
+                        "some_tag",
+                    ]
+                }
+                extra_settings {
+                    name    = "tags"
+                    type    = "multiple-string-values"
+                    values {
+                        value = "Environment"
+                    }
+                    values {
+                        value = "Role"
+                    }
+                    values {
+                        value = "Owner"
+                    }
+                    values {
+                        value = "Name"
+                    }
+                }
+            }
+        }
+    }
 }
 ```
+NOTE: After the import you will notice that two values will be imported which are the `id` and `subscription_id` of the Azure Cloud Conformity Account. To use this resources which is for update purposes only, remove the `id`.
 
 4. Run `terraform apply`
 ```sh

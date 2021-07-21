@@ -9,20 +9,15 @@ description: |-
 Provides a CloudFormation Stack resource from AWS provider.
 
 ## Example Usage
-```terraform
+```hcl
 resource "aws_cloudformation_stack" "cloud-conformity" {
-
   name         = "CloudConformity"
-
   template_url = "https://s3-us-west-2.amazonaws.com/cloudconformity/CloudConformity.template"
-
-  parameters={
+  parameters = {
     AccountId  = "717210094962"
     ExternalId = "${data.conformity_external_id.all.external_id}"
   }
-
   capabilities = ["CAPABILITY_NAMED_IAM"]
-
 }
 ```
 
@@ -50,14 +45,14 @@ terraform import aws_cloudformation_stack.stack CloudConformity
 | Name | Version |
 |------|---------|
 | <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 2.7.0 |
-| <a name="requirement_conformity"></a> [conformity](#requirement\_conformity) | 0.1.0 |
+| <a name="requirement_conformity"></a> [conformity](#requirement\_conformity) | 0.3.0 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
 | <a name="provider_aws"></a> [aws](#provider\_aws) | >= 2.7.0 |
-| <a name="provider_conformity"></a> [conformity](#provider\_conformity) | 0.1.0 |
+| <a name="provider_conformity"></a> [conformity](#provider\_conformity) | 0.3.0 |
 
 ## Resources
 

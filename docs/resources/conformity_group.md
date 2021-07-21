@@ -9,7 +9,7 @@ description: |-
 Provides a Cloud Conformity Group Management.
 
 ## Example Usage
-```terraform
+```hcl
 resource "conformity_group" "group" {
 
     name        = "cloudconformity-group"
@@ -50,13 +50,13 @@ terraform show -no-color >> main.tf
 
 | Name | Version |
 |------|---------|
-| <a name="requirement_conformity"></a> [conformity](#requirement\_conformity) | 0.1.0 |
+| <a name="requirement_conformity"></a> [conformity](#requirement\_conformity) | 0.3.0 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| <a name="provider_conformity"></a> [conformity](#provider\_conformity) | 0.1.0 |
+| <a name="provider_conformity"></a> [conformity](#provider\_conformity) | 0.3.0 |
 
 ## Resources
 

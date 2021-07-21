@@ -19,7 +19,7 @@ Provides instruction on how to configure Providers to Update Azure Cloud Conform
 1. To configure the provider, make sure that region and api key are properly configured on the `terraform.tfvars`.
 
 ## Example Usage for `terraform.tfvars`
-```
+```hcl
 apikey = "CLOUD-CONFORMITY-API-KEY"
 region = "ACCOUNT-REGION"
 azure_environment = "AZURE-ENVIRONMENT-NAME"
@@ -32,7 +32,7 @@ Note: You can always change the values declared according to your choice.
 terraform {
   required_providers {
     conformity = {
-      version = "0.1.0"
+      version = "0.3.0"
       source  = "trendmicro.com/cloudone/conformity"
     }
   }

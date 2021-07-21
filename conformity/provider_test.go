@@ -10,6 +10,7 @@ import (
 	"net/http/httptest"
 	"os"
 	"regexp"
+	"strconv"
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
@@ -25,6 +26,8 @@ var userAccessDetails cloudconformity.UserAccessDetails
 var reportConfigDetails cloudconformity.ReportConfigDetails
 var communicationSetting cloudconformity.CommunicationSettings
 var profileSetting cloudconformity.ProfileSettings
+var botSetting cloudconformity.AccountBotSettingsRequest
+var ruleSetting1, ruleSetting2, ruleSetting3 *cloudconformity.AccountRuleSettings
 var testServer *httptest.Server
 
 func init() {
@@ -59,6 +62,7 @@ func readRequestBody(r *http.Request, payload interface{}) error {
 	if err != nil {
 		return err
 	}
+
 	err = json.Unmarshal(body, &payload)
 	if err != nil {
 		return err
@@ -69,12 +73,14 @@ func readRequestBody(r *http.Request, payload interface{}) error {
 func createConformityMock() (*cloudconformity.Client, *httptest.Server) {
 
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusOK)
+
 		var getOrganizationalExternalId = regexp.MustCompile(`^/v1/organisation/external-id/$`)
 		var postApplyProfile = regexp.MustCompile(`^/v1/profiles/(.*)/apply$`)
 		var postAccount = regexp.MustCompile(`^/v1/accounts/$`)
+		var patchAccountRuleSetting = regexp.MustCompile(`^/v1/accounts/(.*)/settings/rules/(.*)$`)
+		var getAccountRuleSetting = regexp.MustCompile(`^/v1/accounts/(.*)/settings/rules$`)
 		var postAzureAccount = regexp.MustCompile(`^/v1/accounts/azure/$`)
 		var accountDetails = regexp.MustCompile(`^/v1/accounts/(.*)$`)
 		var getAccountAccess = regexp.MustCompile(`^/v1/accounts/(.*)/access$`)
@@ -89,6 +95,8 @@ func createConformityMock() (*cloudconformity.Client, *httptest.Server) {
 		var getCommunicationConfig = regexp.MustCompile(`^/v1/settings/(.*)$`)
 		var postProfile = regexp.MustCompile(`^/v1/profiles/$`)
 		var getProfile = regexp.MustCompile(`^/v1/profiles/(.*)$`)
+		var patchBotSettings = regexp.MustCompile(`^/v1/accounts/(.*)/settings/bot$`)
+
 		switch {
 		case getOrganizationalExternalId.MatchString(r.URL.Path):
 			w.Write([]byte(`{ "data": { "type": "external-ids", "id": "3ff84b20-0f4c-11eb-a7b7-7d9b3c0e866e" } }`))
@@ -114,7 +122,7 @@ func createConformityMock() (*cloudconformity.Client, *httptest.Server) {
 				"configuration": {
 				"externalId": "test-external-id",
 				"roleArn": "test-arn" } } }`))
-		case accountDetails.MatchString(r.URL.Path) && r.Method == "GET":
+		case accountDetails.MatchString(r.URL.Path) && !getAccountRuleSetting.MatchString(r.URL.Path) && r.Method == "GET":
 			tags, _ := json.Marshal(accountPayload.Data.Attributes.Tags)
 			w.Write([]byte(`{
 				"data": {	
@@ -124,6 +132,17 @@ func createConformityMock() (*cloudconformity.Client, *httptest.Server) {
 				"name": "` + accountPayload.Data.Attributes.Name + `",
 				"environment": "` + accountPayload.Data.Attributes.Environment + `", 
 				"tags": ` + string(tags) + `,
+				"settings": {
+					"bot": {
+						"disabled": false,
+						"disabledUntil": 0,
+						"delay": ` + strconv.Itoa(botSetting.Data.Attributes.Settings.Bot.Delay) + `,
+						"disabledRegions": {
+							"ap-east-1": true,
+							"ap-south-1": true
+						}
+					}
+				},
 				"cloud-type": "azure",
 				"cloud-data": {
 				"azure": {
@@ -134,7 +153,7 @@ func createConformityMock() (*cloudconformity.Client, *httptest.Server) {
 			w.Write([]byte(`{
 				"meta": {
 				"status": "sent" } }`))
-		case accountDetails.MatchString(r.URL.Path) && r.Method == "PATCH":
+		case accountDetails.MatchString(r.URL.Path) && !patchBotSettings.MatchString(r.URL.Path) && !patchAccountRuleSetting.MatchString(r.URL.Path) && r.Method == "PATCH":
 			_ = readRequestBody(r, &accountPayload)
 
 			w.Write([]byte(`{
@@ -285,6 +304,9 @@ func createConformityMock() (*cloudconformity.Client, *httptest.Server) {
 					"id": "RTM-002",
 					"attributes": {
 					  "enabled": true,
+					  "exceptions": {
+						"tags": ["some_tag"]
+					  },
 					  "provider": "aws",
 					  "extraSettings": [
 						{
@@ -343,8 +365,137 @@ func createConformityMock() (*cloudconformity.Client, *httptest.Server) {
 			w.Write([]byte(`{
 				"meta": {
 				"status": "deleted" } }`))
-		}
 
+		case patchBotSettings.MatchString(r.URL.Path) && r.Method == "PATCH":
+			_ = readRequestBody(r, &botSetting)
+			w.Write([]byte(`{
+					"data": [
+					  {
+						"type": "accounts",
+						"id": "AgA12vIwb"
+					  }
+					]
+				  }`))
+		case patchAccountRuleSetting.MatchString(r.URL.Path) && r.Method == "PATCH":
+
+			if ruleSetting1 == nil {
+				_ = readRequestBody(r, &ruleSetting1)
+			} else if ruleSetting2 == nil {
+				_ = readRequestBody(r, &ruleSetting2)
+			} else {
+				_ = readRequestBody(r, &ruleSetting3)
+			}
+
+			w.Write([]byte(`{"data": {"type": "accounts","id": "AgA12vIwb"}}`))
+		case getAccountRuleSetting.MatchString(r.URL.Path):
+			rule1 := `null`
+			rule2 := `null`
+			rule3 := `null`
+
+			if ruleSetting1 != nil {
+				values := ruleSetting1.Data.Attributes.RuleSetting.ExtraSettings[0].Values.([]interface{})
+				values1 := values[0].(map[string]interface{})
+				values2 := values[1].(map[string]interface{})
+				rule1 = `
+				{
+					"riskLevel": "MEDIUM",
+					"id": "` + ruleSetting1.Data.Attributes.RuleSetting.Id + `",
+					"exceptions": {
+						"tags": [
+							"` + ruleSetting1.Data.Attributes.RuleSetting.Exceptions.Tags[0] + `"
+						]
+					},
+					"extraSettings": [{
+						"name": "` + ruleSetting1.Data.Attributes.RuleSetting.ExtraSettings[0].Name + `",
+						"countries": true,
+						"type": "` + ruleSetting1.Data.Attributes.RuleSetting.ExtraSettings[0].Type + `",
+						"value": null,
+							"values": [{
+									"value": "` + values1["value"].(string) + `",
+									"label": "` + values1["label"].(string) + `",
+									"enabled": true
+								},
+								{
+									"value": "` + values2["value"].(string) + `",
+									"label": "` + values2["label"].(string) + `",
+									"enabled": true
+								}
+							]
+					}],
+					"provider": "aws",
+					"enabled": false
+				}
+				`
+			}
+			if ruleSetting2 != nil {
+				rule2 = `
+				{
+					"ruleExists": false,
+					"riskLevel": "MEDIUM",
+					"extraSettings": [{
+						"name": "patterns",
+						"type": "multiple-object-values",
+						"valueKeys": ["eventName", "eventSource", "userIdentityType"],
+						"values": [{
+							"value": {
+								"eventSource": "^(IAM).*",
+								"eventName": "^(iam.amazonaws.com)",
+								"userIdentityType": "^(Delete).*"
+							}
+						}]
+					}],
+					"provider": "aws",
+					"id": "RTM-011",
+					"enabled": true,
+					"exceptions": null
+				}
+				`
+			}
+			if ruleSetting3 != nil {
+
+				rule3 = `
+				{
+					"ruleExists": false,
+					"riskLevel": "LOW",
+					"extraSettings": [{
+						"name": "SpecificVPCToSpecificGatewayMapping",
+						"type": "multiple-vpc-gateway-mappings",
+						"mappings": [{
+							"values": [{
+								"type": "multiple-string-values",
+								"name": "gatewayIds",
+								"values": [{
+									"value": "nat-001"
+								}, {
+									"value": "nat-002"
+								}]
+							}, {
+								"type": "single-string-value",
+								"name": "vpcId",
+								"value": "vpc-001"
+							}]
+						}]
+					}],
+					"provider": "aws",
+					"id": "VPC-013",
+					"enabled": true,
+					"exceptions": null
+				}
+				`
+
+			}
+			w.Write([]byte(`
+					{"data": 
+						{"type": 
+							"accounts","id": "H19NxMi5-",
+							"attributes": 
+							{"settings": 
+								{"rules": [` + rule1 + `,` + rule2 + `,` + rule3 + `]}
+							}		
+						}
+					}`))
+
+		}
 	}))
 	// we do not Close() the server, it will be kept alive until all tests are finished
 	client := cloudconformity.Client{Region: "TEST-REGION", Apikey: "TEST-APIKEY", Url: server.URL, HttpClient: server.Client()}

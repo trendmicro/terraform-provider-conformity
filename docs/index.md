@@ -23,7 +23,7 @@ Cloud Conformity Provider Section
 terraform {
   required_providers {
     conformity = {
-      version = "0.1.0"
+      version = "0.3.0"
       source  = "trendmicro.com/cloudone/conformity"
     }
   }
@@ -59,7 +59,7 @@ provider "aws" {
 terraform {
   required_providers {
     conformity = {
-      version = "0.1.0"
+      version = "0.3.0"
       source  = "trendmicro.com/cloudone/conformity"
     }
       aws = {

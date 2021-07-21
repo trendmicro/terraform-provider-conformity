@@ -16,11 +16,17 @@ Provides instruction on how to create or add AWS account on Cloud Conformity usi
 
 ##### Terraform Configuration
 
-1. To use Cloud Conformity and its resources, add the AWS Access Key, Secret Access Key, and Region where the resources will be created and API Key from Cloud Conformity Account to the `terraform.tfvars`. 
-
-2. Create `terraform.tfvars` on `example/aws` folder and add the following values:
-
+1. Create terraform `cloud_formation.tf` on `example/aws` folder for Cloudformation module, create the file if not existing and add the following values:
+```hcl
+module "azure_app_registry" {
+  source      = "../"
+}
 ```
+2. To use Conformity and its resources, add the AWS Access Key, Secret Access Key, and Region where the resources will be created and API Key from Cloud Conformity Account to the `terraform.tfvars`. 
+
+3. Create `terraform.tfvars` on `example/aws` folder and add the following values:
+
+```hcl
 apikey = "CLOUD-CONFORMITY-API-KEY"
 region = "AWS-ACCOUNT-REGION"
 access_key="ACCESS-KEY"

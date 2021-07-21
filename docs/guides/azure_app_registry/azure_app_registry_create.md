@@ -48,9 +48,9 @@ provider "azurerm" {
   tenant_id       = var.tenant_id
 }
 
-3. Go to `terraform.tfvars` on `example/azure_app_registry` folder, create the file if not existing and add the following values:
+3. Go to `terraform.tfvars` on `/example/azure_app_registry` folder, create the file if not existing and add the following values:
 
-```
+```hcl
   subscription_id = "SUBSCRIPTION-ID"
   client_id       = "CLIENT_ID"
   client_secret   = "CLIENT_SECRET"
@@ -63,13 +63,19 @@ Note: You can always change the values declared according to your choice.
 
 #### Step 1
 
-##### Run Terraform
+##### Run terraform app registration module.
 
-#### 1. Navigate to project directory:
-```sh
-cd /path/terraform-provider-conformity/example/azure_app_registry
+#### 1. Create terraform `main.tf`:
+
+Create terraform `main.tf` on `example/azure_app_registry` folder, create the file if not existing and add the following values:
+  
+```hcl
+module "azure_app_registry" {
+  source      = "../"
+}
 ```
-#### 2. Now, you can run terraform code:
+
+#### 2. Now, you can run terraform code on `example/azure_app_registry` directory:
 ```sh
 terraform init
 terraform plan
@@ -79,23 +85,15 @@ terraform apply
 a. You can view outputs found on the terminal.
 b. To view `azuread_application_password`, run
 ```sh
-terraform output azuread_application_password
+terraform output app_registration_key
 ```
 c. Save the outputs especially the `active_directory_tenant_id`, `app_registration_application_id` and the `app_registration_key` output from the previous number (Step 2, Number 3, Letter B).
 
 #### Step 2
 
-##### Grant Admin 
-1. Log into Azure console.
-2. Select Active Directory.
-3. Select App registrations.
-4. Look for App registration called `Conformity Azure Access`.
-5. Select API permissions.
-6. Click `Grant admin consent for [AD name]` to grant admin consent for all the permissions.
-
-#### Step 3
-
 ##### Add Azure Account on Cloud Conformity Console
 1. Go to Cloud Conformity Console.
 2. To allow Conformity access to your Azure Subscriptions, you will use the `active_directory_tenant_id`, `app_registration_application_id` and the `app_registration_key` created in the previous setup. Configure it according to the value needed. This will allow the Conformity rule engine to run Rule checks against Subscriptions within your Azure Active Directory.
 3. Add the Subscription.
+
+Note: You can also create the pre-requisite for Azure Cloud Conformity Account creation manually without using this terraform module. Also, you can check what resources this module is creating. Please refer to this link https://www.cloudconformity.com/help/add-cloud-account/add-an-azure-account.html#add-an-azure-active-directory .
