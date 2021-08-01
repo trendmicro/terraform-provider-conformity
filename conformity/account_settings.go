@@ -8,9 +8,13 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
-func flattenAccountSettings(settings cloudconformity.AccountSettings, rule []cloudconformity.GetRuleSettings) []interface{} {
+func flattenAccountSettings(settings *cloudconformity.AccountSettings, rule []cloudconformity.GetRuleSettings) []interface{} {
 
 	c := make(map[string]interface{})
+
+	if settings == nil || (settings.Bot == nil && rule == nil) {
+		return nil
+	}
 
 	c["bot"] = flattenBotSettings(settings.Bot)
 	c["rule"] = flattenRuleSettings(rule)
@@ -25,19 +29,21 @@ func flattenRuleSettings(rules []cloudconformity.GetRuleSettings) []interface{} 
 	for i, rule := range rules {
 		r := make(map[string]interface{})
 		r["rule_id"] = rule.Id
-		r["note"] = ""
 		r["settings"] = flattenSettings(rule)
 		rs[i] = r
 	}
 
 	return rs
 }
-func flattenBotSettings(bot cloudconformity.AccountBot) []interface{} {
+func flattenBotSettings(bot *cloudconformity.AccountBot) []interface{} {
 
 	c := make(map[string]interface{})
+	if bot == nil || bot.Disabled == nil || bot.Delay == nil {
+		return make([]interface{}, 0)
+	}
 
-	c["disabled"] = bot.Disabled
-	c["delay"] = bot.Delay
+	c["disabled"] = *bot.Disabled
+	c["delay"] = *bot.Delay
 	if regions := flattenBotDisabledRegions(bot.DisabledRegions); len(regions) > 0 {
 		c["disabled_regions"] = regions
 	}
@@ -45,9 +51,13 @@ func flattenBotSettings(bot cloudconformity.AccountBot) []interface{} {
 }
 
 // extract a list of regions from the struct which are disabled
-func flattenBotDisabledRegions(regions cloudconformity.BotDisabledRegions) []string {
+func flattenBotDisabledRegions(regions *cloudconformity.BotDisabledRegions) []string {
 	regionList := []string{}
-	v := reflect.ValueOf(regions)
+
+	if regions == nil {
+		return regionList
+	}
+	v := reflect.ValueOf(regions).Elem()
 	t := v.Type()
 
 	for i := 0; i < v.NumField(); i++ {
@@ -244,16 +254,19 @@ func flattenMappingValue(val []interface{}) []interface{} {
 }
 func updateAccountSettings(provider string, accountId string, d *schema.ResourceData, client *cloudconformity.Client) error {
 	if i, ok := d.GetOk("settings"); ok && len(i.(*schema.Set).List()) > 0 {
-
 		settings := i.(*schema.Set).List()[0].(map[string]interface{})
 
 		if v, ok := settings["bot"]; ok && len(v.(*schema.Set).List()) > 0 {
 			bot := v.(*schema.Set).List()[0].(map[string]interface{})
 
 			botRequest := cloudconformity.AccountBotSettingsRequest{}
+			botRequest.Data.Attributes.Settings.Bot = &cloudconformity.AccountBot{}
 			botRequest.Data.Type = "accounts"
-			botRequest.Data.Attributes.Settings.Bot.Delay = bot["delay"].(int)
-			botRequest.Data.Attributes.Settings.Bot.Disabled = bot["disabled"].(bool)
+			delay := bot["delay"].(int)
+			disabled := bot["disabled"].(bool)
+
+			botRequest.Data.Attributes.Settings.Bot.Delay = &delay
+			botRequest.Data.Attributes.Settings.Bot.Disabled = &disabled
 			botRequest.Data.Attributes.Settings.Bot.DisabledRegions = processBotDisabledRegions(bot["disabled_regions"].(*schema.Set).List())
 
 			_, err := client.UpdateAccountBotSettings(accountId, botRequest)
@@ -270,7 +283,7 @@ func updateAccountSettings(provider string, accountId string, d *schema.Resource
 				ruleRequest := &cloudconformity.AccountRuleSettings{}
 
 				ruleId := rule["rule_id"].(string)
-				ruleRequest.Data.Attributes.Note = rule["note"].(string)
+				ruleRequest.Data.Attributes.Note = "Note automatically added by provider"
 
 				ruleRequest.Data.Attributes.RuleSetting = processRuleSetting(provider, rule["settings"].(*schema.Set).List(), ruleId)
 				_, err := client.UpdateAccountRuleSettings(accountId, ruleId, ruleRequest)
@@ -286,13 +299,13 @@ func updateAccountSettings(provider string, accountId string, d *schema.Resource
 	return nil
 }
 
-func processBotDisabledRegions(list []interface{}) cloudconformity.BotDisabledRegions {
-	regions := cloudconformity.BotDisabledRegions{}
+func processBotDisabledRegions(list []interface{}) *cloudconformity.BotDisabledRegions {
+	regions := &cloudconformity.BotDisabledRegions{}
 
 	for _, v := range list {
 		region, ok := v.(string)
 		if ok && region != "" {
-			setDisabledRegion(&regions, region)
+			setDisabledRegion(regions, region)
 		}
 	}
 	return regions

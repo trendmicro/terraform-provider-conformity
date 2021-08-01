@@ -101,7 +101,6 @@ resource "conformity_azure_account" "azure" {
         // implement multiple string values
         rule {
             rule_id = "Resources-001"
-            note    = "test note"
             settings {
                 enabled     = true
                 risk_level  = "MEDIUM"

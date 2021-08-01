@@ -13,13 +13,12 @@ Provides a Cloud Conformity Account.
 resource "conformity_aws_account" "aws" {
     name        = "aws-conformity"
     environment = "development"
-    role_arn    = "arn:aws:iam::301854035555:role/CloudConformity"
+    role_arn    = "arn:aws:iam::223334445555:role/CloudConformity"
     external_id = data.conformity_external_id.external.external_id
     settings {
         // implement value
         rule {
             rule_id = "RDS-018"
-            note = "test note"
             settings {
                 enabled     = true
                 risk_level  = "MEDIUM"
@@ -39,7 +38,6 @@ resource "conformity_aws_account" "aws" {
         // implement multiple values
         rule {
             rule_id = "SNS-002"
-            note = "test note"
             settings {
                 enabled     = true
                 risk_level  = "MEDIUM"
@@ -68,7 +66,6 @@ resource "conformity_aws_account" "aws" {
         // implement regions
         rule {
             rule_id = "RTM-008"
-            note = "test note"
             settings {
                 enabled     = true
                 risk_level  = "MEDIUM"
@@ -88,7 +85,6 @@ resource "conformity_aws_account" "aws" {
         // implement multiple_object_values
         rule {
             rule_id = "RTM-011"
-            note = "test note"
             settings {
                 enabled     = true
                 risk_level  = "MEDIUM"
@@ -107,7 +103,6 @@ resource "conformity_aws_account" "aws" {
         // implement mappings
         rule {
             rule_id = "VPC-013"
-            note = "test note"
             settings {
                 enabled     = true
                 risk_level  = "LOW"
@@ -166,7 +161,6 @@ resource "conformity_aws_account" "aws" {
   Inside `settings` there can be multiple `rule` set.
 
  - `rule` - (Optional) List: (Can be multiple declaration)
-     * `note` (String) - (Required) A detailed message regarding the reason for this rule configuration.
      * `rule_id` (String) - (Optional) - Rule ID, same as the one provided in the endpoint.
   
   Inside `settings` under `rule` set, there can be one `settings` set. 
@@ -258,15 +252,15 @@ terraform show -no-color >> main.tf
 
 | Name | Version |
 |------|---------|
-| <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 2.7.0 |
-| <a name="requirement_conformity"></a> [conformity](#requirement\_conformity) | 0.3.0 |
+| <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 3.44.0 |
+| <a name="requirement_conformity"></a> [conformity](#requirement\_conformity) | 0.3.1 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| <a name="provider_aws"></a> [aws](#provider\_aws) | >= 2.7.0 |
-| <a name="provider_conformity"></a> [conformity](#provider\_conformity) | 0.3.0 |
+| <a name="provider_aws"></a> [aws](#provider\_aws) | >= 3.44.0 |
+| <a name="provider_conformity"></a> [conformity](#provider\_conformity) | 0.3.1 |
 
 ## Resources
 

@@ -12,7 +12,7 @@ func (c *Client) GetAccount(accountId string) (*accountAccessAndDetails, error) 
 	if err != nil {
 		return nil, err
 	}
-	AccessSettings, err := c.GetAccountAccessSettings(accountId)
+	accessSettings, err := c.GetAccountAccessSettings(accountId)
 	if err != nil {
 		return nil, err
 	}
@@ -20,8 +20,9 @@ func (c *Client) GetAccount(accountId string) (*accountAccessAndDetails, error) 
 	if err != nil {
 		return nil, err
 	}
+
 	accountAccessAndDetails.AccountDetails = *accountDetails
-	accountAccessAndDetails.AccessSettings = *AccessSettings
+	accountAccessAndDetails.AccessSettings = *accessSettings
 	accountAccessAndDetails.RuleSettings = *ruleSettings
 
 	return accountAccessAndDetails, nil

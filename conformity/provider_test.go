@@ -136,7 +136,7 @@ func createConformityMock() (*cloudconformity.Client, *httptest.Server) {
 					"bot": {
 						"disabled": false,
 						"disabledUntil": 0,
-						"delay": ` + strconv.Itoa(botSetting.Data.Attributes.Settings.Bot.Delay) + `,
+						"delay": ` + strconv.Itoa(*botSetting.Data.Attributes.Settings.Bot.Delay) + `,
 						"disabledRegions": {
 							"ap-east-1": true,
 							"ap-south-1": true

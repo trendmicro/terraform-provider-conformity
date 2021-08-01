@@ -94,7 +94,6 @@ func testAccCheckAzureAccountConfigBasic(name, environment, subscriptionId, acti
 			}
 			rule {
 				rule_id = "SecurityCenter-020"
-				note = "test"
 				settings {
 					enabled     = true
 					risk_level  = "MEDIUM"
@@ -142,7 +141,6 @@ func testAccCheckAzureAccountConfigUpdate(name, environment, subscriptionId, act
 			}
 			rule {
 				rule_id = "SecurityCenter-020"
-				note = "test"
 				settings {
 					enabled     = true
 					risk_level  = "MEDIUM"

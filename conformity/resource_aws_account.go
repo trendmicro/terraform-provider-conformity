@@ -52,10 +52,6 @@ func resourceAwsAccount() *schema.Resource {
 							Optional: true,
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
-									"note": {
-										Type:     schema.TypeString,
-										Required: true,
-									},
 									"rule_id": {
 										Type:     schema.TypeString,
 										Required: true,
@@ -106,8 +102,12 @@ func resourceAwsAccountCreate(ctx context.Context, d *schema.ResourceData, m int
 	payload := cloudconformity.AccountPayload{}
 	payload.Data.Attributes.Name = d.Get("name").(string)
 	payload.Data.Attributes.Environment = d.Get("environment").(string)
-	payload.Data.Attributes.Access.Keys.RoleArn = d.Get("role_arn").(string)
-	payload.Data.Attributes.Access.Keys.ExternalId = d.Get("external_id").(string)
+	keys := &cloudconformity.AccountKeys{
+		RoleArn:    d.Get("role_arn").(string),
+		ExternalId: d.Get("external_id").(string),
+	}
+	payload.Data.Attributes.Access.Keys = keys
+
 	accountId, err := client.CreateAwsAccount(payload)
 	if err != nil {
 		return diag.FromErr(err)
