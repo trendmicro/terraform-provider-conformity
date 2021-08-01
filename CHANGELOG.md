@@ -1,3 +1,8 @@
+## 0.3.1
+
+* fix create azure account
+* improve bot & rule settings on update
+
 ## 0.3.0
 
 * **New Data Source:** `conformity_apply_profile`
