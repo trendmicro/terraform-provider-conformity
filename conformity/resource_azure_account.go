@@ -52,10 +52,6 @@ func resourceAzureAccount() *schema.Resource {
 							Optional: true,
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
-									"note": {
-										Type:     schema.TypeString,
-										Required: true,
-									},
 									"rule_id": {
 										Type:     schema.TypeString,
 										Required: true,
@@ -105,10 +101,12 @@ func resourceAzureAccountCreate(ctx context.Context, d *schema.ResourceData, m i
 
 	var diags diag.Diagnostics
 	payload := cloudconformity.AccountPayload{}
+	payload.Data.Type = "account"
 	payload.Data.Attributes.Name = d.Get("name").(string)
 	payload.Data.Attributes.Environment = d.Get("environment").(string)
 	payload.Data.Attributes.Access.SubscriptionId = d.Get("subscription_id").(string)
 	payload.Data.Attributes.Access.ActiveDirectoryId = d.Get("active_directory_id").(string)
+
 	accountId, err := client.CreateAzureAccount(payload)
 	if err != nil {
 		return diag.FromErr(err)

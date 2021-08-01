@@ -115,7 +115,6 @@ func testAccCheckAwsAccountConfigBasic(name, environment, roleARN, externalID st
 			// implement multiple values
 			rule {
 				rule_id = "RTM-005"
-				note = "test"
 				settings {
 					enabled     = true
 					risk_level  = "MEDIUM"
@@ -140,7 +139,6 @@ func testAccCheckAwsAccountConfigBasic(name, environment, roleARN, externalID st
 			// implement multiple-object-values
 			rule {
 				rule_id = "RTM-011"
-				note = "test note"
 				settings {
 					enabled     = true
 					risk_level  = "MEDIUM"
@@ -159,7 +157,6 @@ func testAccCheckAwsAccountConfigBasic(name, environment, roleARN, externalID st
 			// implement mappings
 			rule {
 				rule_id = "VPC-013"
-				note = "test note"
 				settings {
 					enabled     = true
 					risk_level  = "LOW"
@@ -213,7 +210,6 @@ func testAccCheckAwsAccountConfigUpdate(name, environment, roleARN, externalID s
 			}
 			rule {
 				rule_id = "RTM-005"
-				note = "test"
 				settings {
 					enabled     = true
 					risk_level  = "MEDIUM"
@@ -237,7 +233,6 @@ func testAccCheckAwsAccountConfigUpdate(name, environment, roleARN, externalID s
 			}
 			rule {
 				rule_id = "VPC-013"
-				note = "test note"
 				settings {
 					enabled     = true
 					risk_level  = "LOW"
@@ -298,10 +293,10 @@ func testAccCheckAwsAccountDestroy(s *terraform.State) error {
 }
 
 func TestFlattenBotDisabledRegions(t *testing.T) {
-	res := flattenBotDisabledRegions(cloudconformity.BotDisabledRegions{})
+	res := flattenBotDisabledRegions(&cloudconformity.BotDisabledRegions{})
 	assert.Equal(t, 0, len(res))
 
-	res = flattenBotDisabledRegions(cloudconformity.BotDisabledRegions{
+	res = flattenBotDisabledRegions(&cloudconformity.BotDisabledRegions{
 		EuSouth1: true,
 	})
 	assert.Equal(t, 1, len(res))

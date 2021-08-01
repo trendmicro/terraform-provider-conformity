@@ -12,21 +12,21 @@ type apiKeyList struct {
 		ID   string `json:"id"`
 	}
 }
-type accountKeys struct {
+type AccountKeys struct {
 	RoleArn    string `json:"roleArn"`
 	ExternalId string `json:"externalId"`
 }
 type accountAccess struct {
-	Keys              accountKeys `json:"keys,omitempty"`
-	Type              string      `json:"type,omitempty"`
-	SubscriptionId    string      `json:"subscriptionId,omitempty"`
-	ActiveDirectoryId string      `json:"activeDirectoryId,omitempty"`
+	Keys              *AccountKeys `json:"keys,omitempty"`
+	Type              string       `json:"type,omitempty"`
+	SubscriptionId    string       `json:"subscriptionId,omitempty"`
+	ActiveDirectoryId string       `json:"activeDirectoryId,omitempty"`
 }
-type accountConfiguration struct {
+type AccountConfiguration struct {
 	ExternalId string `json:"externalId,omitempty"`
 	RoleArn    string `json:"roleArn,omitempty"`
 }
-type cloudData struct {
+type CloudData struct {
 	Azure struct {
 		SubscriptionId string `json:"subscriptionId"`
 	} `json:"azure"`
@@ -134,9 +134,9 @@ type BotDisabledRegions struct {
 }
 
 type AccountBot struct {
-	Disabled        bool               `json:"disabled"`
-	Delay           int                `json:"delay,omitempty"`
-	DisabledRegions BotDisabledRegions `json:"disabledRegions,omitempty"`
+	Disabled        *bool               `json:"disabled"`
+	Delay           *int                `json:"delay,omitempty"`
+	DisabledRegions *BotDisabledRegions `json:"disabledRegions,omitempty"`
 }
 
 type AccountBotSettingsData struct {
@@ -158,18 +158,18 @@ type AccountBotSettingsRequest struct {
 }
 
 type AccountSettings struct {
-	Bot AccountBot `json:"bot,omitempty"`
+	Bot *AccountBot `json:"bot,omitempty"`
 }
 
 type accountAtrributes struct {
-	Name          string               `json:"name"`
-	Environment   string               `json:"environment"`
-	Tags          []string             `json:"tags"`
-	Access        accountAccess        `json:"access,omitempty"`
-	Configuration accountConfiguration `json:"configuration,omitempty"`
-	CoudType      string               `json:"cloud-type,omitempty"`
-	CloudData     cloudData            `json:"cloud-data,omitempty"`
-	Settings      AccountSettings      `json:"settings,omitempty"`
+	Name          string                `json:"name"`
+	Environment   string                `json:"environment"`
+	Tags          []string              `json:"tags"`
+	Access        accountAccess         `json:"access,omitempty"`
+	Configuration *AccountConfiguration `json:"configuration,omitempty"`
+	CoudType      string                `json:"cloud-type,omitempty"`
+	CloudData     *CloudData            `json:"cloud-data,omitempty"`
+	Settings      *AccountSettings      `json:"settings,omitempty"`
 }
 
 type accountData struct {

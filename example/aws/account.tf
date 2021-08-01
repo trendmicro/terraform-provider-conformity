@@ -3,11 +3,20 @@ resource "conformity_aws_account" "aws" {
     environment = "development"
     role_arn    = "${aws_cloudformation_stack.cloud-conformity.outputs["CloudConformityRoleArn"]}"
     external_id = data.conformity_external_id.external.external_id
+    tags = ["development"]
     settings {
+          rule {
+              rule_id = "S3-021"
+
+              settings {
+                  enabled     = false
+                  risk_level  = "HIGH"
+                  rule_exists = false
+                }
+            }
         // implement value
         rule {
             rule_id = "RDS-018"
-            note = "test note"
             settings {
                 enabled     = true
                 risk_level  = "MEDIUM"
@@ -27,7 +36,6 @@ resource "conformity_aws_account" "aws" {
         // implement multiple values
         rule {
             rule_id = "SNS-002"
-            note = "test note"
             settings {
                 enabled     = true
                 risk_level  = "MEDIUM"
@@ -56,7 +64,6 @@ resource "conformity_aws_account" "aws" {
         // implement regions
         rule {
             rule_id = "RTM-008"
-            note = "test note"
             settings {
                 enabled     = true
                 risk_level  = "MEDIUM"
@@ -76,7 +83,6 @@ resource "conformity_aws_account" "aws" {
         // implement multiple_object_values
         rule {
             rule_id = "RTM-011"
-            note = "test note"
             settings {
                 enabled     = true
                 risk_level  = "MEDIUM"
@@ -95,7 +101,6 @@ resource "conformity_aws_account" "aws" {
         // implement mappings
         rule {
             rule_id = "VPC-013"
-            note = "test note"
             settings {
                 enabled     = true
                 risk_level  = "LOW"
