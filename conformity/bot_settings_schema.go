@@ -20,7 +20,7 @@ func BotSettingsSchema() *schema.Schema {
 				"delay": {
 					Type:     schema.TypeInt,
 					Optional: true,
-					Default:  10,
+					Default:  1,
 				},
 				"disabled_regions": {
 					Type:     schema.TypeSet,
