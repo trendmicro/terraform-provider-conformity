@@ -1,5 +1,5 @@
 ---
-page_title: "Configure Profile Settings Provider - cloudconformity_terraform"
+page_title: "Configure Profile Settings Provider"
 subcategory: "Profile Settings"
 description: |-
   Provides instruction on how to configure Providers for Profile Settings resources using Terraform.
@@ -29,7 +29,7 @@ Note: You can always change the values declared according to your choice.
 terraform {
   required_providers {
     conformity = {
-      version = "0.3.1"
+      version = "0.3.2"
       source  = "trendmicro.com/cloudone/conformity"
     }
   }

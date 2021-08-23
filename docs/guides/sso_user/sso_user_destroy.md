@@ -1,5 +1,5 @@
 ---
-page_title: "Destroy Invite SSO User To Your Organisation - cloudconformity_terraform"
+page_title: "Destroy Invite SSO User To Your Organisation"
 subcategory: "Users"
 description: |-
   Provides instruction on how to destroy invite SSO user to your organisation using Terraform.

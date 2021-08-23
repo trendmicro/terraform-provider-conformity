@@ -1,5 +1,5 @@
 ---
-page_title: "Update Account Guide - cloudconformity_terraform"
+page_title: "Update Account Guide"
 subcategory: "Accounts"
 description: |-
   Provides instruction on how to update Azure Cloud Conformity account name or environment name using Terraform.

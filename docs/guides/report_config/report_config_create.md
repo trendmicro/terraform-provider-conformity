@@ -1,5 +1,5 @@
 ---
-page_title: "Create Report Configs Guide - cloudconformity_terraform"
+page_title: "Create Report Configs Guide"
 subcategory: "Report Configs"
 description: |-
   Provides instruction on how to create Report Configs on Cloud Conformity using Terraform.

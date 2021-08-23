@@ -1,5 +1,5 @@
 ---
-page_title: "conformity_communication_setting Resource - cloudconformity_terraform"
+page_title: "conformity_communication_setting Resource"
 subcategory: "Communication Setting"
 description: |-
   Allows you to create Communication Setting on Cloud Conformity. 
@@ -94,7 +94,7 @@ output "email_setting" {
      * `security_token` (String) - (Optional) webhook security token.
      * `url` (String) - (Required) Webhook url.
 
-Other attributes:
+Other arguments:
  - `filter` - (Optional) Max number 1. List:
      * `categories` (Array of String) - (Optional) An array of category (AWS well-architected framework category) strings from the following:
           security | cost-optimisation | reliability | performance-efficiency | operational-excellence
@@ -118,6 +118,19 @@ Other attributes:
 Note: If you did not define organisation, it will automatically create the communication settings on organisational level.
      * `id` (String) - (Optional) required if organisation is defined.
 
+## Attributes Reference
+
+In addition to all arguments above, the following attributes are exported:
+
+ - `id` - The ID of the Communication Setting in Conformity managed by this resource
+
+Example usage on the template:
+
+```hcl
+setting {
+    id = conformity_communication_setting.email_setting.id
+}
+```
 
 ## Import
 Comunication Settings - Can import based on the resource_id that can be found under the outputs upon creation or inspect element.
@@ -146,30 +159,10 @@ terraform show -no-color >> main.tf
 
 | Name | Version |
 |------|---------|
-| <a name="requirement_conformity"></a> [conformity](#requirement\_conformity) | 0.3.1 |
+| <a name="requirement_conformity"></a> [conformity](#requirement\_conformity) | 0.3.2 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| <a name="provider_conformity"></a> [conformity](#provider\_conformity) | 0.3.1 |
-
-## Resources
-
-| Name | Type |
-|------|------|
-
-| conformity_communication_setting.setting | resource |
-
-## Inputs
-
-| Name | Description | Type | Default | Required |
-|------|-------------|------|---------|:--------:|
-| <a name="input_apikey"></a> [apikey](#input\_apikey) | n/a | `string` | `""` | yes |
-| <a name="input_region"></a> [region](#input\_region) | n/a | `string` | `""` | yes |
-
-## Outputs
-
-| Name | Description |
-|------|-------------|
-| <a name="output_setting"></a> [_setting](#output\_setting) | n/a |
+| <a name="provider_conformity"></a> [conformity](#provider\_conformity) | 0.3.2 |

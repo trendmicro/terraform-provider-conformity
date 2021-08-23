@@ -1,5 +1,5 @@
 ---
-page_title: "Apply profile to accounts Guide - cloudconformity_terraform"
+page_title: "Apply profile to accounts Guide"
 subcategory: "Profile Settings"
 description: |-
   Provides overview on how apply profile to accounts on Cloud Conformity using Terraform.

@@ -1,5 +1,5 @@
 resource "conformity_azure_account" "azure" {
-    subscription_id = "YOUR-SUBSCRIPTION-ID-FROM-IMPORT"
+    subscription_id = var.azure_subscription_id
     name            = var.azure_name
     environment     = var.azure_environment
     active_directory_id = var.azure_active_directory_id

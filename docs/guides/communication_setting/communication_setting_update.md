@@ -1,5 +1,5 @@
 ---
-page_title: "Update Communication Settings Guide - cloudconformity_terraform"
+page_title: "Update Communication Settings Guide"
 subcategory: "Communication Settings"
 description: |-
   Provides instruction on how to update Communication Settings on Cloud Conformity using Terraform.

@@ -2,7 +2,7 @@
 resource "conformity_communication_setting" "sns_setting" {
 
     sns {
-        arn          = "arn:aws:sns:us-west-2:301854035555:CloudConformity"
+        arn          = "arn:aws:sns:us-west-2:123456789012:CloudConformity"
         channel_name = "cloud_sns"
     }
 

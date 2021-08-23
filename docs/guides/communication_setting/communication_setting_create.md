@@ -1,5 +1,5 @@
 ---
-page_title: "Create Communication Settings Guide - cloudconformity_terraform"
+page_title: "Create Communication Settings Guide"
 subcategory: "Communication Settings"
 description: |-
   Provides instruction on how to create Communication Settings on Cloud Conformity using Terraform.

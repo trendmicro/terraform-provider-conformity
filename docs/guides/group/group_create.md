@@ -1,5 +1,5 @@
 ---
-page_title: "Create or Add Groups and Tags on Cloud Conformity - cloudconformity_terraform"
+page_title: "Create or Add Groups and Tags on Cloud Conformity"
 subcategory: "Groups"
 description: |-
   Provides instruction on how to create or add groups and tags on Cloud Conformity using Terraform.

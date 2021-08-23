@@ -1,5 +1,5 @@
 ---
-page_title: "Create An Invite User To Your Organisation - cloudconformity_terraform"
+page_title: "Create An Invite User To Your Organisation"
 subcategory: "Users"
 description: |-
   Provides instruction on how to create an invite user to your organisation using Terraform. This resource is not applicable to users who are part of the Cloud One Platform.

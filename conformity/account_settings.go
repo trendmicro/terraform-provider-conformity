@@ -252,6 +252,19 @@ func flattenMappingValue(val []interface{}) []interface{} {
 	return values
 
 }
+func updateAccountTags(payload cloudconformity.AccountPayload, accountId string, d *schema.ResourceData, client *cloudconformity.Client) error {
+
+	tags := d.Get("tags").(*schema.Set)
+	for _, tag := range tags.List() {
+		payload.Data.Attributes.Tags = append(payload.Data.Attributes.Tags, tag.(string))
+	}
+	_, err := client.UpdateAccount(accountId, payload)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
 func updateAccountSettings(provider string, accountId string, d *schema.ResourceData, client *cloudconformity.Client) error {
 	if i, ok := d.GetOk("settings"); ok && len(i.(*schema.Set).List()) > 0 {
 		settings := i.(*schema.Set).List()[0].(map[string]interface{})

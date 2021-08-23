@@ -1,13 +1,13 @@
 ---
-page_title: "cloudconformity_external_id - cloudconformity_terraform"
+page_title: "conformity_external_id"
 subcategory: "Data Source"
 description: |-
   Provides an external ID for your Cloud Conformity organisation.
 ---
 
-# Data Source `cloudconformity_external_id`
+# Data Source `conformity_external_id`
 
-Provides an external ID for your Cloud Conformity organisation.
+Provides an external ID for your Cloud Conformity organisation. When using this data source `apikey` and `region` must be provided as terraform variables
 
 ## Example Usage
 ```hcl
@@ -28,4 +28,4 @@ resource "conformity_aws_account" "aws"{
 
 ## Attributes Reference
 
- - `id` (String) - (Required) The external ID.
+ - `external_id` - The external ID.

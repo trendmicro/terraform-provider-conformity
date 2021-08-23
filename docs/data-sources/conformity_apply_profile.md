@@ -1,5 +1,5 @@
 ---
-page_title: "conformity_apply_profile - cloudconformity_terraform"
+page_title: "conformity_apply_profile"
 subcategory: "Profile"
 description: |-
  Allows you to apply profile and rule settings to a set of accounts under your organisation.

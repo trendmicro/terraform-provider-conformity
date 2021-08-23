@@ -112,6 +112,13 @@ func resourceAzureAccountCreate(ctx context.Context, d *schema.ResourceData, m i
 		return diag.FromErr(err)
 	}
 
+	if v, ok := d.GetOk("tags"); ok && len(v.(*schema.Set).List()) > 0 {
+		err := updateAccountTags(payload, accountId, d, client)
+		if err != nil {
+			return diag.FromErr(err)
+		}
+	}
+
 	err = updateAccountSettings("azure", accountId, d, client)
 	if err != nil {
 		return diag.FromErr(err)

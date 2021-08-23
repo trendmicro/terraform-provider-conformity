@@ -1,5 +1,5 @@
 ---
-page_title: "Destroy Communication Settings Guide - cloudconformity_terraform"
+page_title: "Destroy Communication Settings Guide"
 subcategory: "Communication Settings"
 description: |-
   Provides instruction on how to destroy Communication Settings using Terraform.
