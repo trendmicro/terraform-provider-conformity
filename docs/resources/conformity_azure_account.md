@@ -1,5 +1,5 @@
 ---
-page_title: "conformity_azure_account Resource - cloudconformity_terraform"
+page_title: "conformity_azure_account"
 subcategory: "Azure"
 description: |-
   Provides import resources for cloud conformity azure account.
@@ -10,35 +10,14 @@ Provides import resources for cloud conformity azure account.
 
 ## Example Usage
 ```hcl
-resource "conformity_azure_account" "azure" {}
+resource "conformity_azure_account" "azure" {
+    name                = "azure-conformity"
+    environment         = "development"
+    active_directory_id = "your-active-directory-id"
+    subscription_id     = "your-subscription-id"
+}
 ```
 
-## Import
-Azure Account - Can import based on the `Account ID` that can be found under the Conformity web console.
-
-To get the Azure Account ID:
-Open Conformity Admin Web console > navigate to Account dashboard > choose the Azure account you would like to import.
-Notice the URL, you should be able to get the account ID e.g. https://cloudone.trendmicro.com/conformity/account/account-ID
-
-Run `terraform init`:
-```hcl
-terraform init
-```
-
-Import the conformity_azure_account resources into Terraform. Replace the {CLOUDCONFORMITY-ACCOUNT-ID-AZURE} value.
-```hcl
-terraform import conformity_azure_account.azure {CLOUDCONFORMITY-ACCOUNT-ID-AZURE}
-```
-
-Use the `state` subcommand to verify Terraform successfully imported the conformity_azure_account resources.
-```hcl
-terraform state show conformity_azure_account.azure
-```
-
-Run `terraform show -no-color >> main.tf` to import the resources on the `main.tf` file. Be sure to remove the id from the resource
-```hcl
-terraform show -no-color >> main.tf
-```
 ## Argument reference
  - `name` (String) - (Required) The name of your account.
  - `environment` (String) - (Required) The environment for your account.
@@ -107,30 +86,55 @@ terraform show -no-color >> main.tf
 | `value`  | single-number-value, single-string-value, single-value-regex, ttl                                                             | included {     ….     exceptions {       ….     }       extra_settings {		 	….                     type = "ttl"         value = "72"       } }                                                                                           |
 | `values` | choice-multiple-value, choice-single-value, multiple-string-values, multiple-number-values, countries, multiple-ip-values, multiple-aws-account-values, tags | included {     ….     exceptions {       ….     }       extra_settings {		 	….                     type = "choice-multiple-value"           values {             ….   
 
+## Attributes Reference
+
+In addition to all arguments above, the following attributes are exported:
+
+ - `id` - The ID of the Azure account in Conformity managed by this resource
+
+Example usage on the template:
+
+```hcl
+account {
+    id = conformity_azure_account.azure.id
+}
+```
+
+## Import
+Azure Account - Can import based on the `Account ID` that can be found under the Conformity web console.
+
+To get the Azure Account ID:
+Open Conformity Admin Web console > navigate to Account dashboard > choose the Azure account you would like to import.
+Notice the URL, you should be able to get the account ID e.g. https://cloudone.trendmicro.com/conformity/account/account-ID
+
+Run `terraform init`:
+```hcl
+terraform init
+```
+
+Import the conformity_azure_account resources into Terraform. Replace the {CLOUDCONFORMITY-ACCOUNT-ID-AZURE} value.
+```hcl
+terraform import conformity_azure_account.azure {CLOUDCONFORMITY-ACCOUNT-ID-AZURE}
+```
+
+Use the `state` subcommand to verify Terraform successfully imported the conformity_azure_account resources.
+```hcl
+terraform state show conformity_azure_account.azure
+```
+
+Run `terraform show -no-color >> main.tf` to import the resources on the `main.tf` file. Be sure to remove the id from the resource
+```hcl
+terraform show -no-color >> main.tf
+```
+
 ## Requirements
 
 | Name | Version |
 |------|---------|
-| <a name="requirement_conformity"></a> [conformity](#requirement\_conformity) | 0.3.1 |
+| <a name="requirement_conformity"></a> [conformity](#requirement\_conformity) | 0.3.2 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| <a name="provider_conformity"></a> [conformity](#provider\_conformity) | 0.3.1 |
-
-## Resources
-
-| Name | Type |
-|------|------|
-
-| conformity_azure_account.azure | resource |
-
-## Inputs
-
-| Name | Description | Type | Default | Required |
-|------|-------------|------|---------|:--------:|
-| <a name="input_apikey"></a> [apikey](#input\_apikey) | n/a | `string` | `""` | yes |
-| <a name="input_azure_active_directory_id"></a> [azure\_active\_directory\_id](#input\_azure\_active\_directory\_id) | n/a | `string` | `""` | yes |
-| <a name="input_azure_environment"></a> [azure\_environment](#input\_azure\_environment) | variable "azure\_name"{ type    = string default = "trendmicro\_azure" } | `string` | `"staging"` | yes |
-| <a name="input_region"></a> [region](#input\_region) | n/a | `string` | `""` | yes |
+| <a name="provider_conformity"></a> [conformity](#provider\_conformity) | 0.3.2 |

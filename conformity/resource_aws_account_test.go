@@ -43,6 +43,7 @@ func TestAccResourceAwsAccount(t *testing.T) {
 					resource.TestCheckResourceAttr("conformity_aws_account.aws", "environment", "test-env"),
 					resource.TestCheckResourceAttr("conformity_aws_account.aws", "role_arn", "test-arn"),
 					resource.TestCheckResourceAttr("conformity_aws_account.aws", "external_id", "test-external-id"),
+					resource.TestCheckResourceAttr("conformity_aws_account.aws", "tags.0", "staging"),
 					resource.TestCheckOutput("conformity_account_name", "test-name"),
 					resource.TestCheckResourceAttr("conformity_aws_account.aws", "settings.0.bot.0.delay", "0"),
 					resource.TestCheckResourceAttr("conformity_aws_account.aws", "settings.0.bot.0.disabled_regions.0", "ap-east-1"),
@@ -106,6 +107,7 @@ func testAccCheckAwsAccountConfigBasic(name, environment, roleARN, externalID st
 		environment = "%s"
 		role_arn = "%s"
 		external_id = "%s"
+		tags = ["staging"]
 		settings {
 			bot {
 				delay            = 0

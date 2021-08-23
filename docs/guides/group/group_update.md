@@ -1,5 +1,5 @@
 ---
-page_title: "Update Groups and/or Tags on Cloud Conformity - cloudconformity_terraform"
+page_title: "Update Groups and/or Tags on Cloud Conformity"
 subcategory: "Groups"
 description: |-
   Provides instruction on how to add more tags or group or update their name on Cloud Conformity using Terraform.

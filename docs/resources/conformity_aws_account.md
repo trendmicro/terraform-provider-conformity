@@ -1,5 +1,5 @@
 ---
-page_title: "conformity_aws_account Resource - cloudconformity_terraform"
+page_title: "conformity_aws_account Resource"
 subcategory: "AWS"
 description: |-
   Provides a Cloud Conformity Account.
@@ -10,6 +10,8 @@ Provides a Cloud Conformity Account.
 
 ## Example Usage With AWS Conformity To Create Account Only
 ```hcl
+data "conformity_external_id" "external"{}
+
 resource "conformity_aws_account" "aws" {
     name        = "aws-conformity"
     environment = "development"
@@ -147,8 +149,9 @@ resource "conformity_aws_account" "aws" {
 ## Argument reference
  - `name` (String) - (Required) The name of your account.
  - `environment` (String) - (Required) The environment for your account.
- - `external_id` (String) - (Required) The external ID for your Cloud Conformity organisation.
- - `tags` (Array of Strings) - (Required)  Tags for account.
+ - `external_id` (String) - (Required) The external ID for your Conformity organisation. Can be referenced from `conformity_external_id` data source.
+ - `role_arn` (String) - (Required) The ARN of the role your account can assume. Can be referenced from `aws_cloudformation_stack`.
+ - `tags` (Array of Strings) - (Optional) Tags for account.
  - `settings` - (Optional) List: (Can be multiple declaration)
   
   Inside `settings` there can be a `bot` set.
@@ -216,11 +219,18 @@ resource "conformity_aws_account" "aws" {
 
 ## Attributes Reference
 
-In addition to all the arguments above, the following attributes are imported from `cloudconformity_external_id` and `aws_cloudformation_stack` resources.
+In addition to all arguments above, the following attributes are exported:
 
- - `ExternalId` (String) - (Required) The external ID. Imported from `cloudconformity_external_id`.
- - `role_arn` (String) - (Required) The ARN of the role your account can assume. Imported from `aws_cloudformation_stack`.
-  
+ - `id` - The ID of the AWS account in Conformity managed by this resource
+
+Example usage on the template:
+
+```hcl
+account {
+    id = conformity_aws_account.aws.id
+}
+```
+
 ## Import
 AWS Account - Can import based on the `Account ID` that can be found under the Conformity web console.
 
@@ -253,42 +263,19 @@ terraform show -no-color >> main.tf
 | Name | Version |
 |------|---------|
 | <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 3.44.0 |
-| <a name="requirement_conformity"></a> [conformity](#requirement\_conformity) | 0.3.1 |
+| <a name="requirement_conformity"></a> [conformity](#requirement\_conformity) | 0.3.2 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
 | <a name="provider_aws"></a> [aws](#provider\_aws) | >= 3.44.0 |
-| <a name="provider_conformity"></a> [conformity](#provider\_conformity) | 0.3.1 |
+| <a name="provider_conformity"></a> [conformity](#provider\_conformity) | 0.3.2 |
 
 ## Resources
 
 | Name | Type |
 |------|------|
 | [aws_cloudformation_stack.cloud-conformity](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudformation_stack) | resource |
-
 | conformity_aws_account.aws | resource |
-
 | conformity_external_id.external | data source |
-
-## Inputs
-
-| Name | Description | Type | Default | Required |
-|------|-------------|------|---------|:--------:|
-| <a name="input_access_key"></a> [access\_key](#input\_access\_key) | n/a | `string` | `""` | yes |
-| <a name="input_apikey"></a> [apikey](#input\_apikey) | n/a | `string` | `""` | yes |
-| <a name="input_environment"></a> [environment](#input\_environment) | n/a | `string` | `"Staging"` | yes |
-| <a name="input_name"></a> [name](#input\_name) | n/a | `string` | `"Cloudconformity"` | yes |
-| <a name="input_region"></a> [region](#input\_region) | n/a | `string` | `"us-west-2"` | yes |
-| <a name="input_secret_key"></a> [secret\_key](#input\_secret\_key) | n/a | `string` | `""` | yes |
-
-## Outputs
-
-| Name | Description |
-|------|-------------|
-| <a name="output_aws_account_name"></a> [aws\_account\_name](#output\_aws\_account\_name) | n/a |
-| <a name="output_aws_environment"></a> [aws\_environment](#output\_aws\_environment) | n/a |
-| <a name="output_aws_role_arn"></a> [aws\_role\_arn](#output\_aws\_role\_arn) | n/a |
-| <a name="output_external_id"></a> [external\_id](#output\_external\_id) | n/a |
-| <a name="output_role_arn"></a> [role\_arn](#output\_role\_arn) | n/a |

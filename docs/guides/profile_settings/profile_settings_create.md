@@ -1,5 +1,5 @@
 ---
-page_title: "Create Profile Settings Guide - cloudconformity_terraform"
+page_title: "Create Profile Settings Guide"
 subcategory: "Profile Settings"
 description: |-
   Provides instruction on how to create Profile Settings on Cloud Conformity using Terraform.

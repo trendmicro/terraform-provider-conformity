@@ -1,5 +1,5 @@
 ---
-page_title: "Configure Invite SSO User Provider - cloudconformity_terraform"
+page_title: "Configure Invite SSO User Provider"
 subcategory: "Users"
 description: |-
   Provides instruction on how to configure SSO invite user to your organisation using Terraform. This resource is not applicable to users who are part of the Cloud One Platform.
@@ -44,7 +44,7 @@ Note: You can always change the values declared according to your choice.
 terraform {
   required_providers {
     conformity = {
-      version = "0.3.1"
+      version = "0.3.2"
       source  = "trendmicro.com/cloudone/conformity"
     }
   }

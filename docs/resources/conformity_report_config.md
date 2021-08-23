@@ -1,5 +1,5 @@
 ---
-page_title: "conformity_report_config Resource - cloudconformity_terraform"
+page_title: "conformity_report_config Resource"
 subcategory: "Report Configs"
 description: |-
   Allows you to create Report Configs on Cloud Conformity. 
@@ -83,6 +83,20 @@ Only ADMIN/POWER users can create organisation-level and group-level report-conf
      * `without_checks` (String) - (Optional) Displays only controls from PDF reports with 0 associated checks. If withChecks is also set to true, then filter has no effect and all checks will be displayed. The default value is false. Valid values: [true |false]
       * `risk_levels` (String) - (Optional) Risk level. Possible values: ["EXTREME" | "VERY_HIGH" | "HIGH" | "MEDIUM" | "LOW"] 
   
+## Attributes Reference
+
+In addition to all arguments above, the following attributes are exported:
+
+ - `id` - The ID of the Report Configuration in Conformity managed by this resource
+
+Example usage on the template:
+
+```hcl
+report {
+    id = conformity_report_config.report.id
+}
+```
+
 ## Import
 Report Configs - Can import based on the report-config-id.
 
@@ -118,25 +132,10 @@ terraform show -no-color >> main.tf
 
 | Name | Version |
 |------|---------|
-| <a name="requirement_conformity"></a> [conformity](#requirement\_conformity) | 0.3.1 |
+| <a name="requirement_conformity"></a> [conformity](#requirement\_conformity) | 0.3.2 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| <a name="provider_conformity"></a> [conformity](#provider\_conformity) | 0.3.1 |
-
-
-## Resources
-
-| Name | Type |
-|------|------|
-
-| conformity_report_config.report | resource |
-
-## Inputs
-
-| Name | Description | Type | Default | Required |
-|------|-------------|------|---------|:--------:|
-| <a name="input_apikey"></a> [apikey](#input\_apikey) | n/a | `string` | `""` | yes |
-| <a name="input_region"></a> [region](#input\_region) | n/a | `string` | `""` | yes |
+| <a name="provider_conformity"></a> [conformity](#provider\_conformity) | 0.3.2 |

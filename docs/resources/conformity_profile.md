@@ -1,5 +1,5 @@
 ---
-page_title: "conformity_profile Resource - cloudconformity_terraform"
+page_title: "conformity_profile Resource"
 subcategory: "Profile Settings"
 description: |-
   Allows you to create Profile Settings on Cloud Conformity. 
@@ -130,6 +130,20 @@ output "profile" {
 | `value`  | single-number-value, single-string-value, single-value-regex, ttl                                                             | included {     ….     exceptions {       ….     }       extra_settings {		 	….                     type = "ttl"         value = "72"       } }                                                                                           |
 | `values` | choice-multiple-value, choice-single-value, multiple-string-values, multiple-number-values, countries, multiple-ip-values, multiple-aws-account-values, tags | included {     ….     exceptions {       ….     }       extra_settings {		 	….                     type = "choice-multiple-value"           values {             ….           }           values {             ….            }       } } |
 
+## Attributes Reference
+
+In addition to all arguments above, the following attributes are exported:
+
+ - `id` - The ID of the Profile Setting in Conformity managed by this resource
+
+Example usage on the template:
+
+```hcl
+profile {
+    id = conformity_profile.profile_settings.id
+}
+```
+
 ## Import
 Profile Settings - Can import based on the profile_id that can be found under the outputs upon creation or on the link on cloud conformity console.
 To get the profile_id, you just need to navigate to the "Profiles" and look for the profile setting that you want to import on Cloud Conformity console and get the profile_id in the URL e.g. https://cloudone.trendmicro.com/conformity/profiles/profile:{profile_id}
@@ -158,30 +172,10 @@ terraform show -no-color >> main.tf
 
 | Name | Version |
 |------|---------|
-| <a name="requirement_conformity"></a> [conformity](#requirement\_conformity) | 0.3.1 |
+| <a name="requirement_conformity"></a> [conformity](#requirement\_conformity) | 0.3.2 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| <a name="provider_conformity"></a> [conformity](#provider\_conformity) | 0.3.1 |
-
-## Resources
-
-| Name | Type |
-|------|------|
-
-| conformity_profile.profile_settings | resource |
-
-## Inputs
-
-| Name | Description | Type | Default | Required |
-|------|-------------|------|---------|:--------:|
-| <a name="input_apikey"></a> [apikey](#input\_apikey) | n/a | `string` | `""` | yes |
-| <a name="input_region"></a> [region](#input\_region) | n/a | `string` | `""` | yes |
-
-## Outputs
-
-| Name | Description |
-|------|-------------|
-| <a name="output_profile"></a> [profile](#output\_profile) | n/a |
+| <a name="provider_conformity"></a> [conformity](#provider\_conformity) | 0.3.2 |

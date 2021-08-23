@@ -1,3 +1,8 @@
+## 0.3.2
+
+* fix documentation
+* fix tags on account creation
+
 ## 0.3.1
 
 * fix create azure account

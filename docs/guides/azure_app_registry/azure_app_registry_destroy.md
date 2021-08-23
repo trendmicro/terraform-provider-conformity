@@ -1,5 +1,5 @@
 ---
-page_title: "Destroy Azure App Registry Guide - cloudconformity_terraform"
+page_title: "Destroy Azure App Registry Guide"
 subcategory: "Azure App Registry"
 description: |-
   Provides instruction on how to destroy Azure App Registry on Azure Account using Terraform.

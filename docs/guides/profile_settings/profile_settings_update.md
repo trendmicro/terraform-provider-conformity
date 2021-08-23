@@ -1,5 +1,5 @@
 ---
-page_title: "Update Profile Settings Guide - cloudconformity_terraform"
+page_title: "Update Profile Settings Guide"
 subcategory: "Profile Settings"
 description: |-
   Provides instruction on how to update Profile Settings on Cloud Conformity using Terraform.

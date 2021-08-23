@@ -1,5 +1,5 @@
 ---
-page_title: "Create An Invite User To Your Organisation - cloudconformity_terraform"
+page_title: "Create An Invite User To Your Organisation"
 subcategory: "Users"
 description: |-
   Provides instruction on how to destroy invite user to your organisation using Terraform.

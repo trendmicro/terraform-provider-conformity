@@ -1,5 +1,5 @@
 ---
-page_title: "Create Azure App Registry Guide - cloudconformity_terraform"
+page_title: "Create Azure App Registry Guide"
 subcategory: "Azure App Registry"
 description: |-
   Provides instruction on how to create Azure App Registry on Azure account using Terraform.

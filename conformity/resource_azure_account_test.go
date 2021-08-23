@@ -40,6 +40,7 @@ func TestAccResourceAzureAccount(t *testing.T) {
 					resource.TestCheckResourceAttr("conformity_azure_account.azure", "name", "test-name"),
 					resource.TestCheckResourceAttr("conformity_azure_account.azure", "environment", "test-env"),
 					resource.TestCheckResourceAttr("conformity_azure_account.azure", "subscription_id", "test-subscrition-id"),
+					resource.TestCheckResourceAttr("conformity_azure_account.azure", "tags.0", "staging"),
 					resource.TestCheckOutput("conformity_account_name", "test-name"),
 					resource.TestCheckResourceAttr("conformity_azure_account.azure", "settings.0.rule.0.rule_id", "SecurityCenter-020"),
 					resource.TestCheckResourceAttr("conformity_azure_account.azure", "settings.0.rule.0.settings.0.enabled", "true"),
@@ -86,6 +87,7 @@ func testAccCheckAzureAccountConfigBasic(name, environment, subscriptionId, acti
 		environment = "%s"
 		subscription_id = "%s"
 		active_directory_id = "%s"
+		tags = ["staging"]
 		settings {
 			bot {
 				delay            = 0

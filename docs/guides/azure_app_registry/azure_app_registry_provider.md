@@ -1,5 +1,5 @@
 ---
-page_title: "Configure Azure App Registry Provider - cloudconformity_terraform"
+page_title: "Configure Azure App Registry Provider"
 subcategory: "Accounts"
 description: |-
   Provides instruction on how to configure Providers to Update Azure Cloud Conformity resources using Terraform.

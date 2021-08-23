@@ -1,5 +1,5 @@
 ---
-page_title: "Destroy Account Guide - cloudconformity_terraform"
+page_title: "Destroy Account Guide"
 subcategory: "Accounts"
 description: |-
   Provides instruction on how to destroy Azure Cloud Conformity Account using Terraform.

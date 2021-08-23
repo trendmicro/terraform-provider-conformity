@@ -1,5 +1,5 @@
 ---
-page_title: "Update Account ID and/or Level Under Access List for Invite User - cloudconformity_terraform"
+page_title: "Update Account ID and/or Level Under Access List for Invite User"
 subcategory: "Users"
 description: |-
   Provides instruction on how to update account ID and/or level under access list for invite user using Terraform.

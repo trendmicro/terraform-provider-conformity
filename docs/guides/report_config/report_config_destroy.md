@@ -1,5 +1,5 @@
 ---
-page_title: "Destroy Report Configs Guide - cloudconformity_terraform"
+page_title: "Destroy Report Configs Guide"
 subcategory: "Report Configs"
 description: |-
   Provides instruction on how to destroy Report Configs using Terraform.

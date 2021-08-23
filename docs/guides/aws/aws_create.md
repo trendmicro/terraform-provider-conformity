@@ -1,5 +1,5 @@
 ---
-page_title: "Create Account Guide - cloudconformity_terraform"
+page_title: "Create Account Guide"
 subcategory: "Accounts"
 description: |-
   Provides instruction on how to create or add AWS account on Cloud Conformity using Terraform.

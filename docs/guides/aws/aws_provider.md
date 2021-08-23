@@ -1,5 +1,5 @@
 ---
-page_title: "Configure AWS Provider - cloudconformity_terraform"
+page_title: "Configure AWS Provider"
 subcategory: "Accounts"
 description: |-
   Provides instruction on how to configure Providers to create AWS and Cloud Conformity resources using Terraform.
@@ -32,7 +32,7 @@ Note: You can always change the values declared according to your choice.
 terraform {
   required_providers {
     conformity = {
-      version = "0.3.1"
+      version = "0.3.2"
       source  = "trendmicro.com/cloudone/conformity"
     }
       aws = {
