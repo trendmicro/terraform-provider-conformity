@@ -5,7 +5,7 @@ description: |-
   Provides instruction on how to destroy Report Configs using Terraform.
 ---
 
-# How To Destroy Cloud Conformity Resources
+# How To Destroy Conformity Resources
 Provides instruction on how to destroy Report Configs using Terraform.
 
 #### Step 1

@@ -2,11 +2,11 @@
 page_title: "Update Account Guide"
 subcategory: "Accounts"
 description: |-
-  Provides instruction on how to update AWS Cloud Conformity account name or environment name using Terraform.
+  Provides instruction on how to update AWS Conformity account name or environment name using Terraform.
 ---
 
-# How To Update AWS and Cloud Conformity Resources
-Provides instruction on how to update AWS Cloud Conformity account name or environment name using Terraform.
+# How To Update AWS and Conformity Resources
+Provides instruction on how to update AWS Conformity account name or environment name using Terraform.
 
 #### Step 1
 

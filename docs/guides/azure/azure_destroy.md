@@ -2,11 +2,11 @@
 page_title: "Destroy Account Guide"
 subcategory: "Accounts"
 description: |-
-  Provides instruction on how to destroy Azure Cloud Conformity Account using Terraform.
+  Provides instruction on how to destroy Azure Conformity Account using Terraform.
 ---
 
-# How To Destroy Azure Cloud Conformity Resources
-Provides instruction on how to destroy Azure Cloud Conformity Account using Terraform.
+# How To Destroy Azure Conformity Resources
+Provides instruction on how to destroy Azure Conformity Account using Terraform.
 
 #### Step 1
 

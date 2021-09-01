@@ -5,7 +5,7 @@ description: |-
   Provides instruction on how to create Azure App Registry on Azure account using Terraform.
 ---
 
-# How To Create or Add Azure App Registry on Cloud Conformity on a local machine
+# How To Create or Add Azure App Registry on Conformity on a local machine
 Provides instruction on how to create Azure App Registry on Azure account using Terraform.
 
 ## Things needed:
@@ -91,9 +91,9 @@ c. Save the outputs especially the `active_directory_tenant_id`, `app_registrati
 
 #### Step 2
 
-##### Add Azure Account on Cloud Conformity Console
-1. Go to Cloud Conformity Console.
+##### Add Azure Account on Conformity Console
+1. Go to Conformity Console.
 2. To allow Conformity access to your Azure Subscriptions, you will use the `active_directory_tenant_id`, `app_registration_application_id` and the `app_registration_key` created in the previous setup. Configure it according to the value needed. This will allow the Conformity rule engine to run Rule checks against Subscriptions within your Azure Active Directory.
 3. Add the Subscription.
 
-Note: You can also create the pre-requisite for Azure Cloud Conformity Account creation manually without using this terraform module. Also, you can check what resources this module is creating. Please refer to this link https://www.cloudconformity.com/help/add-cloud-account/add-an-azure-account.html#add-an-azure-active-directory .
+Note: You can also create the pre-requisite for Azure Conformity Account creation manually without using this terraform module. Also, you can check what resources this module is creating. Please refer to this link https://www.cloudconformity.com/help/add-cloud-account/add-an-azure-account.html#add-an-azure-active-directory .

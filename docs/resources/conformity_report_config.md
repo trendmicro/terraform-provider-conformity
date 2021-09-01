@@ -2,11 +2,11 @@
 page_title: "conformity_report_config Resource"
 subcategory: "Report Configs"
 description: |-
-  Allows you to create Report Configs on Cloud Conformity. 
+  Allows you to create Report Configs on Conformity. 
 ---
 
 # Resource `conformity_report_config`
-Allows you to create Report Configs on Cloud Conformity. 
+Allows you to create Report Configs on Conformity. 
 
 ## Example Usage
 ```hcl
@@ -33,8 +33,8 @@ resource "conformity_report_config" "report" {
 
 ## Argument reference
 
- - `account_id` (String) - (Optional) The Cloud Conformity ID of the account. Provide to get only report configs for the specified account. 
- - `group_id` (String) - (Optional) The Cloud Conformity ID of the group. Provide to get only report configs for the specified group. Notice: if you provided accountId at the same time, groupId would be ignored. 
+ - `account_id` (String) - (Optional) The Conformity ID of the account. Provide to get only report configs for the specified account. 
+ - `group_id` (String) - (Optional) The Conformity ID of the group. Provide to get only report configs for the specified group. Notice: if you provided accountId at the same time, groupId would be ignored. 
  
 IMPORTANT: Some guidelines about using this endpoint:
 Each report config can be account-level, group-level, or organisation-level.
@@ -132,10 +132,10 @@ terraform show -no-color >> main.tf
 
 | Name | Version |
 |------|---------|
-| <a name="requirement_conformity"></a> [conformity](#requirement\_conformity) | 0.3.2 |
+| <a name="requirement_conformity"></a> [conformity](#requirement\_conformity) | 0.3.3 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| <a name="provider_conformity"></a> [conformity](#provider\_conformity) | 0.3.2 |
+| <a name="provider_conformity"></a> [conformity](#provider\_conformity) | 0.3.3 |

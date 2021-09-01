@@ -2,11 +2,11 @@
 page_title: "Destroy Account Guide"
 subcategory: "Accounts"
 description: |-
-  Provides instruction on how to destroy Cloud Conformity Account using Terraform.
+  Provides instruction on how to destroy Conformity Account using Terraform.
 ---
 
-# How To Destroy AWS and Cloud Conformity Resources
-Provides instruction on how to destroy Cloud Conformity Account using Terraform.
+# How To Destroy AWS and Conformity Resources
+Provides instruction on how to destroy Conformity Account using Terraform.
 
 #### Step 1
 

@@ -2,11 +2,11 @@
 page_title: "conformity_communication_setting Resource"
 subcategory: "Communication Setting"
 description: |-
-  Allows you to create Communication Setting on Cloud Conformity. 
+  Allows you to create Communication Setting on Conformity. 
 ---
 
 # Resource `conformity_communication_setting`
-Allows you to create Communication Setting on Cloud Conformity. 
+Allows you to create Communication Setting on Conformity. 
 
 ## Example Usage
 You can create multiple channel.
@@ -159,10 +159,10 @@ terraform show -no-color >> main.tf
 
 | Name | Version |
 |------|---------|
-| <a name="requirement_conformity"></a> [conformity](#requirement\_conformity) | 0.3.2 |
+| <a name="requirement_conformity"></a> [conformity](#requirement\_conformity) | 0.3.3 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| <a name="provider_conformity"></a> [conformity](#provider\_conformity) | 0.3.2 |
+| <a name="provider_conformity"></a> [conformity](#provider\_conformity) | 0.3.3 |

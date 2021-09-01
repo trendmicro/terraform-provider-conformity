@@ -29,7 +29,7 @@ func (c *Client) GetAccount(accountId string) (*accountAccessAndDetails, error) 
 
 }
 
-// allows ADMIN users to get the current setting Cloud Conformity uses to access the specified account
+// allows ADMIN users to get the current setting Conformity uses to access the specified account
 // return the role arn and externalId
 func (c *Client) GetAccountAccessSettings(accountId string) (*accountData, error) {
 	accountData := &accountData{}

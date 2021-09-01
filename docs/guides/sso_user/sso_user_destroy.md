@@ -5,7 +5,7 @@ description: |-
   Provides instruction on how to destroy invite SSO user to your organisation using Terraform.
 ---
 
-# How To Destroy SSO User on Cloud Conformity
+# How To Destroy SSO User on Conformity
 Provides instruction on how to destroy invite SSO user to your organiation using Terraform.
 
 #### Step 1

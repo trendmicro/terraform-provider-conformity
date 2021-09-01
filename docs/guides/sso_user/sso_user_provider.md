@@ -10,13 +10,13 @@ Provides instruction on how to configure invite SSO user to your organisation us
 
 ## Things needed:
 1. AWS Access Key and Secret Access Key
-2. Cloud Conformity API Key
+2. Conformity API Key
 
 #### Step 1
 
 ##### Terraform Configuration
 
-1. To configure the provider, make sure that the region and API Key from Cloud Conformity Account are properly configured on the `terraform.tfvars`.
+1. To configure the provider, make sure that the region and API Key from Conformity Account are properly configured on the `terraform.tfvars`.
 
 ## Example Usage for `terraform.tfvars`
 ```hcl
@@ -44,7 +44,7 @@ Note: You can always change the values declared according to your choice.
 terraform {
   required_providers {
     conformity = {
-      version = "0.3.2"
+      version = "0.3.3"
       source  = "trendmicro.com/cloudone/conformity"
     }
   }
@@ -57,5 +57,5 @@ provider "conformity" {
 ```
 
 ## Argument Reference
- - `apikey` - (Required) This is the Cloud Conformity API Key. 
+ - `apikey` - (Required) This is the Conformity API Key. 
  - `region` - (Required) The region your organiation resides in. See https://github.com/cloudconformity/documentation-api for the available regions.

@@ -5,7 +5,7 @@ description: |-
   Provides instruction on how to destroy Communication Settings using Terraform.
 ---
 
-# How To Destroy Communication Settings and Cloud Conformity Resources
+# How To Destroy Communication Settings and Conformity Resources
 Provides instruction on how to destroy Communication Settings using Terraform.
 
 #### Step 1

@@ -2,11 +2,11 @@
 page_title: "Update Account Guide"
 subcategory: "Accounts"
 description: |-
-  Provides instruction on how to update Azure Cloud Conformity account name or environment name using Terraform.
+  Provides instruction on how to update Azure Conformity account name or environment name using Terraform.
 ---
 
-# How To Update Azure Cloud Conformity Resources
-Provides instruction on how to update Azure Cloud Conformity account name or environment name using Terraform.
+# How To Update Azure Conformity Resources
+Provides instruction on how to update Azure Conformity account name or environment name using Terraform.
 
 #### Step 1
 
@@ -42,7 +42,7 @@ terraform state show conformity_azure_account.azure
 terraform show -no-color >> main.tf
 ```
 
-NOTE: This will import ID and Subscription ID of the Azure Cloud Conformity Account.
+NOTE: This will import ID and Subscription ID of the Azure Conformity Account.
 
 #### Step 2
 
@@ -133,7 +133,7 @@ resource "conformity_azure_account" "azure" {
     }
 }
 ```
-NOTE: After the import you will notice that two values will be imported which are the `id` and `subscription_id` of the Azure Cloud Conformity Account. To use this resources which is for update purposes only, remove the `id`.
+NOTE: After the import you will notice that two values will be imported which are the `id` and `subscription_id` of the Azure Conformity Account. To use this resources which is for update purposes only, remove the `id`.
 
 4. Run `terraform apply`
 ```sh

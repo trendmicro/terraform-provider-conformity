@@ -2,11 +2,15 @@
 page_title: "conformity_azure_account"
 subcategory: "Azure"
 description: |-
-  Provides import resources for cloud conformity azure account.
+  Provides a Conformity Azure Account.
 ---
 
 # Resource `conformity_azure_account`
-Provides import resources for cloud conformity azure account.
+Provides a Conformity Azure Account.
+
+# Prerequisite
+1. Setup a app registry in Azure by using the `azure_app_registry` in the examples folder or by following the manual steps here https://www.cloudconformity.com/help/add-cloud-account/add-an-azure-account.html
+2. In all cases you need to add the Azure Active Directory manually in the Conformity Application like described here https://www.cloudconformity.com/help/add-cloud-account/add-an-azure-account.html#add-an-azure-active-directory
 
 ## Example Usage
 ```hcl
@@ -131,10 +135,10 @@ terraform show -no-color >> main.tf
 
 | Name | Version |
 |------|---------|
-| <a name="requirement_conformity"></a> [conformity](#requirement\_conformity) | 0.3.2 |
+| <a name="requirement_conformity"></a> [conformity](#requirement\_conformity) | 0.3.3 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| <a name="provider_conformity"></a> [conformity](#provider\_conformity) | 0.3.2 |
+| <a name="provider_conformity"></a> [conformity](#provider\_conformity) | 0.3.3 |

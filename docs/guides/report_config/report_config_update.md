@@ -2,11 +2,11 @@
 page_title: "Update Report Configs Guide"
 subcategory: "Report Configs"
 description: |-
-  Provides instruction on how to update Report Configs on Cloud Conformity using Terraform.
+  Provides instruction on how to update Report Configs on Conformity using Terraform.
 ---
 
-# How To Update Cloud Conformity Resources
-Provides instruction on how to update Report Configs on Cloud Conformity using Terraform.
+# How To Update Conformity Resources
+Provides instruction on how to update Report Configs on Conformity using Terraform.
 
 #### Step 1
 

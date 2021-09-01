@@ -1,12 +1,12 @@
 ---
-page_title: "Destroy Groups and Tags on Cloud Conformity"
+page_title: "Destroy Groups and Tags on Conformity"
 subcategory: "Groups"
 description: |-
-  Provides instruction on how to destroy groups and tags on Cloud Conformity Account using Terraform.
+  Provides instruction on how to destroy groups and tags on Conformity Account using Terraform.
 ---
 
-# How To Destroy Groups and Tags on Cloud Conformity
-Provides instruction on how to destroy groups and tags on Cloud Conformity Account using Terraform.
+# How To Destroy Groups and Tags on Conformity
+Provides instruction on how to destroy groups and tags on Conformity Account using Terraform.
 
 #### Step 1
 
