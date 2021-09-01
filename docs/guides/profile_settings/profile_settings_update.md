@@ -2,11 +2,11 @@
 page_title: "Update Profile Settings Guide"
 subcategory: "Profile Settings"
 description: |-
-  Provides instruction on how to update Profile Settings on Cloud Conformity using Terraform.
+  Provides instruction on how to update Profile Settings on Conformity using Terraform.
 ---
 
-# How To Update Cloud Conformity Resources
-Provides instruction on how to update Profile Settings on Cloud Conformity using Terraform.
+# How To Update Conformity Resources
+Provides instruction on how to update Profile Settings on Conformity using Terraform.
 
 #### Step 1
 

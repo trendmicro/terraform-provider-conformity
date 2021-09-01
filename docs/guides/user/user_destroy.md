@@ -5,7 +5,7 @@ description: |-
   Provides instruction on how to destroy invite user to your organisation using Terraform.
 ---
 
-# How To Destroy Invite User on Cloud Conformity
+# How To Destroy Invite User on Conformity
 Provides instruction on how to destroy invite user to your organiation using Terraform.
 
 #### Step 1

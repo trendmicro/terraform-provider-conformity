@@ -2,15 +2,15 @@
 page_title: "Create Account Guide"
 subcategory: "Accounts"
 description: |-
-  Provides instruction on how to create or add AWS account on Cloud Conformity using Terraform.
+  Provides instruction on how to create or add AWS account on Conformity using Terraform.
 ---
 
-# How To Create or Add AWS Account on Cloud Conformity on a local machine
-Provides instruction on how to create or add AWS account on Cloud Conformity using Terraform.
+# How To Create or Add AWS Account on Conformity on a local machine
+Provides instruction on how to create or add AWS account on Conformity using Terraform.
 
 ## Things needed:
 1. AWS Access Key and Secret Access Key
-2. Cloud Conformity API Key
+2. Conformity API Key
 
 #### Step 1
 
@@ -22,7 +22,7 @@ module "azure_app_registry" {
   source      = "../"
 }
 ```
-2. To use Conformity and its resources, add the AWS Access Key, Secret Access Key, and Region where the resources will be created and API Key from Cloud Conformity Account to the `terraform.tfvars`. 
+2. To use Conformity and its resources, add the AWS Access Key, Secret Access Key, and Region where the resources will be created and API Key from Conformity Account to the `terraform.tfvars`. 
 
 3. Create `terraform.tfvars` on `example/aws` folder and add the following values:
 

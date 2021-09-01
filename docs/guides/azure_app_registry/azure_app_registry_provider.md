@@ -2,15 +2,15 @@
 page_title: "Configure Azure App Registry Provider"
 subcategory: "Accounts"
 description: |-
-  Provides instruction on how to configure Providers to Update Azure Cloud Conformity resources using Terraform.
+  Provides instruction on how to configure Providers to Update Azure Conformity resources using Terraform.
 ---
 
 # How To Configure Azure App Resgistry Provider
-Provides instruction on how to configure Providers to Update Azure Cloud Conformity resources using Terraform.
+Provides instruction on how to configure Providers to Update Azure Conformity resources using Terraform.
 
 ## Things needed:
 1. Azure login Access
-2. Cloud Conformity API Key
+2. Conformity API Key
 
 #### Step 1
 

@@ -2,17 +2,17 @@
 page_title: "conformity_aws_account Resource"
 subcategory: "Groups"
 description: |-
-  Provides a Cloud Conformity Group Management.
+  Provides a Conformity Group Management.
 ---
 
 # Resource `conformity_group`
-Provides a Cloud Conformity Group Management.
+Provides a Conformity Group Management.
 
 ## Example Usage
 ```hcl
 resource "conformity_group" "group" {
 
-    name        = "cloudconformity-group"
+    name        = "conformity-group"
     tags        = ["tag1", "tag2"]
 }
 ```
@@ -64,10 +64,10 @@ terraform show -no-color >> main.tf
 
 | Name | Version |
 |------|---------|
-| <a name="requirement_conformity"></a> [conformity](#requirement\_conformity) | 0.3.2 |
+| <a name="requirement_conformity"></a> [conformity](#requirement\_conformity) | 0.3.3 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| <a name="provider_conformity"></a> [conformity](#provider\_conformity) | 0.3.2 |
+| <a name="provider_conformity"></a> [conformity](#provider\_conformity) | 0.3.3 |

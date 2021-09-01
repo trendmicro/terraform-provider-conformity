@@ -2,12 +2,12 @@
 page_title: "conformity_external_id"
 subcategory: "Data Source"
 description: |-
-  Provides an external ID for your Cloud Conformity organisation.
+  Provides an external ID for your Conformity organisation.
 ---
 
 # Data Source `conformity_external_id`
 
-Provides an external ID for your Cloud Conformity organisation. When using this data source `apikey` and `region` must be provided as terraform variables
+Provides an external ID for your Conformity organisation. When using this data source `apikey` and `region` must be provided as terraform variables
 
 ## Example Usage
 ```hcl

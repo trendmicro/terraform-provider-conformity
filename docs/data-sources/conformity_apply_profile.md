@@ -29,7 +29,7 @@ data "conformity_apply_profile" "profile"{
 
 ## Attributes Reference
 
- - `profile_id` (String) - (Required) The Cloud Conformity ID of the profile.
+ - `profile_id` (String) - (Required) The Conformity ID of the profile.
  - `account_ids` (Array of Strings) - Account IDs that will be configured by the profile.
  - `mode` (String) - (Required) Mode of how the profile will be applied to the accounts, i.e. "fill-gaps", "overwrite" or "replace":
     * fill-gaps - Merge existing settings with this Profile. If there is a conflict, the account's existing setting will be used.

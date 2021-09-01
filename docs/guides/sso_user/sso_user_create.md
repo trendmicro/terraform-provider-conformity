@@ -9,7 +9,7 @@ description: |-
 Provides instruction on how to create an invite SSO user to your organiation using Terraform. This resource is not applicable to users who are part of the Cloud One Platform.
 
 ## Things needed:
-1. Cloud Conformity API Key
+1. Conformity API Key
 2. Account ID
 
 To get the AWS Account ID:

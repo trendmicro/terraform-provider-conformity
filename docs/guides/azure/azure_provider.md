@@ -2,15 +2,15 @@
 page_title: "Configure Azure Provider"
 subcategory: "Accounts"
 description: |-
-  Provides instruction on how to configure Providers to Update Azure Cloud Conformity resources using Terraform.
+  Provides instruction on how to configure Providers to Update Azure Conformity resources using Terraform.
 ---
 
 # How To Configure Azure Provider
-Provides instruction on how to configure Providers to Update Azure Cloud Conformity resources using Terraform.
+Provides instruction on how to configure Providers to Update Azure Conformity resources using Terraform.
 
 ## Things needed:
-1. Cloud Conformity API Key
-2. Configured App Registration on Azure for Cloud Conformity like described here https://www.cloudconformity.com/help/add-cloud-account/add-an-azure-account.html#add-an-azure-active-directory or from our example at `../azure_app_registry`
+1. Conformity API Key
+2. Configured App Registration on Azure for Conformity like described here https://www.cloudconformity.com/help/add-cloud-account/add-an-azure-account.html#add-an-azure-active-directory or from our example at `../azure_app_registry`
 
 #### Step 1
 
@@ -32,7 +32,7 @@ Note: You can always change the values declared according to your choice.
 terraform {
   required_providers {
     conformity = {
-      version = "0.3.2"
+      version = "0.3.3"
       source  = "trendmicro.com/cloudone/conformity"
     }
   }
@@ -45,5 +45,5 @@ provider "conformity" {
 ```
 
 ## Argument Reference
- - `apikey` - (Required) This is the Cloud Conformity API Key. 
+ - `apikey` - (Required) This is the Conformity API Key. 
  - `region` - (Required) The region your organisation resides in. See https://github.com/cloudconformity/documentation-api for the available regions.

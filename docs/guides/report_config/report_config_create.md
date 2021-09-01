@@ -2,20 +2,20 @@
 page_title: "Create Report Configs Guide"
 subcategory: "Report Configs"
 description: |-
-  Provides instruction on how to create Report Configs on Cloud Conformity using Terraform.
+  Provides instruction on how to create Report Configs on Conformity using Terraform.
 ---
 
-# How To Create Report Configs on Cloud Conformity on a local machine
-Provides instruction on how to create Report Configs on Cloud Conformity using Terraform.
+# How To Create Report Configs on Conformity on a local machine
+Provides instruction on how to create Report Configs on Conformity using Terraform.
 
 ## Things needed:
-1. Cloud Conformity API Key
+1. Conformity API Key
 
 #### Step 1
 
 ##### Terraform Configuration
 
-1. To use Cloud Conformity and its resources, make sure that the values for certain variables are declared, Region, Account ID and API Key from Cloud Conformity Account are properly configured on the `terraform.tfvars`.
+1. To use Conformity and its resources, make sure that the values for certain variables are declared, Region, Account ID and API Key from Conformity Account are properly configured on the `terraform.tfvars`.
 
 2. Create `terraform.tfvars` on `example/report_config` folder and add the following values:
 

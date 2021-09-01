@@ -2,11 +2,11 @@
 page_title: "conformity_profile Resource"
 subcategory: "Profile Settings"
 description: |-
-  Allows you to create Profile Settings on Cloud Conformity. 
+  Allows you to create Profile Settings on Conformity. 
 ---
 
 # Resource `conformity_profile`
-Allows you to create Profile Settings on Cloud Conformity. 
+Allows you to create Profile Settings on Conformity. 
 
 ## Example Usage
 ```hcl
@@ -145,8 +145,8 @@ profile {
 ```
 
 ## Import
-Profile Settings - Can import based on the profile_id that can be found under the outputs upon creation or on the link on cloud conformity console.
-To get the profile_id, you just need to navigate to the "Profiles" and look for the profile setting that you want to import on Cloud Conformity console and get the profile_id in the URL e.g. https://cloudone.trendmicro.com/conformity/profiles/profile:{profile_id}
+Profile Settings - Can import based on the profile_id that can be found under the outputs upon creation or on the link on Conformity console.
+To get the profile_id, you just need to navigate to the "Profiles" and look for the profile setting that you want to import on Conformity console and get the profile_id in the URL e.g. https://cloudone.trendmicro.com/conformity/profiles/profile:{profile_id}
 
 Run `terraform init`:
 ```hcl
@@ -172,10 +172,10 @@ terraform show -no-color >> main.tf
 
 | Name | Version |
 |------|---------|
-| <a name="requirement_conformity"></a> [conformity](#requirement\_conformity) | 0.3.2 |
+| <a name="requirement_conformity"></a> [conformity](#requirement\_conformity) | 0.3.3 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| <a name="provider_conformity"></a> [conformity](#provider\_conformity) | 0.3.2 |
+| <a name="provider_conformity"></a> [conformity](#provider\_conformity) | 0.3.3 |

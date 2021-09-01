@@ -1,21 +1,21 @@
 ---
-page_title: "Create or Add Groups and Tags on Cloud Conformity"
+page_title: "Create or Add Groups and Tags on Conformity"
 subcategory: "Groups"
 description: |-
-  Provides instruction on how to create or add groups and tags on Cloud Conformity using Terraform.
+  Provides instruction on how to create or add groups and tags on Conformity using Terraform.
 ---
 
-# How To Create or Add Groups and Tags on Cloud Conformity
-Provides instruction on how to create or add groups and tags on Cloud Conformity using Terraform.
+# How To Create or Add Groups and Tags on Conformity
+Provides instruction on how to create or add groups and tags on Conformity using Terraform.
 
 ## Things needed:
-1. Cloud Conformity API Key
+1. Conformity API Key
 
 #### Step 1
 
 ##### Terraform Configuration
 
-1. To add groups and tags on Cloud Conformity, create `terraform.tfvars` on `example/group` folder and add the following values:
+1. To add groups and tags on Conformity, create `terraform.tfvars` on `example/group` folder and add the following values:
    
 ## Example Usage for `terraform.tfvars`
 ```hcl

@@ -6,7 +6,7 @@ import (
 	"strings"
 )
 
-//  register a new AWS account with Cloud Conformity
+//  register a new AWS account with Conformity
 func (c *Client) CreateAwsAccount(AccountPayload AccountPayload) (string, error) {
 
 	accountResponse := AccountResponse{}

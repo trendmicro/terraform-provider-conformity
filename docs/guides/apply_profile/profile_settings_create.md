@@ -2,14 +2,14 @@
 page_title: "Apply profile to accounts Guide"
 subcategory: "Profile Settings"
 description: |-
-  Provides overview on how apply profile to accounts on Cloud Conformity using Terraform.
+  Provides overview on how apply profile to accounts on Conformity using Terraform.
 ---
 
-# Profile Settings on Cloud Conformity on a local machine
-  Provides overview on how apply profile to accounts on Cloud Conformity using Terraform.
+# Profile Settings on Conformity on a local machine
+  Provides overview on how apply profile to accounts on Conformity using Terraform.
 
 ## Things needed for this Data Source:
-1. Cloud Conformity API Key
+1. Conformity API Key
 
 #### Use Cases
 Applying profile settings to account uses a data source.
@@ -46,13 +46,13 @@ output "data_profile" {
 ```
 
 ##### Applying profile settings to account with data source only.
-This example has a data source only for applying profile settings to an account. As you can see, the profile_id will be from the the outputs upon creation or on the link on cloud conformity console. For the account_ids, you can add multiple accounts_ids where you want to apply the profile settings.
+This example has a data source only for applying profile settings to an account. As you can see, the profile_id will be from the the outputs upon creation or on the link on conformity console. For the account_ids, you can add multiple accounts_ids where you want to apply the profile settings.
 
 To get the Account ID:
 Open Conformity Admin Web console > navigate to Account dashboard > choose the account you would like to apply the profile settings.
 Notice the URL, you should be able to get the account ID e.g. https://cloudone.trendmicro.com/conformity/account/account-ID
 
-To get the profile_id, you just need to navigate to the "Profiles" and look for the profile setting that you want to apply the profile settings on Cloud Conformity console and get the profile_id in the URL e.g. https://cloudone.trendmicro.com/conformity/profiles/profile:{profile_id}.
+To get the profile_id, you just need to navigate to the "Profiles" and look for the profile setting that you want to apply the profile settings on Conformity console and get the profile_id in the URL e.g. https://cloudone.trendmicro.com/conformity/profiles/profile:{profile_id}.
 
 Example Usage:
 

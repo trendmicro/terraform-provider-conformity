@@ -2,11 +2,11 @@
 page_title: "Update Communication Settings Guide"
 subcategory: "Communication Settings"
 description: |-
-  Provides instruction on how to update Communication Settings on Cloud Conformity using Terraform.
+  Provides instruction on how to update Communication Settings on Conformity using Terraform.
 ---
 
-# How To Update AWS and Cloud Conformity Resources
-Provides instruction on how to update Communication Settings on Cloud Conformity using Terraform.
+# How To Update AWS and Conformity Resources
+Provides instruction on how to update Communication Settings on Conformity using Terraform.
 
 #### Step 1
 
