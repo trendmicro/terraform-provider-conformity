@@ -23,8 +23,8 @@ Conformity Provider Section
 terraform {
   required_providers {
     conformity = {
-      version = "0.3.3"
-      source  = "trendmicro.com/cloudone/conformity"
+      version = "0.3.4"
+      source  = "trendmicro/conformity"
     }
   }
 }
@@ -59,8 +59,8 @@ provider "aws" {
 terraform {
   required_providers {
     conformity = {
-      version = "0.3.3"
-      source  = "trendmicro.com/cloudone/conformity"
+      version = "0.3.4"
+      source  = "trendmicro/conformity"
     }
       aws = {
       source  = "hashicorp/aws"
@@ -90,17 +90,15 @@ the environment: https://www.terraform.io/docs/cli/config/environment-variables.
 
 ## Support
 
-This solution is provided ‘as is’, ‘with all faults’, ‘as available’ under a Trend Micro end user agreement<br/>
-(www.trendmicro.com/en_sg/about/legal.html?modal=en-mulitcountry-tm-tools-eulapdf). This<br/>
-solution should be seen as community supported and Trend Micro will<br/>
-contribute our expertise as and when possible. We do not provide<br/>
-technical support or help in using or troubleshooting the components of<br/>
-the project through our normal support options. The underlying product<br/>
-used (Conformity API) by the solution are supported, but the support is<br/>
-only for the product functionality and not for help in deploying or<br/>
-using this solution itself.<br/>
+This solution is provided ‘as is’, ‘with all faults’, ‘as available’ under a Trend Micro end user agreement (www.trendmicro.com/en_sg/about/legal.html?modal=en-mulitcountry-tm-tools-eulapdf).</br>
+This solution should be seen as community supported and Trend Micro will</br>
+contribute our expertise as and when possible. We do not provide</br>
+technical support or help in using or troubleshooting the components of</br>
+the project through our normal support options. The underlying product</br>
+used (Conformity API) by the solution are supported, but the support is</br>
+only for the product functionality and not for help in deploying or</br>
+using this solution itself.</br>
 
-
-Report an issue or commit a feature improvement to the provider https://github.com/trendmicro/terraform-provider-conformity.<br/>
-Contact the Trend Micro team at support@cloudconformity.com to report an issue or make a feature request<br/>
-Report an Issue https://github.com/trendmicro/terraform-provider-conformity/issues.<br/>
+Report an issue or commit a feature improvement to the provider https://github.com/trendmicro/terraform-provider-conformity</br>
+Contact the Trend Micro team at support@cloudconformity.com to report an issue or make a feature request.</br>
+Report an Issue https://github.com/trendmicro/terraform-provider-conformity/issues</br>
