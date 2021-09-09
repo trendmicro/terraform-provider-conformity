@@ -41,9 +41,9 @@ resource "conformity_sso_user" "user" {
  - `last_name` (String) - (Required) The last name of the sso_user.
  - `role` (String) - (Required) The role which the sso_user is assigned to. Can be "ADMIN" "USER".
  - `mfa` (Bool) - Shows 'true' if the user has MFA, otherwise 'false'.
- - `access_list` - (Required) List:
-      `account` (String) - (Required) The account id within the organisation.
-      `level` (String) - (Required) The level of access the user has to the account. Can be "NONE" "READONLY" "FULL".
+ - `access_list` - (Optional) List:
+     * `account` (String) - (Required) The account id within the organisation.
+     * `level` (String) - (Required) The level of access the user has to the account. Can be "NONE" "READONLY" "FULL".
 
 ## Attributes Reference
 
@@ -88,10 +88,10 @@ terraform show -no-color >> main.tf
 
 | Name | Version |
 |------|---------|
-| <a name="requirement_conformity"></a> [conformity](#requirement\_conformity) | 0.3.5 |
+| <a name="requirement_conformity"></a> [conformity](#requirement\_conformity) | 0.3.6 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| <a name="provider_conformity"></a> [conformity](#provider\_conformity) | 0.3.5 |
+| <a name="provider_conformity"></a> [conformity](#provider\_conformity) | 0.3.6 |
