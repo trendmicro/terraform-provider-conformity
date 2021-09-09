@@ -1,3 +1,7 @@
+## 0.3.6
+
+* fix documentation
+
 ## 0.3.5
 
 * fix documentation

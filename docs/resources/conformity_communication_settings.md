@@ -112,11 +112,11 @@ Other arguments:
       * `tags` (Array of String) - (Optional) An array of any assigned metadata tags to your resources.
 
 - `relationships` - (Optional) List: 
-- `account` - (Optional): 
-     * `id` (String) - (Optional) required if account is defined.
-- `organisation` - (Optional): 
-Note: If you did not define organisation, it will automatically create the communication settings on organisational level.
-     * `id` (String) - (Optional) required if organisation is defined.
+    * `account` - (Optional): 
+      * `id` (String) - (Optional) required if account is defined.
+    * `organisation` - (Optional): 
+      Note: If you did not define organisation, it will automatically create the communication settings on organisational level.
+      * `id` (String) - (Optional) required if organisation is defined.
 
 ## Attributes Reference
 
@@ -159,10 +159,10 @@ terraform show -no-color >> main.tf
 
 | Name | Version |
 |------|---------|
-| <a name="requirement_conformity"></a> [conformity](#requirement\_conformity) | 0.3.5 |
+| <a name="requirement_conformity"></a> [conformity](#requirement\_conformity) | 0.3.6 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| <a name="provider_conformity"></a> [conformity](#provider\_conformity) | 0.3.5 |
+| <a name="provider_conformity"></a> [conformity](#provider\_conformity) | 0.3.6 |
