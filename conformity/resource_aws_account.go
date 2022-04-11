@@ -158,15 +158,15 @@ func resourceAwsAccountRead(ctx context.Context, d *schema.ResourceData, m inter
 		return diag.FromErr(err)
 	}
 	if accountAccessAndDetails.AccountDetails.Data.Attributes.Settings == nil {
-        if err := d.Set("settings", nil); err != nil {
-           return diag.FromErr(err)
-        }
-    }else {
-        settings := flattenAccountSettings(accountAccessAndDetails.AccountDetails.Data.Attributes.Settings, accountAccessAndDetails.RuleSettings.Data.Attributes.Settings.Rules)
-           if err := d.Set("settings", settings); err != nil {
-               return diag.FromErr(err)
-           }
-    }
+		if err := d.Set("settings", nil); err != nil {
+			return diag.FromErr(err)
+		}
+	}else {
+		settings := flattenAccountSettings(accountAccessAndDetails.AccountDetails.Data.Attributes.Settings, accountAccessAndDetails.RuleSettings.Data.Attributes.Settings.Rules)
+		if err := d.Set("settings", settings); err != nil {
+			return diag.FromErr(err)
+		}
+	}
 }
 
 func resourceAwsAccountUpdate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
