@@ -96,9 +96,11 @@ func flattenExceptions(exceptions *cloudconformity.RuleSettingExceptions) []inte
 	c["filter_tags"] = exceptions.FilterTags
 
 	c["resources"] = exceptions.Resources
-
-	c["tags"] = exceptions.Tags
-
+	if len(exceptions.Tags) == 0{
+		c["tags"] = nil
+	}else{
+		c["tags"] = exceptions.Tags
+	}
 	return []interface{}{c}
 }
 func flattenExtraSettings(extra []*cloudconformity.RuleSettingExtra) []interface{} {

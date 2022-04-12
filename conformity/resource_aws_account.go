@@ -167,6 +167,7 @@ func resourceAwsAccountRead(ctx context.Context, d *schema.ResourceData, m inter
 			return diag.FromErr(err)
 		}
 	}
+	return diags
 }
 
 func resourceAwsAccountUpdate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
