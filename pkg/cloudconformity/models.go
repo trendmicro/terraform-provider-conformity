@@ -21,6 +21,9 @@ type accountAccess struct {
 	Type              string       `json:"type,omitempty"`
 	SubscriptionId    string       `json:"subscriptionId,omitempty"`
 	ActiveDirectoryId string       `json:"activeDirectoryId,omitempty"`
+	projectId		  string       `json:"projectId,omitempty"`
+	projectName 	  string       `json:"projectName,omitempty"`
+	serviceAccountUniqueId string  `json:"serviceAccountUniqueId,omitempty"`
 }
 type AccountConfiguration struct {
 	ExternalId string `json:"externalId,omitempty"`
@@ -162,14 +165,15 @@ type AccountSettings struct {
 }
 
 type accountAtrributes struct {
-	Name          string                `json:"name"`
-	Environment   string                `json:"environment"`
-	Tags          []string              `json:"tags"`
-	Access        accountAccess         `json:"access,omitempty"`
-	Configuration *AccountConfiguration `json:"configuration,omitempty"`
-	CoudType      string                `json:"cloud-type,omitempty"`
-	CloudData     *CloudData            `json:"cloud-data,omitempty"`
-	Settings      *AccountSettings      `json:"settings,omitempty"`
+	Name            string                `json:"name"`
+	Environment     string                `json:"environment"`
+	ManagedGroupId  string                `json:"managed-group-id"`
+	Tags            []string              `json:"tags"`
+	Access          accountAccess         `json:"access,omitempty"`
+	Configuration   *AccountConfiguration `json:"configuration,omitempty"`
+	CoudType        string                `json:"cloud-type,omitempty"`
+	CloudData       *CloudData            `json:"cloud-data,omitempty"`
+	Settings        *AccountSettings      `json:"settings,omitempty"`
 }
 
 type accountData struct {
