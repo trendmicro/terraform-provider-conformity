@@ -9,7 +9,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
 )
 
-func resourceAwsAccount() *schema.Resource {
+func resourceGCPAccount() *schema.Resource {
 	return &schema.Resource{
 		CreateContext: resourceGCPAccountCreate,
 		ReadContext:   resourceGCPAccountRead,
@@ -102,7 +102,7 @@ func resourceGCPAccountCreate(ctx context.Context, d *schema.ResourceData, m int
 	payload.Data.Attributes.Access.projectName = d.Get("projectName").(string)
 	payload.Data.Attributes.Access.serviceAccountUniqueId = d.Get("serviceAccountUniqueId").(string)
 
-	accountId, err := client.CreateAwsAccount(payload)
+	accountId, err := client.CreateGCPAccount(payload)
 	if err != nil {
 		return diag.FromErr(err)
 	}
