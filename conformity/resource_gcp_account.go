@@ -98,9 +98,9 @@ func resourceGCPAccountCreate(ctx context.Context, d *schema.ResourceData, m int
 	payload := cloudconformity.AccountPayload{}
 	payload.Data.Attributes.Name = d.Get("name").(string)
 	payload.Data.Attributes.Environment = d.Get("environment").(string)
-	payload.Data.Attributes.Access.projectId = d.Get("projectId").(string)
-	payload.Data.Attributes.Access.projectName = d.Get("projectName").(string)
-	payload.Data.Attributes.Access.serviceAccountUniqueId = d.Get("serviceAccountUniqueId").(string)
+	payload.Data.Attributes.Access.ProjectId = d.Get("projectId").(string)
+	payload.Data.Attributes.Access.ProjectName = d.Get("projectName").(string)
+	payload.Data.Attributes.Access.ServiceAccountUniqueId = d.Get("serviceAccountUniqueId").(string)
 
 	accountId, err := client.CreateGCPAccount(payload)
 	if err != nil {
@@ -200,23 +200,4 @@ func resourceGCPAccountUpdate(ctx context.Context, d *schema.ResourceData, m int
 	}
 
 	return resourceGCPAccountRead(ctx, d, m)
-}
-
-func resourceAccountDelete(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
-	client := m.(*cloudconformity.Client)
-
-	// Warning or errors can be collected in a slice type
-	var diags diag.Diagnostics
-	accountId := d.Id()
-
-	_, err := client.DeleteAccount(accountId)
-	if err != nil {
-		return diag.FromErr(err)
-	}
-
-	// d.SetId("") is automatically called assuming delete returns no errors, but
-	// it is added here for explicitness.
-
-	d.SetId("")
-	return diags
 }

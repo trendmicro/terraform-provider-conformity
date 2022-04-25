@@ -21,9 +21,9 @@ type accountAccess struct {
 	Type              string       `json:"type,omitempty"`
 	SubscriptionId    string       `json:"subscriptionId,omitempty"`
 	ActiveDirectoryId string       `json:"activeDirectoryId,omitempty"`
-	projectId		  string       `json:"projectId,omitempty"`
-	projectName 	  string       `json:"projectName,omitempty"`
-	serviceAccountUniqueId string  `json:"serviceAccountUniqueId,omitempty"`
+	ProjectId		  string       `json:"projectId,omitempty"`
+	ProjectName 	  string       `json:"projectName,omitempty"`
+	ServiceAccountUniqueId string  `json:"serviceAccountUniqueId,omitempty"`
 }
 type AccountConfiguration struct {
 	ExternalId string `json:"externalId,omitempty"`
