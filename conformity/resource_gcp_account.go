@@ -24,7 +24,15 @@ func resourceGCPAccount() *schema.Resource {
 				Type:     schema.TypeString,
 				Required: true,
 			},
-			"managed-group-id": {
+			"project_id": {
+				Type:     schema.TypeString,
+				Required: true,
+			},
+			"service_account_unique_id": {
+				Type:     schema.TypeString,
+				Required: true,
+			},
+			"project_name": {
 				Type:     schema.TypeString,
 				Required: true,
 			},
