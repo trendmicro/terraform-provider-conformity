@@ -59,10 +59,8 @@ func newRequest(c *Client, methodType string, path string, payload io.Reader, ra
 	u.Path = resource
 	urlString := u.String()
 	client := c.HttpClient
-    log.Printf("[DEBUG] Request URL: %v\n", urlString)
-    log.Printf("[DEBUG] Request Payload: %v\n", payload)
-    valueOf := reflect.ValueOf(result)
-    log.Printf("[DEBUG] Defined Struct Name: %v\n", reflect.Indirect(valueOf).Type().Name())
+    log.Printf("[DEBUG] Request Payload For URL %v: %v\n", urlString, payload)
+    result_name := reflect.Indirect(reflect.ValueOf(result)).Type().Name()
 	req, err := http.NewRequest(methodType, urlString, payload)
 	if err != nil {
 		return nil, err
@@ -83,7 +81,7 @@ func newRequest(c *Client, methodType string, path string, payload io.Reader, ra
 	if err != nil {
 		return nil, err
 	}
-    log.Printf("[DEBUG] Response Body: %v\n", string(body))
+    log.Printf("[DEBUG] Response Body of %v: %v\n", result_name, string(body))
 	err = json.Unmarshal(body, &result)
 	if err != nil {
 		return nil, err
