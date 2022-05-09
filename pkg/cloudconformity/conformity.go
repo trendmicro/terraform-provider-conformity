@@ -9,6 +9,7 @@ import (
 	"log"
 	"net/http"
 	"net/url"
+	"reflect"
 )
 
 type method interface {
@@ -49,6 +50,15 @@ func (c *Client) headers(request *http.Request) {
 	}
 }
 
+func getType(myvar interface{}) {
+    valueOf := reflect.ValueOf(myvar)
+    if valueOf.Type().Kind() == reflect.Ptr {
+        return reflect.Indirect(valueOf).Type().Name()
+    } else {
+        return valueOf.Type().Name()
+    }
+}
+
 func newRequest(c *Client, methodType string, path string, payload io.Reader, rawQuery string, result interface{}) ([]byte, error) {
 
 	apiUrl := c.Url
@@ -58,7 +68,9 @@ func newRequest(c *Client, methodType string, path string, payload io.Reader, ra
 	u.Path = resource
 	urlString := u.String()
 	client := c.HttpClient
-
+    log.Printf("[DEBUG] Request URL: %v\n", urlString)
+    log.Printf("[DEBUG] Request Payload: %v\n", string(payload))
+    log.Printf("[DEBUG] Defined Struct Name: %v\n", getType(result))
 	req, err := http.NewRequest(methodType, urlString, payload)
 	if err != nil {
 		return nil, err
@@ -79,7 +91,7 @@ func newRequest(c *Client, methodType string, path string, payload io.Reader, ra
 	if err != nil {
 		return nil, err
 	}
-
+    log.Printf("[DEBUG] Response Body: %v\n", string(body))
 	err = json.Unmarshal(body, &result)
 	if err != nil {
 		return nil, err
