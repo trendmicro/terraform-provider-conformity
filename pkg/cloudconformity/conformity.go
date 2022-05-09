@@ -50,15 +50,6 @@ func (c *Client) headers(request *http.Request) {
 	}
 }
 
-func getType(myvar interface{}) {
-    valueOf := reflect.ValueOf(myvar)
-    if valueOf.Type().Kind() == reflect.Ptr {
-        return reflect.Indirect(valueOf).Type().Name()
-    } else {
-        return valueOf.Type().Name()
-    }
-}
-
 func newRequest(c *Client, methodType string, path string, payload io.Reader, rawQuery string, result interface{}) ([]byte, error) {
 
 	apiUrl := c.Url
@@ -69,8 +60,9 @@ func newRequest(c *Client, methodType string, path string, payload io.Reader, ra
 	urlString := u.String()
 	client := c.HttpClient
     log.Printf("[DEBUG] Request URL: %v\n", urlString)
-    log.Printf("[DEBUG] Request Payload: %v\n", string(payload))
-    log.Printf("[DEBUG] Defined Struct Name: %v\n", getType(result))
+    log.Printf("[DEBUG] Request Payload: %v\n", payload)
+    valueOf := reflect.ValueOf(result)
+    log.Printf("[DEBUG] Defined Struct Name: %v\n", reflect.Indirect(valueOf).Type().Name())
 	req, err := http.NewRequest(methodType, urlString, payload)
 	if err != nil {
 		return nil, err
