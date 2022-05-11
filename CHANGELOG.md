@@ -1,6 +1,7 @@
 ## 0.3.7
 
-* fix documentation
+* Logging the request and response payload of API
+* Improved Account create and Read request and response struct
 
 ## 0.3.6
 
