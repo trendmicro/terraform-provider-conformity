@@ -106,9 +106,9 @@ func resourceGCPAccountCreate(ctx context.Context, d *schema.ResourceData, m int
 	payload := cloudconformity.AccountPayload{}
 	payload.Data.Attributes.Name = d.Get("name").(string)
 	payload.Data.Attributes.Environment = d.Get("environment").(string)
-	payload.Data.Attributes.Access.ProjectId = d.Get("projectId").(string)
-	payload.Data.Attributes.Access.ProjectName = d.Get("projectName").(string)
-	payload.Data.Attributes.Access.ServiceAccountUniqueId = d.Get("serviceAccountUniqueId").(string)
+	payload.Data.Attributes.Access.ProjectId = d.Get("project_id").(string)
+	payload.Data.Attributes.Access.ProjectName = d.Get("project_name").(string)
+	payload.Data.Attributes.Access.ServiceAccountUniqueId = d.Get("service_accountUniqueId").(string)
 
 	accountId, err := client.CreateGCPAccount(payload)
 	if err != nil {

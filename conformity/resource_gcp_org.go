@@ -2,8 +2,8 @@ package conformity
 
 import (
 	"context"
-	//"github.com/trendmicro/terraform-provider-conformity/pkg/cloudconformity"
-
+	"github.com/trendmicro/terraform-provider-conformity/pkg/cloudconformity"
+    "log"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -15,41 +15,57 @@ func resourceGCPOrg() *schema.Resource {
 		UpdateContext: resourceGCPOrgUpdate,
 		DeleteContext: resourceOrgDelete,
 		Schema: map[string]*schema.Schema{
-			"type": {
+			"service_account_name": {
 				Type:     schema.TypeString,
 				Required: true,
 			},
-			"id": {
-				Type:     schema.TypeString,
-				Required: true,
-			},
-			"managed-group-id": {
-				Type:     schema.TypeString,
-				Required: true,
-			},
-			"tags": {
+			"service_account_key_json": {
 				Type:     schema.TypeSet,
-				Optional: true,
-				Elem: &schema.Schema{
-					Type: schema.TypeString,
-				},
-			},
-			"attributes": {
-				Type:     schema.TypeSet,
-				Optional: true,
+				Required: true,
 				MinItems: 0,
 				MaxItems: 1,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
-                        "serviceAccountName": {
+                        "type": {
                             Type:     schema.TypeString,
                             Required: true,
                                 },
-                        "serviceAccountUniqueId": {
+                        "project_id": {
                             Type:     schema.TypeString,
                             Required: true,
                                 },
-
+                        "private_key_id": {
+                            Type:     schema.TypeString,
+                            Required: true,
+                                },
+                        "private_key": {
+                            Type:     schema.TypeString,
+                            Required: true,
+                                },
+                        "client_email": {
+                            Type:     schema.TypeString,
+                            Required: true,
+                                },
+                        "client_id": {
+                            Type:     schema.TypeString,
+                            Required: true,
+                                },
+                        "auth_uri": {
+                            Type:     schema.TypeString,
+                            Required: true,
+                                },
+                        "token_uri": {
+                            Type:     schema.TypeString,
+                            Required: true,
+                                },
+                        "auth_provider_x509_cert_url": {
+                            Type:     schema.TypeString,
+                            Required: true,
+                                },
+                        "client_x509_cert_url": {
+                            Type:     schema.TypeString,
+                            Required: true,
+                                },
 					},
 				},
 			},
@@ -61,31 +77,31 @@ func resourceGCPOrg() *schema.Resource {
 }
 
 func resourceGCPOrgCreate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
-	//client := m.(*cloudconformity.Client)
+	client := m.(*cloudconformity.Client)
 	// Warning or errors can be collected in a slice type
 	var diags diag.Diagnostics
+    log.Printf("[DEBUG] Conformity GCPOrg  request payload:*************************")
+    payload := cloudconformity.OrgPayload{}
+	payload.Data.ServiceAccountName = d.Get("service_account_name").(string)
+	payload.Data.ServiceAccountKeyJson.ProjectId = d.Get("project_id").(string)
+	payload.Data.ServiceAccountKeyJson.Type = d.Get("type").(string)
+	payload.Data.ServiceAccountKeyJson.PrivateKeyId = d.Get("private_key_id").(string)
+	payload.Data.ServiceAccountKeyJson.PrivateKey = d.Get("private_key").(string)
+	payload.Data.ServiceAccountKeyJson.ClientEmail = d.Get("client_email").(string)
+	payload.Data.ServiceAccountKeyJson.ClientId = d.Get("client_id").(string)
+	payload.Data.ServiceAccountKeyJson.AuthUri = d.Get("auth_uri").(string)
+	payload.Data.ServiceAccountKeyJson.TokenUri = d.Get("token_uri").(string)
+	payload.Data.ServiceAccountKeyJson.AuthProviderX509CertUrl = d.Get("auth_provider_x509_cert_url").(string)
+	payload.Data.ServiceAccountKeyJson.ClientX509CertUrl = d.Get("client_x509_cert_url").(string)
 
-// 	payload := cloudconformity.OrgPayload{}
-// 	payload.Data.serviceAccountName = d.Get("name").(string)
-// 	payload.Data.serviceAccountKeyJson.type = d.Get("type").(string)
-// 	payload.Data.serviceAccountKeyJson.project_id = d.Get("project_id").(string)
-// 	payload.Data.serviceAccountKeyJson.private_key_id = d.Get("private_key_id").(string)
-// 	payload.Data.serviceAccountKeyJson.private_key = d.Get("private_key").(string)
-// 	payload.Data.serviceAccountKeyJson.client_email = d.Get("client_email").(string)
-// 	payload.Data.serviceAccountKeyJson.client_id = d.Get("client_id").(string)
-// 	payload.Data.serviceAccountKeyJson.auth_uri = d.Get("auth_uri").(string)
-// 	payload.Data.serviceAccountKeyJson.token_uri = d.Get("token_uri").(string)
-// 	payload.Data.serviceAccountKeyJson.auth_provider_x509_cert_url = d.Get("auth_provider_x509_cert_url").(string)
-// 	payload.Data.serviceAccountKeyJson.client_x509_cert_url = d.Get("client_x509_cert_url").(string)
-//
-//
-// 	organisationId, err := client.CreateGCPOrg(payload)
-// 	if err != nil {
-// 		return diag.FromErr(err)
-// 	}
-//
-// 	d.SetId(organisationId)
-// 	resourceGCPOrgRead(ctx, d, m)
+	orgResponse, err := client.CreateGCPOrg(payload)
+
+	if err != nil {
+		return diag.FromErr(err)
+	}
+
+    d.SetId(orgResponse)
+ 	resourceGCPOrgRead(ctx, d, m)
 	return diags
 }
 

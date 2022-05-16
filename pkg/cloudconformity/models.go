@@ -469,3 +469,35 @@ type ApplyProfileResponse struct {
 		Status  string `json:"status"`
 	} `json:"meta"`
 }
+
+type GCPKeyJSON struct {
+    Type  string `json:"type"`
+    ProjectId  string `json:"ProjectId"`
+    PrivateKeyId string `json:"PrivateKeyId"`
+    PrivateKey string `json:"PrivateKey"`
+    ClientEmail string `json:"clientEmail"`
+    ClientId  string `json:"clientId"`
+    AuthUri   string `json:"AuthUri"`
+    TokenUri   string `json:"TokenUri"`
+    AuthProviderX509CertUrl  string `json:"AuthProviderX509CertUrl"`
+    ClientX509CertUrl     string `json:"ClientX509CertUrl"`
+}
+
+type OrgPayload struct {
+    Data struct {
+		ServiceAccountName      string          `json:"serviceAccountName"`
+		ServiceAccountKeyJson   GCPKeyJSON      `json:"serviceAccountKeyJson"`
+	} `json:"data"`
+}
+
+type GCPOrgAtrributes struct {
+    ServiceAccountName string `json:"serviceAccountName"`
+    ServiceAccountUniqueId string `json:"ServiceAccountUniqueId"`
+}
+
+type GCPOrgResponse struct {
+	Data struct {
+		ID         string            `json:"id"`
+		Attributes GCPOrgAtrributes `json:"attributes"`
+	} `json:"data"`
+}

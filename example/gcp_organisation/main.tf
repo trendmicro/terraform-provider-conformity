@@ -1,0 +1,13 @@
+resource "conformity_gcp_org" "gcp_org" {
+    service_account_name     = "MySubscription"
+    type                     = "service_account"
+    project_id               = "conformity-346910"
+    private_key_id           = "cf020749b8ca19eec84671aaa2e00ec1c3688e7c"
+    private_key              = "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDGkMvGH+wmaDY+\nWMhhUPhIu8h79SQFJX08muO03omiYjsNz/k1GDfMg9xNFi1UZF8ft1RKDY8eIJ0D\nTwIOl6i5utWprDGbJa8I1NLsfNtuB1D3H3C9EpF0F5wdd+z1El+/vWxtek9CbxBc\nj4dd2XeFrKkprHb1244ZhY0Q70Fouyalhk79QFQOwqNoe6ehPt9B9yrDiEHxK9hL\n5SNijoOlLmPZ/CUheSE/65FJSW4emkVjMIqT9ilH/wzX7C4HtxXoIOmtESA+HkB4\nK+WUD86csyoiCFn6eRTsCN9mtot/W1NRqG8MmL159J3QeAtsA/wqVf3emnYrclqj\npPwuhVZxAgMBAAECggEABF3iUVbZ4WVYzgmzTGqUrzrL96fmNSPEK41HdS6QrczF\nujHI6/k+nuWGdn6GnCzB58dnF+LQ8ytp8IzwAWSl7gG1GbBi/eO4A/R0OAWt6K9K\nAUlEeC/8mWY8hWxh/mi7SNLwW779F7usCzEP28lAxuSLatJzYkhECX0lo0nzsQsk\nrQpHKltbBY8k198AjZj8qXSMC3llFvz9V3he5kpjo1hpNrISS8Kirl4jouFrwhNn\n2sD3k+WegklzkYAHTaktp5XPcyCx3pDBdA31V+uBQYo2Gyvyudjsbggs89NHoZzw\nbAiYkTFkUgELLHxBH82YH6ET/qDmJwYUXYslxenJAQKBgQDl/CzZHMeXjAEwFRmT\njvpXbiJ+x9/oatPTIP7kVTEGykw780VhicYmpX1fsXdN3OVfmZULcVHuVA36iHMz\nY7YO1HZW6B0GNyM38tPkmbNvpKY4PBbRty6mdCFfONY/EBFDGq/lL+3BCLyZdk01\nvWcve/Ya6r9IF4VSc2ZdZHZXwQKBgQDdBsmjPFf8g8q/qCMUdArYepUJw7eGcJ2A\nT/DLKyeXdPaSdNnYoF7XE/T3BKZF0xtauW5SQ93XaVuggbkMGllW3y9L3TfG2mtV\nHEAtDNxRSLKNj8lRl1MV+a8bpOMalf+tXz5qXw0ILxQEQhyxs/3AKdTfw1bjqtIC\nK/q2OY0qsQKBgCpTL3nBZyYHuQw9Rdi3HnFKroSAij9+sX8QenhRCVXDkyYRTjp2\nHYZtPFaJFXi552ihniFd+IMQ6wWpaPITLqUqCqFR1E2Zhhy8zqwqcTBhr8l3nYd4\n29f8VUvt7NfsQBEGb0qReILm9baUY/843S2K9a7cdtlworOa00LqwzDBAoGAYGXA\ndZAw87HrMHG9cwM1Y7r623pfxaPCHZ8/7uxQZS8fBzstc9xl4LoUgdOmTRfIe2Ya\nZoiw7W1HCBbrxQqM4mWOtDC0TecfHsymdL+CK3VgYntOm2Y7V39BTvY4EnVPQKck\nirIP9fzKZx0KdLqCtlfIPxtr/vmWhFn4C5fIKNECgYEAleRPnSK1VItR7cADYX5J\nnFcpaVcqZ5OhOqZAknGKeEyIyV7V4nqvy7tJYYkilnov+XM19FRku1UfqEo1rITF\nyBFy0ZRfHTys28PW4CuYUxRrbGCyTS8Ro9N/nLUKO9+hrVMqgtU8PtCRMELTKMsT\nXbIYlNC7dnPXtfVYutePPcY=\n-----END PRIVATE KEY-----\n"
+    client_email             = "cloud-one-conformity-bot@conformity-346910.iam.gserviceaccount.com"
+    client_id                = "103072212920811129548"
+    auth_uri                 = "https://accounts.google.com/o/oauth2/auth"
+    token_uri                = "https://oauth2.googleapis.com/token"
+    auth_provider_x509_cert_url = "https://www.googleapis.com/oauth2/v1/certs"
+    client_x509_cert_url     = "https://www.googleapis.com/robot/v1/metadata/x509/cloud-one-conformity-bot%40conformity-346910.iam.gserviceaccount.com"
+}
