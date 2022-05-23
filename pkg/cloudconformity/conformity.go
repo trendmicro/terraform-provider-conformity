@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"io"
 	"io/ioutil"
-	"log"
 	"net/http"
 	"net/url"
 	"reflect"
@@ -59,10 +58,8 @@ func newRequest(c *Client, methodType string, path string, payload io.Reader, ra
 	u.Path = resource
 	urlString := u.String()
 	client := c.HttpClient
-	pubByte = []byte("-----BEGIN RSA PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA2rryzyobjdhXIZRXDv/8\nJXfKhzbbOAsQC+QgRfYSEzW0qUTXGho0S9JrFGgJSCT2tIVrfKVqYcqOyLZ+/1N+\nN4c7t3jvxcYo7BExp1eqbkH9G579hQsSoXOS3YZycCt7/YSqJNvn/GCQztTuEmLB\nE3EiLrWB0wGquv5mA8pDmCShCXxUEcsKEJgS2RRDiT4YzpXK0R/Twua4TB/QfE7e\niHMQMG/bVebF+fLVVH4o3qLjcyq62tnT/r5knciOHAKBUn4WAkCM00hYzhXmsXa2\n+GO+A9A++zBH65i03LeskfImR40Rrq6NRgTjbeiheQCb2JR4Twzb12Z28QqY/oRn\n+wIDAQAB\n-----END RSA PUBLIC KEY-----")
-	publicKey =: BytesToPublicKey(pubByte)
-	encryptMsg := EncryptWithPublicKey(payload, publicKey)
-    log.Printf("[DEBUG] Request Payload For URL %v: %v\n", urlString, string(encryptMsg))
+    custom_log_print("[DEBUG]", "Request URL: %v"+urlString, false)
+    custom_log_print("[DEBUG]", payload, true)
     result_name := reflect.Indirect(reflect.ValueOf(result)).Type().Name()
 	req, err := http.NewRequest(methodType, urlString, payload)
 	if err != nil {
@@ -85,15 +82,16 @@ func newRequest(c *Client, methodType string, path string, payload io.Reader, ra
 		return nil, err
 	}
 	encryptMsg := EncryptWithPublicKey(body, publicKey)
-    log.Printf("[DEBUG] Response Body of %v: %v\n", result_name, string(encryptMsg))
+	custom_log_print("[DEBUG]", "Response Body of "+result_name, false)
+	custom_log_print("[DEBUG]", body, true)
 	err = json.Unmarshal(body, &result)
 	if err != nil {
 		return nil, err
 	}
 
 	if resp.StatusCode != 200 {
-		log.Printf("[DEBUG] Conformity request error: %v\n", resp.StatusCode)
-		log.Printf("[DEBUG] Conformity reponse body error: %v\n", string(body))
+		custom_log_print("[DEBUG]", " Conformity request error: "+resp.StatusCode, false)
+		custom_log_print("[DEBUG]", " Conformity reponse body error"+string(body), false)
 
 		return body, errors.New(string(body))
 	}
