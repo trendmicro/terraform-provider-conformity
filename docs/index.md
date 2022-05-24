@@ -94,4 +94,26 @@ This solution is provided ‘as is’, ‘with all faults’, ‘as available’
 
 Report an issue or commit a feature improvement to the provider https://github.com/trendmicro/terraform-provider-conformity
 
+## How to see the logs:
+
+#### 1. Navigate to project directory:
+```sh
+cd /path/terraform-provider-conformity
+```
+#### 2. Install dependencies:
+```sh
+go mod vendor
+```
+#### 3. Create the Artifact:
+```sh
+make install
+```
+#### 4. Now, you can test terraform code with enabling the logs:
+```sh
+cd example/path-to-main/
+TF_LOG=info terraform init
+TF_LOG=info terraform apply
+```
+
+
 Contact the Trend Micro team at support@cloudconformity.com to report an issue or make a feature request.

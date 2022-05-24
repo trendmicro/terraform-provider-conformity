@@ -58,8 +58,8 @@ func newRequest(c *Client, methodType string, path string, payload io.Reader, ra
 	u.Path = resource
 	urlString := u.String()
 	client := c.HttpClient
-    custom_log_print("[DEBUG]", "Request URL: %v"+urlString, false)
-    custom_log_print("[DEBUG]", payload, true)
+    log_debug("Request URL: %v"+urlString)
+//     log_encrypted(string(payload))
     result_name := reflect.Indirect(reflect.ValueOf(result)).Type().Name()
 	req, err := http.NewRequest(methodType, urlString, payload)
 	if err != nil {
@@ -81,17 +81,16 @@ func newRequest(c *Client, methodType string, path string, payload io.Reader, ra
 	if err != nil {
 		return nil, err
 	}
-	encryptMsg := EncryptWithPublicKey(body, publicKey)
-	custom_log_print("[DEBUG]", "Response Body of "+result_name, false)
-	custom_log_print("[DEBUG]", body, true)
+	log_debug("Response Body of " + result_name)
+	log_encrypted(string(body))
 	err = json.Unmarshal(body, &result)
 	if err != nil {
 		return nil, err
 	}
 
 	if resp.StatusCode != 200 {
-		custom_log_print("[DEBUG]", " Conformity request error: "+resp.StatusCode, false)
-		custom_log_print("[DEBUG]", " Conformity reponse body error"+string(body), false)
+		log_debug("Conformity request error: "+ string(resp.StatusCode))
+		log_debug("Conformity response body error"+string(body))
 
 		return body, errors.New(string(body))
 	}
