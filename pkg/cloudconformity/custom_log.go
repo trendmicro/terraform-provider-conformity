@@ -11,7 +11,6 @@ var publicKey = BytesToPublicKey(pubByte)
 
 func log_encrypted(msg string) () {
         byte_msg := []byte(msg)
-//         log_msg := EncryptWithPublicKey(byte_msg, publicKey)
         log_msg := "-----" + string(EncryptWithPublicKey(byte_msg, publicKey))+ "-----"
         log.Printf("[DEBUG] " + log_msg)
         return
