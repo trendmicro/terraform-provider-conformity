@@ -165,6 +165,17 @@ type accountAtrributes struct {
 	Name          string                `json:"name"`
 	Environment   string                `json:"environment"`
 	Tags          []string              `json:"tags"`
+	//Access        accountAccess         `json:"access,omitempty"`
+	Configuration *AccountConfiguration `json:"configuration,omitempty"`
+	CoudType      string                `json:"cloud-type,omitempty"`
+	CloudData     *CloudData            `json:"cloud-data,omitempty"`
+	Settings      *AccountSettings      `json:"settings,omitempty"`
+}
+
+type createAccountAtrributes struct {
+	Name          string                `json:"name"`
+	Environment   string                `json:"environment"`
+	Tags          []string              `json:"tags"`
 	Access        accountAccess         `json:"access,omitempty"`
 	Configuration *AccountConfiguration `json:"configuration,omitempty"`
 	CoudType      string                `json:"cloud-type,omitempty"`
@@ -177,8 +188,13 @@ type accountData struct {
 	Attributes accountAtrributes `json:"attributes"`
 }
 
+type createAccountData struct {
+	Type       string            `json:"type,omitempty"`
+	Attributes createAccountAtrributes `json:"attributes"`
+}
+
 type AccountPayload struct {
-	Data accountData `json:"data"`
+	Data createAccountData `json:"data"`
 }
 
 type AccountResponse struct {

@@ -23,7 +23,7 @@ Conformity Provider Section
 terraform {
   required_providers {
     conformity = {
-      version = "0.3.6"
+      version = "0.3.7"
       source  = "trendmicro/conformity"
     }
   }
@@ -59,7 +59,7 @@ provider "aws" {
 terraform {
   required_providers {
     conformity = {
-      version = "0.3.6"
+      version = "0.3.7"
       source  = "trendmicro/conformity"
     }
       aws = {
@@ -92,6 +92,15 @@ the environment: https://www.terraform.io/docs/cli/config/environment-variables.
 
 This solution is provided ‘as is’, ‘with all faults’, ‘as available’ under a Trend Micro end user agreement ( www.trendmicro.com/en_sg/about/legal.html?modal=en-mulitcountry-tm-tools-eula.pdf ). This solution should be seen as community supported and Trend Micro will contribute our expertise as and when possible. We do not provide technical support or help in using or troubleshooting the components of the project through our normal support options. The underlying product used (Conformity API) by the solution are supported, but the support is only for the product functionality and not for help in deploying or using this solution itself.
 
-Report an issue or commit a feature improvement to the provider https://github.com/trendmicro/terraform-provider-conformity
+Report an issue or commit a feature improvement to the provider https://github.com/trendmicro/terraform-provider-conformity. You can provide the output logs while reporting the issue to help our team resolve it faster. The instruction is as follows.
+
+## Enable Debug Logs:
+
+Set `TF_LOG` environment variable to `info`, this will print additional debug logs. The logs will be encrypted in form. Our team will be able to decrypt it.
+
+```sh
+TF_LOG=info terraform init
+TF_LOG=info terraform apply
+```
 
 Contact the Trend Micro team at support@cloudconformity.com to report an issue or make a feature request.
