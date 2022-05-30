@@ -6,6 +6,7 @@ cd /path/terraform-provider-conformity
 ```
 #### 2. Install dependencies:
 ```sh
+go mod tidy
 go mod vendor
 ```
 #### 3. Create the Artifact:
