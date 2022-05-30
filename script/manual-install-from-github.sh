@@ -14,7 +14,7 @@ cd ${download}
 owner="trendmicro"
 name="conformity"
 repo="terraform-provider-${name}"
-version="0.3.7"
+version="0.3.8"
 token="YOUR_TOKEN"
 os_arch="darwin_amd64"
 
