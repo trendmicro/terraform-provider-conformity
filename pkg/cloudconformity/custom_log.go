@@ -20,11 +20,11 @@ func log_encrypted(msg string) {
 func convert_io_to_string(msg io.Reader) string {
 	if msg != nil {
 		buf := new(strings.Builder)
-		payload_string, err := io.Copy(buf, msg)
+		_, err := io.Copy(buf, msg)
 		if err != nil {
 			log_debug("Some error while copying request payload buffer to string.")
 		} else {
-			return string(payload_string)
+			return buf.String()
 		}
 	}
 	return ""
