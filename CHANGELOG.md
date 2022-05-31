@@ -1,4 +1,8 @@
 ## 0.3.7
+* security vulnerable issue fixed
+* Logging nul payload issue fixed
+
+## 0.3.7
 
 * Logging the request and response payload of API
 * Improved Account create and Read request and response struct

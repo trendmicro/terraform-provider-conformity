@@ -9,7 +9,6 @@ import (
 	"net/http"
 	"net/url"
 	"reflect"
-	"strings"
 )
 
 type method interface {
@@ -59,11 +58,12 @@ func newRequest(c *Client, methodType string, path string, payload io.Reader, ra
 	u.Path = resource
 	urlString := u.String()
 	client := c.HttpClient
-    log_debug("Request URL: %v"+urlString)
-    buf := new(strings.Builder)
-    payload_string, err := io.Copy(buf, payload)
-    log_encrypted(string(payload_string))
-    result_name := reflect.Indirect(reflect.ValueOf(result)).Type().Name()
+	log_debug("Request URL: " + urlString)
+	log_debug("Method: " + methodType)
+	payload_string := convert_io_to_string(payload)
+	log_encrypted(payload_string)
+
+	result_name := reflect.Indirect(reflect.ValueOf(result)).Type().Name()
 	req, err := http.NewRequest(methodType, urlString, payload)
 	if err != nil {
 		return nil, err
@@ -92,8 +92,8 @@ func newRequest(c *Client, methodType string, path string, payload io.Reader, ra
 	}
 
 	if resp.StatusCode != 200 {
-		log_debug("Conformity request error: "+ string(resp.StatusCode))
-		log_debug("Conformity response body error"+string(body))
+		log_debug("Conformity request error: " + string(resp.StatusCode))
+		log_debug("Conformity response body error" + string(body))
 
 		return body, errors.New(string(body))
 	}
