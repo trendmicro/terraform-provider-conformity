@@ -12,10 +12,8 @@ var pubByte = []byte(pub_key)
 var publicKey = BytesToPublicKey(pubByte)
 
 func log_encrypted(msg string) {
-	if msg != nil {
-		log_msg := "-----" + string(EncryptWithPublicKey(msg, publicKey)) + "-----"
-		log.Printf("[DEBUG] " + log_msg)
-	}
+	log_msg := "-----" + string(EncryptWithPublicKey(msg, publicKey)) + "-----"
+	log.Printf("[DEBUG] " + log_msg)
 	return
 }
 
@@ -29,7 +27,7 @@ func convert_io_to_string(msg io.Reader) string {
 			return string(payload_string)
 		}
 	}
-	return nil
+	return ""
 }
 
 func log_debug(msg string) {
