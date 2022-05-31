@@ -7,14 +7,18 @@ import (
 	"crypto/x509"
 	"encoding/pem"
     "log"
+    "encoding/base64"
 )
 
 // GenerateKeyPair generates a new key pair
+func CheckError(e error) {
+    if e != nil {
+        log.Println(e.Error)
+    }
+}
 func GenerateKeyPair(bits int) (*rsa.PrivateKey, *rsa.PublicKey) {
 	privkey, err := rsa.GenerateKey(rand.Reader, bits)
-	if err != nil {
-		log.Println(err)
-	}
+	CheckError(err)
 	return privkey, &privkey.PublicKey
 }
 
@@ -33,10 +37,7 @@ func PrivateKeyToBytes(priv *rsa.PrivateKey) []byte {
 // PublicKeyToBytes public key to bytes
 func PublicKeyToBytes(pub *rsa.PublicKey) []byte {
 	pubASN1, err := x509.MarshalPKIXPublicKey(pub)
-	if err != nil {
-		log.Println(err)
-	}
-
+	CheckError(err)
 	pubBytes := pem.EncodeToMemory(&pem.Block{
 		Type:  "RSA PUBLIC KEY",
 		Bytes: pubASN1,
@@ -54,14 +55,10 @@ func BytesToPrivateKey(priv []byte) *rsa.PrivateKey {
 	if enc {
 		log.Println("is encrypted pem block")
 		b, err = x509.DecryptPEMBlock(block, nil)
-		if err != nil {
-			log.Println(err)
-		}
+		CheckError(err)
 	}
 	key, err := x509.ParsePKCS1PrivateKey(b)
-	if err != nil {
-		log.Println(err)
-	}
+	CheckError(err)
 	return key
 }
 
@@ -74,14 +71,10 @@ func BytesToPublicKey(pub []byte) *rsa.PublicKey {
 	if enc {
 		log.Println("is encrypted pem block")
 		b, err = x509.DecryptPEMBlock(block, nil)
-		if err != nil {
-			log.Println(err)
-		}
+		CheckError(err)
 	}
 	ifc, err := x509.ParsePKIXPublicKey(b)
-	if err != nil {
-		log.Println(err)
-	}
+	CheckError(err)
 	key, ok := ifc.(*rsa.PublicKey)
 	if !ok {
 		log.Println("not ok")
@@ -89,22 +82,19 @@ func BytesToPublicKey(pub []byte) *rsa.PublicKey {
 	return key
 }
 
-// EncryptWithPublicKey encrypts data with public key
-func EncryptWithPublicKey(msg []byte, pub *rsa.PublicKey) []byte {
-	hash := sha512.New()
-	ciphertext, err := rsa.EncryptOAEP(hash, rand.Reader, pub, msg, nil)
-	if err != nil {
-		log.Println(err)
-	}
-	return ciphertext
+func EncryptWithPublicKey(secretMessage string, key *rsa.PublicKey) string {
+    label := []byte("OAEP Encrypted")
+    rng := rand.Reader
+    ciphertext, err := rsa.EncryptOAEP(sha512.New(), rng, key, []byte(secretMessage), label)
+    CheckError(err)
+    return base64.StdEncoding.EncodeToString(ciphertext)
 }
 
-// DecryptWithPrivateKey decrypts data with private key
-func DecryptWithPrivateKey(ciphertext []byte, priv *rsa.PrivateKey) []byte {
-	hash := sha512.New()
-	plaintext, err := rsa.DecryptOAEP(hash, rand.Reader, priv, ciphertext, nil)
-	if err != nil {
-		log.Println(err)
-	}
-	return plaintext
+func DecryptWithPrivateKey(cipherText string, privKey *rsa.PrivateKey) string {
+    ct, _ := base64.StdEncoding.DecodeString(cipherText)
+    label := []byte("OAEP Encrypted")
+    rng := rand.Reader
+    plaintext, err := rsa.DecryptOAEP(sha512.New(), rng, privKey, ct, label)
+    CheckError(err)
+    return string(plaintext)
 }

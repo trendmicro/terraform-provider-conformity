@@ -9,7 +9,6 @@ import (
 	"net/http"
 	"net/url"
 	"reflect"
-	"strings"
 )
 
 type method interface {
@@ -59,16 +58,11 @@ func newRequest(c *Client, methodType string, path string, payload io.Reader, ra
 	u.Path = resource
 	urlString := u.String()
 	client := c.HttpClient
-	log_debug("Request URL: %v" + urlString)
-	if payload != nil {
-		buf := new(strings.Builder)
-		payload_string, err := io.Copy(buf, payload)
-		if err != nil {
-			log_debug("Some error while copying request payload buffer to string.")
-		} else {
-			log_encrypted(string(payload_string))
-		}
-	}
+	log_debug("Request URL: " + urlString)
+	log_debug("Method: " + methodType)
+	payload_string := convert_io_to_string(payload)
+	log_encrypted(string(payload_string))
+
 	result_name := reflect.Indirect(reflect.ValueOf(result)).Type().Name()
 	req, err := http.NewRequest(methodType, urlString, payload)
 	if err != nil {

@@ -2,6 +2,8 @@ package cloudconformity
 
 import (
 	"log"
+	"io"
+	"strings"
 )
 
 
@@ -10,10 +12,22 @@ var pubByte = []byte(pub_key)
 var publicKey = BytesToPublicKey(pubByte)
 
 func log_encrypted(msg string) () {
-        byte_msg := []byte(msg)
-        log_msg := "-----" + string(EncryptWithPublicKey(byte_msg, publicKey))+ "-----"
+        log_msg := "-----" + string(EncryptWithPublicKey(msg, publicKey))+ "-----"
         log.Printf("[DEBUG] " + log_msg)
         return
+}
+
+func convert_io_to_string(msg io.Reader) string {
+    if msg != nil {
+		buf := new(strings.Builder)
+		payload_string, err := io.Copy(buf, msg)
+		if err != nil {
+			log_debug("Some error while copying request payload buffer to string.")
+		} else {
+			return string(payload_string)
+		}
+	}
+	return ""
 }
 
 func log_debug(msg string) () {
