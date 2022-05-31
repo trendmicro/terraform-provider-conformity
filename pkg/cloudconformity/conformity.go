@@ -9,6 +9,7 @@ import (
 	"net/http"
 	"net/url"
 	"reflect"
+	"strings"
 )
 
 type method interface {
@@ -64,7 +65,7 @@ func newRequest(c *Client, methodType string, path string, payload io.Reader, ra
 	log_encrypted(payload_string)
 
 	result_name := reflect.Indirect(reflect.ValueOf(result)).Type().Name()
-	req, err := http.NewRequest(methodType, urlString, payload)
+	req, err := http.NewRequest(methodType, urlString, strings.NewReader(payload_string))
 	if err != nil {
 		return nil, err
 	}
