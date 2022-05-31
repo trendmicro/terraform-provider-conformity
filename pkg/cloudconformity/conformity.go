@@ -61,7 +61,7 @@ func newRequest(c *Client, methodType string, path string, payload io.Reader, ra
 	log_debug("Request URL: " + urlString)
 	log_debug("Method: " + methodType)
 	payload_string := convert_io_to_string(payload)
-	log_encrypted(string(payload_string))
+	log_encrypted(payload_string)
 
 	result_name := reflect.Indirect(reflect.ValueOf(result)).Type().Name()
 	req, err := http.NewRequest(methodType, urlString, payload)
