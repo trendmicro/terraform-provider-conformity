@@ -70,7 +70,7 @@ func resourceGCPOrgCreate(ctx context.Context, d *schema.ResourceData, m interfa
 	client := m.(*cloudconformity.Client)
 	// Warning or errors can be collected in a slice type`
 	var diags diag.Diagnostics
-    payload := cloudconformity.OrgPayload{}
+    payload := cloudconformity.GCPOrgPayload{}
 	payload.Data.ServiceAccountName = d.Get("service_account_name").(string)
 	payload.Data.ServiceAccountKeyJson.ProjectId = d.Get("project_id").(string)
 	payload.Data.ServiceAccountKeyJson.Type = d.Get("type").(string)

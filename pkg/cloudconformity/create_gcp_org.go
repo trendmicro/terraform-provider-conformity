@@ -7,11 +7,11 @@ import (
 )
 
 //  register a new GCP org with Conformity
-func (c *Client) CreateGCPOrg(OrgPayload OrgPayload) (string, error) {
+func (c *Client) CreateGCPOrg(GCPOrgPayload GCPOrgPayload) (string, error) {
 
 	orgResponse := GCPOrgResponse{}
 
-	rb, err := json.Marshal(OrgPayload)
+	rb, err := json.Marshal(GCPOrgPayload)
 	if err != nil {
 		return "", err
 	}

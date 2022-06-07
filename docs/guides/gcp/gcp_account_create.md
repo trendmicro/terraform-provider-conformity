@@ -19,7 +19,7 @@ Provides instruction on how to create or add GCP account on Conformity using Ter
 1. Create terraform `cloud_formation.tf` on `example/gcp` folder for Cloudformation module, create the file if not existing and add the following values:
 ```hcl
 resource "conformity_gcp_account" "gcp" {
-    name            = "MySubscription"
+    name            = "MyProject"
     project_id       = "conformity-123456"
     project_name     = "conformity"
     service_account_unique_id = "123456"
@@ -33,7 +33,7 @@ resource "conformity_gcp_account" "gcp" {
 
 ```hcl
 apikey = "CLOUD-CONFORMITY-API-KEY"
-region = "GCP-ACCOUNT-REGION"
+region = "CONFORMITY-REGION"
 ```
 Note: You can always change the values declared according to your choice.
 

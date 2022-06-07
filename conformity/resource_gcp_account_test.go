@@ -8,7 +8,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
-	"github.com/stretchr/testify/assert"
+// 	"github.com/stretchr/testify/assert"
 )
 
 func TestAccResourceGCPAccount(t *testing.T) {
@@ -21,14 +21,13 @@ func TestAccResourceGCPAccount(t *testing.T) {
 	ruleSetting3 = nil
 
 	name := "test-name"
-	environment := "test-env"
-	managedGroupId := "test-managedGroupId"
-
-
+	projectId := "conformity-346910"
+	projectName := "conformity"
+	serviceAccountUniqueId := "112840099457455417995"
 	updatedName := "test-name-2"
-	updatedEnvironment := "test-env-2"
-	updatedRoleARN := "test-arn-2"
-	updatedExternalID := "test-external-id-2"
+	updatedProjectId := "conformity-346910"
+	updatedProjectName := "conformity"
+	updatedServiceAccountUniqueId := "112840099457455417995"
 	updatedTags := []string{"tag1", "tag2"}
 
 	resource.Test(t, resource.TestCase{
@@ -37,7 +36,7 @@ func TestAccResourceGCPAccount(t *testing.T) {
 		Providers:    testAccConformityProviders,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccCheckGCPAccountConfigBasic(name, environment, roleARN, externalID),
+				Config: testAccCheckGCPAccountConfigBasic(name, projectId, projectName, serviceAccountUniqueId),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr("conformity_gcp_account.gcp", "name", "test-name"),
 					resource.TestCheckResourceAttr("conformity_gcp_account.gcp", "environment", "test-env"),
@@ -65,7 +64,7 @@ func TestAccResourceGCPAccount(t *testing.T) {
 				), ExpectNonEmptyPlan: true,
 			},
 			{
-				Config: testAccCheckGCPAccountConfigUpdate(updatedName, updatedEnvironment, roleARN, externalID, updatedTags),
+				Config: testAccCheckGCPAccountConfigUpdate(updatedName, updatedProjectId, updatedProjectName, updatedServiceAccountUniqueId, updatedTags),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr("conformity_gcp_account.gcp", "name", "test-name-2"),
 					resource.TestCheckResourceAttr("conformity_gcp_account.gcp", "environment", "test-env-2"),
@@ -88,21 +87,22 @@ func TestAccResourceGCPAccount(t *testing.T) {
 				), ExpectNonEmptyPlan: true,
 			},
 			{
-				Config: testAccCheckGCPAccountConfigBasic(updatedName, updatedEnvironment, updatedRoleARN, updatedExternalID),
+				Config: testAccCheckGCPAccountConfigBasic(updatedName, updatedProjectId, updatedProjectName, updatedServiceAccountUniqueId),
 				// No check function is given because we expect this configuration
 				// to fail before any infrastructure is created
-				ExpectError: regexp.MustCompile("'role_arn' and 'external_id' cannot be changed"),
+				ExpectError: regexp.MustCompile("'updatedProject_id' and 'updatedProject_name' cannot be changed"),
 			},
 		},
 	})
 }
 
-func testAccCheckGCPAccountConfigBasic(name, environment, roleARN, externalID string) string {
+func testAccCheckGCPAccountConfigBasic(name, project_id, project_name, service_account_unique_id string) string {
 	return fmt.Sprintf(`
 	resource "conformity_gcp_account" "gcp" {
-		name = "%s"
-		environment = "%s"
-		managed-group-id = "%s"
+		name            = "%s"
+        project_id       = "%s"
+        project_name     = "%s"
+        service_account_unique_id = "%s"
 		tags = ["staging"]
 		settings {
 			bot {
@@ -184,16 +184,16 @@ func testAccCheckGCPAccountConfigBasic(name, environment, roleARN, externalID st
 		value = conformity_gcp_account.gcp.name
 	}
 
-	`, name, environment, roleARN, externalID)
+	`, name, project_id, project_name, service_account_unique_id)
 }
 
-func testAccCheckGCPAccountConfigUpdate(name, environment, roleARN, externalID string, tags []string) string {
+func testAccCheckGCPAccountConfigUpdate(name, project_id, project_name, service_account_unique_id string, tags []string) string {
 	return fmt.Sprintf(`
 	resource "conformity_gcp_account" "gcp" {
 		name = "%s"
-		environment = "%s"
-		role_arn = "%s"
-		external_id = "%s"
+		project_id       = "%s"
+        project_name     = "%s"
+        service_account_unique_id = "%s"
 		tags = ["%s","%s"]
 		settings {
 			bot {
@@ -261,7 +261,7 @@ func testAccCheckGCPAccountConfigUpdate(name, environment, roleARN, externalID s
 		value = conformity_gcp_account.gcp.name
 	}
 
-	`, name, environment, roleARN, externalID, tags[0], tags[1])
+	`, name, project_id, project_name, service_account_unique_id, tags[0], tags[1])
 }
 
 func testAccCheckGCPAccountDestroy(s *terraform.State) error {
@@ -283,35 +283,4 @@ func testAccCheckGCPAccountDestroy(s *terraform.State) error {
 	}
 	testServer.Close()
 	return nil
-}
-
-func TestFlattenBotDisabledRegions(t *testing.T) {
-	res := flattenBotDisabledRegions(&cloudconformity.BotDisabledRegions{})
-	assert.Equal(t, 0, len(res))
-
-	res = flattenBotDisabledRegions(&cloudconformity.BotDisabledRegions{
-		EuSouth1: true,
-	})
-	assert.Equal(t, 1, len(res))
-	assert.Equal(t, "eu-south-1", res[0])
-}
-
-func TestProcessBotDisabledRegions(t *testing.T) {
-	list := make([]interface{}, 0)
-	regions := processBotDisabledRegions(list)
-	assert.False(t, regions.AfSouth1)
-	assert.False(t, regions.UsWest2)
-
-	list = make([]interface{}, 1)
-	list[0] = "nonsense"
-	regions = processBotDisabledRegions(list)
-	assert.False(t, regions.AfSouth1)
-	assert.False(t, regions.UsWest2)
-
-	list = make([]interface{}, 2)
-	list[0] = "af-south-1"
-	list[1] = "us-west-2"
-	regions = processBotDisabledRegions(list)
-	assert.True(t, regions.AfSouth1)
-	assert.True(t, regions.UsWest2)
 }

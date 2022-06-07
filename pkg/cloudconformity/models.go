@@ -483,7 +483,7 @@ type GCPKeyJSON struct {
     ClientX509CertUrl     string `json:"client_x509_cert_url"`
 }
 
-type OrgPayload struct {
+type GCPOrgPayload struct {
     Data struct {
 		ServiceAccountName      string          `json:"serviceAccountName"`
 		ServiceAccountKeyJson   GCPKeyJSON      `json:"serviceAccountKeyJson"`
