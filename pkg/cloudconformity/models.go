@@ -171,7 +171,7 @@ type accountAtrributes struct {
 	Tags            []string              `json:"tags"`
 	Access          accountAccess         `json:"access,omitempty"`
 	Configuration   *AccountConfiguration `json:"configuration,omitempty"`
-	CoudType        string                `json:"cloud-type,omitempty"`
+	CloudType        string                `json:"cloud-type,omitempty"`
 	CloudData       *CloudData            `json:"cloud-data,omitempty"`
 	Settings        *AccountSettings      `json:"settings,omitempty"`
 }

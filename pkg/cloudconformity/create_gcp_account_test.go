@@ -27,9 +27,9 @@ func TestCreateGCPAccountFail(t *testing.T) {
 	defer ts.Close()
 
 	// run the code
-	externalID, err := client.CreateGCPAccount(AccountPayload{})
+	accountID, err := client.CreateGCPAccount(AccountPayload{})
 	// check the results
 	assert.NotNil(t, err)
 	assert.EqualError(t, err, errResponse)
-	assert.Equal(t, externalID, "")
+	assert.Equal(t, accountID, "")
 }
