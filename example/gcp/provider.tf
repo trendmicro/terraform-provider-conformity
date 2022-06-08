@@ -1,8 +1,8 @@
 terraform {
   required_providers {
     conformity = {
-     version = "0.3.9"
-     source  = "trendmicro/conformity"
+      version = "0.4.0"
+      source  = "trendmicro/conformity"
 
     }
   }
