@@ -34,7 +34,7 @@ resource "conformity_gcp_org" "gcp_org" {
 ```
 2. To use Conformity and its resources, add the GCP Access Key, Secret Access Key, and Region where the resources will be created and API Key from Conformity Organisation to the `terraform.tfvars`. 
 
-3. Create `terraform.tfvars` on `example/GCP` folder and add the following values:
+3. Create `terraform.tfvars` on `example/gcp_organisation` folder and add the following values:
 
 ```hcl
 apikey = "CLOUD-CONFORMITY-API-KEY"
