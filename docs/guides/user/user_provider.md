@@ -44,7 +44,7 @@ Note: You can always change the values declared according to your choice.
 terraform {
   required_providers {
     conformity = {
-      version = "0.3.8"
+      version = "0.3.9"
       source  = "trendmicro/conformity"
     }
   }

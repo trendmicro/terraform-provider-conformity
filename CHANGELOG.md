@@ -1,4 +1,7 @@
-## 0.3.7
+## 0.3.9
+* GCP integration
+
+## 0.3.8
 * security vulnerable issue fixed
 * Logging nul payload issue fixed
 

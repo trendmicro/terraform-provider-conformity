@@ -150,15 +150,6 @@ func resourceGCPAccountRead(ctx context.Context, d *schema.ResourceData, m inter
 	if err := d.Set("environment", accountAccessAndDetails.AccountDetails.Data.Attributes.Environment); err != nil {
 		return diag.FromErr(err)
 	}
-	if err := d.Set("project_id", accountAccessAndDetails.AccountDetails.Data.Attributes.Access.ProjectId); err != nil {
-		return diag.FromErr(err)
-	}
-	if err := d.Set("project_name", accountAccessAndDetails.AccountDetails.Data.Attributes.Access.ProjectName); err != nil {
-		return diag.FromErr(err)
-	}
-	if err := d.Set("service_account_unique_id", accountAccessAndDetails.AccountDetails.Data.Attributes.Access.ServiceAccountUniqueId); err != nil {
-		return diag.FromErr(err)
-	}
 	if err := d.Set("tags", accountAccessAndDetails.AccountDetails.Data.Attributes.Tags); err != nil {
 		return diag.FromErr(err)
 	}

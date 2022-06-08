@@ -143,7 +143,7 @@ type AccountBot struct {
 }
 
 type AccountBotSettingsData struct {
-	Attributes accountAtrributes `json:"attributes"`
+	Attributes accountAttributes `json:"attributes"`
 	Type       string            `json:"type"`
 	Id         string            `json:"id"`
 }
@@ -164,7 +164,7 @@ type AccountSettings struct {
 	Bot *AccountBot `json:"bot,omitempty"`
 }
 
-type accountAtrributes struct {
+type accountAttributes struct {
 	Name          string                `json:"name"`
 	Environment   string                `json:"environment"`
 	ManagedGroupId  string                `json:"managed-group-id"`
@@ -176,7 +176,7 @@ type accountAtrributes struct {
 	Settings      *AccountSettings      `json:"settings,omitempty"`
 }
 
-type createAccountAtrributes struct {
+type createAccountAttributes struct {
 	Name          string                `json:"name"`
 	Environment   string                `json:"environment"`
 	Tags          []string              `json:"tags"`
@@ -189,12 +189,12 @@ type createAccountAtrributes struct {
 
 type accountData struct {
 	Type       string            `json:"type,omitempty"`
-	Attributes accountAtrributes `json:"attributes"`
+	Attributes accountAttributes `json:"attributes"`
 }
 
 type createAccountData struct {
 	Type       string            `json:"type,omitempty"`
-	Attributes createAccountAtrributes `json:"attributes"`
+	Attributes createAccountAttributes `json:"attributes"`
 }
 
 type AccountPayload struct {
@@ -204,7 +204,7 @@ type AccountPayload struct {
 type AccountResponse struct {
 	Data struct {
 		ID         string            `json:"id"`
-		Attributes accountAtrributes `json:"attributes"`
+		Attributes accountAttributes `json:"attributes"`
 	} `json:"data"`
 }
 type accountDetails struct {
@@ -506,7 +506,7 @@ type GCPOrgPayload struct {
 	} `json:"data"`
 }
 
-type GCPOrgAtrributes struct {
+type GCPOrgAttributes struct {
     ServiceAccountName string `json:"serviceAccountName"`
     ServiceAccountUniqueId string `json:"ServiceAccountUniqueId"`
 }
@@ -514,6 +514,6 @@ type GCPOrgAtrributes struct {
 type GCPOrgResponse struct {
 	Data struct {
 		ID         string            `json:"id"`
-		Attributes GCPOrgAtrributes `json:"attributes"`
+		Attributes GCPOrgAttributes `json:"attributes"`
 	} `json:"data"`
 }
