@@ -6,9 +6,10 @@ import (
 	"fmt"
 	"io"
 	"io/ioutil"
-	"log"
 	"net/http"
 	"net/url"
+	"reflect"
+	"strings"
 )
 
 type method interface {
@@ -58,8 +59,13 @@ func newRequest(c *Client, methodType string, path string, payload io.Reader, ra
 	u.Path = resource
 	urlString := u.String()
 	client := c.HttpClient
+	log_debug("Request URL: " + urlString)
+	log_debug("Method: " + methodType)
+	payload_string := convert_io_to_string(payload)
+	log_encrypted(payload_string)
 
-	req, err := http.NewRequest(methodType, urlString, payload)
+	result_name := reflect.Indirect(reflect.ValueOf(result)).Type().Name()
+	req, err := http.NewRequest(methodType, urlString, strings.NewReader(payload_string))
 	if err != nil {
 		return nil, err
 	}
@@ -79,15 +85,16 @@ func newRequest(c *Client, methodType string, path string, payload io.Reader, ra
 	if err != nil {
 		return nil, err
 	}
-
+	log_debug("Response Body of " + result_name)
+	log_encrypted(string(body))
 	err = json.Unmarshal(body, &result)
 	if err != nil {
 		return nil, err
 	}
 
 	if resp.StatusCode != 200 {
-		log.Printf("[DEBUG] Conformity request error: %v\n", resp.StatusCode)
-		log.Printf("[DEBUG] Conformity reponse body error: %v\n", string(body))
+		log_debug("Conformity request error: " + string(resp.StatusCode))
+		log_debug("Conformity response body error" + string(body))
 
 		return body, errors.New(string(body))
 	}

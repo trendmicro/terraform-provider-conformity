@@ -165,15 +165,26 @@ type AccountSettings struct {
 }
 
 type accountAtrributes struct {
-	Name            string                `json:"name"`
-	Environment     string                `json:"environment"`
+	Name          string                `json:"name"`
+	Environment   string                `json:"environment"`
 	ManagedGroupId  string                `json:"managed-group-id"`
-	Tags            []string              `json:"tags"`
-	Access          accountAccess         `json:"access,omitempty"`
-	Configuration   *AccountConfiguration `json:"configuration,omitempty"`
-	CloudType        string                `json:"cloud-type,omitempty"`
-	CloudData       *CloudData            `json:"cloud-data,omitempty"`
-	Settings        *AccountSettings      `json:"settings,omitempty"`
+	Tags          []string              `json:"tags"`
+	//Access        accountAccess         `json:"access,omitempty"`
+	Configuration *AccountConfiguration `json:"configuration,omitempty"`
+	CloudType      string                `json:"cloud-type,omitempty"`
+	CloudData     *CloudData            `json:"cloud-data,omitempty"`
+	Settings      *AccountSettings      `json:"settings,omitempty"`
+}
+
+type createAccountAtrributes struct {
+	Name          string                `json:"name"`
+	Environment   string                `json:"environment"`
+	Tags          []string              `json:"tags"`
+	Access        accountAccess         `json:"access,omitempty"`
+	Configuration *AccountConfiguration `json:"configuration,omitempty"`
+	CloudType      string                `json:"cloud-type,omitempty"`
+	CloudData     *CloudData            `json:"cloud-data,omitempty"`
+	Settings      *AccountSettings      `json:"settings,omitempty"`
 }
 
 type accountData struct {
@@ -181,8 +192,13 @@ type accountData struct {
 	Attributes accountAtrributes `json:"attributes"`
 }
 
+type createAccountData struct {
+	Type       string            `json:"type,omitempty"`
+	Attributes createAccountAtrributes `json:"attributes"`
+}
+
 type AccountPayload struct {
-	Data accountData `json:"data"`
+	Data createAccountData `json:"data"`
 }
 
 type AccountResponse struct {

@@ -47,14 +47,14 @@ terraform import aws_cloudformation_stack.stack CloudConformity
 | Name | Version |
 |------|---------|
 | <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 3.44.0 |
-| <a name="requirement_conformity"></a> [conformity](#requirement\_conformity) | 0.3.6 |
+| <a name="requirement_conformity"></a> [conformity](#requirement\_conformity) | 0.3.8 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
 | <a name="provider_aws"></a> [aws](#provider\_aws) | >= 3.44.0 |
-| <a name="provider_conformity"></a> [conformity](#provider\_conformity) | 0.3.6 |
+| <a name="provider_conformity"></a> [conformity](#provider\_conformity) | 0.3.8 |
 
 ## Resources
 
