@@ -21,6 +21,9 @@ type accountAccess struct {
 	Type              string       `json:"type,omitempty"`
 	SubscriptionId    string       `json:"subscriptionId,omitempty"`
 	ActiveDirectoryId string       `json:"activeDirectoryId,omitempty"`
+	ProjectId		  string       `json:"projectId,omitempty"`
+	ProjectName 	  string       `json:"projectName,omitempty"`
+	ServiceAccountUniqueId string  `json:"serviceAccountUniqueId,omitempty"`
 }
 type AccountConfiguration struct {
 	ExternalId string `json:"externalId,omitempty"`
@@ -140,7 +143,7 @@ type AccountBot struct {
 }
 
 type AccountBotSettingsData struct {
-	Attributes accountAtrributes `json:"attributes"`
+	Attributes accountAttributes `json:"attributes"`
 	Type       string            `json:"type"`
 	Id         string            `json:"id"`
 }
@@ -161,36 +164,37 @@ type AccountSettings struct {
 	Bot *AccountBot `json:"bot,omitempty"`
 }
 
-type accountAtrributes struct {
+type accountAttributes struct {
 	Name          string                `json:"name"`
 	Environment   string                `json:"environment"`
+	ManagedGroupId  string                `json:"managed-group-id"`
 	Tags          []string              `json:"tags"`
 	//Access        accountAccess         `json:"access,omitempty"`
 	Configuration *AccountConfiguration `json:"configuration,omitempty"`
-	CoudType      string                `json:"cloud-type,omitempty"`
+	CloudType      string                `json:"cloud-type,omitempty"`
 	CloudData     *CloudData            `json:"cloud-data,omitempty"`
 	Settings      *AccountSettings      `json:"settings,omitempty"`
 }
 
-type createAccountAtrributes struct {
+type createAccountAttributes struct {
 	Name          string                `json:"name"`
 	Environment   string                `json:"environment"`
 	Tags          []string              `json:"tags"`
 	Access        accountAccess         `json:"access,omitempty"`
 	Configuration *AccountConfiguration `json:"configuration,omitempty"`
-	CoudType      string                `json:"cloud-type,omitempty"`
+	CloudType      string                `json:"cloud-type,omitempty"`
 	CloudData     *CloudData            `json:"cloud-data,omitempty"`
 	Settings      *AccountSettings      `json:"settings,omitempty"`
 }
 
 type accountData struct {
 	Type       string            `json:"type,omitempty"`
-	Attributes accountAtrributes `json:"attributes"`
+	Attributes accountAttributes `json:"attributes"`
 }
 
 type createAccountData struct {
 	Type       string            `json:"type,omitempty"`
-	Attributes createAccountAtrributes `json:"attributes"`
+	Attributes createAccountAttributes `json:"attributes"`
 }
 
 type AccountPayload struct {
@@ -200,7 +204,7 @@ type AccountPayload struct {
 type AccountResponse struct {
 	Data struct {
 		ID         string            `json:"id"`
-		Attributes accountAtrributes `json:"attributes"`
+		Attributes accountAttributes `json:"attributes"`
 	} `json:"data"`
 }
 type accountDetails struct {
@@ -480,4 +484,36 @@ type ApplyProfileResponse struct {
 		Message string `json:"message"`
 		Status  string `json:"status"`
 	} `json:"meta"`
+}
+
+type GCPKeyJSON struct {
+    Type  string `json:"type"`
+    ProjectId  string `json:"project_id"`
+    PrivateKeyId string `json:"private_key_id"`
+    PrivateKey string `json:"private_key"`
+    ClientEmail string `json:"client_email"`
+    ClientId  string `json:"client_id"`
+    AuthUri   string `json:"auth_uri"`
+    TokenUri   string `json:"token_uri"`
+    AuthProviderX509CertUrl  string `json:"auth_provider_x509_cert_url"`
+    ClientX509CertUrl     string `json:"client_x509_cert_url"`
+}
+
+type GCPOrgPayload struct {
+    Data struct {
+		ServiceAccountName      string          `json:"serviceAccountName"`
+		ServiceAccountKeyJson   GCPKeyJSON      `json:"serviceAccountKeyJson"`
+	} `json:"data"`
+}
+
+type GCPOrgAttributes struct {
+    ServiceAccountName string `json:"serviceAccountName"`
+    ServiceAccountUniqueId string `json:"ServiceAccountUniqueId"`
+}
+
+type GCPOrgResponse struct {
+	Data struct {
+		ID         string            `json:"id"`
+		Attributes GCPOrgAttributes `json:"attributes"`
+	} `json:"data"`
 }

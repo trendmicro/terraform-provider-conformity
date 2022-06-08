@@ -30,6 +30,8 @@ func Provider() *schema.Provider {
 		ResourcesMap: map[string]*schema.Resource{
 			"conformity_aws_account":           resourceAwsAccount(),
 			"conformity_azure_account":         resourceAzureAccount(),
+			"conformity_gcp_account":           resourceGCPAccount(),
+			"conformity_gcp_org":               resourceGCPOrg(),
 			"conformity_group":                 resourceConformityGroup(),
 			"conformity_user":                  resourceConformityLegacyUser(),
 			"conformity_sso_user":              resourceConformitySsoLegacyUser(),

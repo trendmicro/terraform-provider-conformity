@@ -1,4 +1,7 @@
-## 0.3.7
+## 0.3.9
+* GCP integration
+
+## 0.3.8
 * security vulnerable issue fixed
 * Logging nul payload issue fixed
 
@@ -53,6 +56,8 @@ FEATURES:
 * **New Data Source:** `conformity_external_id`
 * **New Resource:** `conformity_aws_account`
 * **New Resource:** `conformity_azure_account`
+* **New Resource:** `conformity_gcp_account`
+* **New Resource:** `conformity_gcp_org`
 * **New Resource:** `conformity_group`
 * **New Resource:** `conformity_user`
 * **New Resource:** `conformity_sso_user`
