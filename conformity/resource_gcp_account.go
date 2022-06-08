@@ -22,7 +22,7 @@ func resourceGCPAccount() *schema.Resource {
 			},
 			"environment": {
 				Type:     schema.TypeString,
-				Required: true,
+				Optional: true,
 			},
 			"project_id": {
 				Type:     schema.TypeString,
@@ -108,7 +108,7 @@ func resourceGCPAccountCreate(ctx context.Context, d *schema.ResourceData, m int
 	payload.Data.Attributes.Environment = d.Get("environment").(string)
 	payload.Data.Attributes.Access.ProjectId = d.Get("project_id").(string)
 	payload.Data.Attributes.Access.ProjectName = d.Get("project_name").(string)
-	payload.Data.Attributes.Access.ServiceAccountUniqueId = d.Get("service_accountUniqueId").(string)
+	payload.Data.Attributes.Access.ServiceAccountUniqueId = d.Get("service_account_unique_id").(string)
 
 	accountId, err := client.CreateGCPAccount(payload)
 	if err != nil {
@@ -150,7 +150,13 @@ func resourceGCPAccountRead(ctx context.Context, d *schema.ResourceData, m inter
 	if err := d.Set("environment", accountAccessAndDetails.AccountDetails.Data.Attributes.Environment); err != nil {
 		return diag.FromErr(err)
 	}
-	if err := d.Set("managed-group-id", accountAccessAndDetails.AccountDetails.Data.Attributes.ManagedGroupId); err != nil {
+	if err := d.Set("project_id", accountAccessAndDetails.AccountDetails.Data.Attributes.Access.ProjectId); err != nil {
+		return diag.FromErr(err)
+	}
+	if err := d.Set("project_name", accountAccessAndDetails.AccountDetails.Data.Attributes.Access.ProjectName); err != nil {
+		return diag.FromErr(err)
+	}
+	if err := d.Set("service_account_unique_id", accountAccessAndDetails.AccountDetails.Data.Attributes.Access.ServiceAccountUniqueId); err != nil {
 		return diag.FromErr(err)
 	}
 	if err := d.Set("tags", accountAccessAndDetails.AccountDetails.Data.Attributes.Tags); err != nil {

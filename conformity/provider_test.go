@@ -20,6 +20,7 @@ import (
 var testAccConformityProviders map[string]*schema.Provider
 var testAccConformityProvider *schema.Provider
 var accountPayload cloudconformity.AccountPayload
+var gcpOrgPayload cloudconformity.GCPOrgPayload
 var groupDetails cloudconformity.GroupDetails
 var userDetails cloudconformity.UserDetails
 var userAccessDetails cloudconformity.UserAccessDetails
@@ -82,6 +83,8 @@ func createConformityMock() (*cloudconformity.Client, *httptest.Server) {
 		var patchAccountRuleSetting = regexp.MustCompile(`^/v1/accounts/(.*)/settings/rules/(.*)$`)
 		var getAccountRuleSetting = regexp.MustCompile(`^/v1/accounts/(.*)/settings/rules$`)
 		var postAzureAccount = regexp.MustCompile(`^/v1/accounts/azure/$`)
+		var postGCPAccount = regexp.MustCompile(`^/v1/accounts/gcp/$`)
+		var postGCPOrg = regexp.MustCompile(`^/v1/gcp/organisations/$`)
 		var accountDetails = regexp.MustCompile(`^/v1/accounts/(.*)$`)
 		var getAccountAccess = regexp.MustCompile(`^/v1/accounts/(.*)/access$`)
 		var postGroup = regexp.MustCompile(`^/v1/groups/$`)
@@ -113,6 +116,12 @@ func createConformityMock() (*cloudconformity.Client, *httptest.Server) {
 		case postAzureAccount.MatchString(r.URL.Path):
 			_ = readRequestBody(r, &accountPayload)
 			w.Write([]byte(`{ "data": { "type": "accounts", "id": "H19NxMi5-" } }`))
+		case postGCPAccount.MatchString(r.URL.Path):
+			_ = readRequestBody(r, &accountPayload)
+			w.Write([]byte(`{ "data": { "type": "accounts", "id": "H19NxMi5-" } }`))
+		case postGCPOrg.MatchString(r.URL.Path):
+			_ = readRequestBody(r, &accountPayload)
+			w.Write([]byte(`{ "data": { "type": "gcp-organisations", "id": "H19NxMi5-" } }`))
 		case getAccountAccess.MatchString(r.URL.Path):
 			w.Write([]byte(`{
 				"id": "BJ0Ox16Hb:access",

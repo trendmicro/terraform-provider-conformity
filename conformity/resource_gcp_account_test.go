@@ -3,7 +3,6 @@ package conformity
 import (
 	"fmt"
 	"github.com/trendmicro/terraform-provider-conformity/pkg/cloudconformity"
-	"regexp"
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
@@ -23,6 +22,7 @@ func TestAccResourceGCPAccount(t *testing.T) {
 	name := "test-name"
 	projectId := "conformity-346910"
 	projectName := "conformity"
+	environment := "test-env"
 	serviceAccountUniqueId := "112840099457455417995"
 	updatedName := "test-name-2"
 	updatedProjectId := "conformity-346910"
@@ -36,11 +36,11 @@ func TestAccResourceGCPAccount(t *testing.T) {
 		Providers:    testAccConformityProviders,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccCheckGCPAccountConfigBasic(name, projectId, projectName, serviceAccountUniqueId),
+				Config: testAccCheckGCPAccountConfigBasic(name, projectId, projectName, serviceAccountUniqueId, environment),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr("conformity_gcp_account.gcp", "name", "test-name"),
 					resource.TestCheckResourceAttr("conformity_gcp_account.gcp", "environment", "test-env"),
-					resource.TestCheckResourceAttr("conformity_gcp_account.gcp", "managed-group-id", "test-managedGroupId"),
+					//resource.TestCheckResourceAttr("conformity_gcp_account.gcp", "project_id", "conformity-346910"),
 					resource.TestCheckResourceAttr("conformity_gcp_account.gcp", "tags.0", "staging"),
 					resource.TestCheckOutput("conformity_account_name", "test-name"),
 					resource.TestCheckResourceAttr("conformity_gcp_account.gcp", "settings.0.bot.0.delay", "0"),
@@ -68,7 +68,7 @@ func TestAccResourceGCPAccount(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr("conformity_gcp_account.gcp", "name", "test-name-2"),
 					resource.TestCheckResourceAttr("conformity_gcp_account.gcp", "environment", "test-env-2"),
-					resource.TestCheckResourceAttr("conformity_gcp_account.gcp", "managed-group-id", "test-managedGroupId"),
+					//resource.TestCheckResourceAttr("conformity_gcp_account.gcp", "project_id", "conformity-346910"),
 					resource.TestCheckResourceAttr("conformity_gcp_account.gcp", "tags.0", "tag1"),
 					resource.TestCheckResourceAttr("conformity_gcp_account.gcp", "tags.1", "tag2"),
 					resource.TestCheckOutput("conformity_account_name", "test-name-2"),
@@ -86,23 +86,18 @@ func TestAccResourceGCPAccount(t *testing.T) {
 					resource.TestCheckResourceAttr("conformity_gcp_account.gcp", "settings.0.rule.1.settings.0.extra_settings.0.mappings.0.values.0.values.0.value", "nat-001"),
 				), ExpectNonEmptyPlan: true,
 			},
-			{
-				Config: testAccCheckGCPAccountConfigBasic(updatedName, updatedProjectId, updatedProjectName, updatedServiceAccountUniqueId),
-				// No check function is given because we expect this configuration
-				// to fail before any infrastructure is created
-				ExpectError: regexp.MustCompile("'updatedProject_id' and 'updatedProject_name' cannot be changed"),
-			},
 		},
 	})
 }
 
-func testAccCheckGCPAccountConfigBasic(name, project_id, project_name, service_account_unique_id string) string {
+func testAccCheckGCPAccountConfigBasic(name, project_id, project_name, service_account_unique_id, environment string) string {
 	return fmt.Sprintf(`
 	resource "conformity_gcp_account" "gcp" {
 		name            = "%s"
         project_id       = "%s"
         project_name     = "%s"
         service_account_unique_id = "%s"
+        environment = "%s"
 		tags = ["staging"]
 		settings {
 			bot {
@@ -184,7 +179,7 @@ func testAccCheckGCPAccountConfigBasic(name, project_id, project_name, service_a
 		value = conformity_gcp_account.gcp.name
 	}
 
-	`, name, project_id, project_name, service_account_unique_id)
+	`, name, project_id, project_name, service_account_unique_id, environment)
 }
 
 func testAccCheckGCPAccountConfigUpdate(name, project_id, project_name, service_account_unique_id string, tags []string) string {
@@ -194,6 +189,7 @@ func testAccCheckGCPAccountConfigUpdate(name, project_id, project_name, service_
 		project_id       = "%s"
         project_name     = "%s"
         service_account_unique_id = "%s"
+        environment = "test-env-2"
 		tags = ["%s","%s"]
 		settings {
 			bot {
