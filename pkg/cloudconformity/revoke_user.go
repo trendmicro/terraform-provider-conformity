@@ -10,7 +10,7 @@ func (c *Client) RevokeLegacyUser(userId string) (*deleteResponse, error) {
 
 	deleteUserResponse := deleteResponse{}
 
-	_, err := c.ClientRequest(Delete{}, fmt.Sprintf("/v1/users/%s", userId), nil, "", &deleteUserResponse)
+	_, err := c.ClientRequest(Delete{}, fmt.Sprintf("/users/%s", userId), nil, "", &deleteUserResponse)
 	if err != nil {
 		return nil, err
 	}

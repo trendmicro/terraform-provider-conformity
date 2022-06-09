@@ -18,7 +18,7 @@ func (c *Client) CreateGroup(groupPayload GroupDetails) (string, error) {
 
 	log.Printf("[DEBUG] Conformity CreateGroup request payload: %v\n", string(rb))
 
-	_, err = c.ClientRequest(Post{}, "/v1/groups/", strings.NewReader(string(rb)), "", &groupDetails)
+	_, err = c.ClientRequest(Post{}, "/groups/", strings.NewReader(string(rb)), "", &groupDetails)
 	if err != nil {
 		return "", err
 	}

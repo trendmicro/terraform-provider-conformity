@@ -19,7 +19,7 @@ func (c *Client) UpdateProfile(profileId string, profilePayload ProfileSettings)
 
 	log.Printf("[DEBUG] Conformity UpdateProfile request payload: %v\n", string(rb))
 
-	_, err = c.ClientRequest(Patch{}, fmt.Sprintf("/v1/profiles/%s", profileId), strings.NewReader(string(rb)), "", &profileSettings)
+	_, err = c.ClientRequest(Patch{}, fmt.Sprintf("/profiles/%s", profileId), strings.NewReader(string(rb)), "", &profileSettings)
 	if err != nil {
 		return "", err
 	}

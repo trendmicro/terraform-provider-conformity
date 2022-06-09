@@ -195,8 +195,8 @@ func createHttpTestClientGetAccount(t *testing.T) *httptest.Server {
 		w.WriteHeader(http.StatusOK)
 		w.Header().Set("Content-Type", "application/json")
 
-		var getAccessSettings = regexp.MustCompile(`^/v1/accounts/(.*?)/access$`)
-		var getAccessDetails = regexp.MustCompile(`^/v1/accounts/(.*?)$`)
+		var getAccessSettings = regexp.MustCompile(`^/accounts/(.*?)/access$`)
+		var getAccessDetails = regexp.MustCompile(`^/accounts/(.*?)$`)
 		switch {
 		case getAccessSettings.MatchString(r.URL.Path):
 			fmt.Println("createHttpTestClientGetAccount - getAccessSettings")

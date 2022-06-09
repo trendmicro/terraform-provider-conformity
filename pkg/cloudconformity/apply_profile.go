@@ -19,7 +19,7 @@ func (c *Client) CreateApplyProfile(profileId string, profilePayload ApplyProfil
 
 	log.Printf("[DEBUG] Conformity CreateApplyProfile request payload: %v\n", string(rb))
 
-	_, err = c.ClientRequest(Post{}, fmt.Sprintf("/v1/profiles/%s/apply", profileId), strings.NewReader(string(rb)), "", applyProfileResponse)
+	_, err = c.ClientRequest(Post{}, fmt.Sprintf("/profiles/%s/apply", profileId), strings.NewReader(string(rb)), "", applyProfileResponse)
 	if err != nil {
 		return nil, err
 	}

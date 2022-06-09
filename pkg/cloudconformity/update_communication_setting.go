@@ -19,7 +19,7 @@ func (c *Client) UpdateCommunicationSetting(commSettingId string, commPayload Co
 
 	log.Printf("[DEBUG] Conformity UpdateCommunicationSetting request payload: %v\n", string(rb))
 
-	_, err = c.ClientRequest(Patch{}, fmt.Sprintf("/v1/settings/communication/%s", commSettingId), strings.NewReader(string(rb)), "", &commResponse)
+	_, err = c.ClientRequest(Patch{}, fmt.Sprintf("/settings/communication/%s", commSettingId), strings.NewReader(string(rb)), "", &commResponse)
 	if err != nil {
 		return "", err
 	}

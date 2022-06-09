@@ -18,7 +18,7 @@ func (c *Client) CreateAzureAccount(AzurePayload AccountPayload) (string, error)
 
 	log.Printf("[DEBUG] Conformity CreateAzureAccount request payload: %v\n", string(rb))
 
-	_, err = c.ClientRequest(Post{}, "/v1/accounts/azure/", strings.NewReader(string(rb)), "", &accountResponse)
+	_, err = c.ClientRequest(Post{}, "/accounts/azure/", strings.NewReader(string(rb)), "", &accountResponse)
 	if err != nil {
 		return "", err
 	}

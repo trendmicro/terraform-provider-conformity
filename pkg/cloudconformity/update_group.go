@@ -19,7 +19,7 @@ func (c *Client) UpdateGroup(groupId string, groupPayload GroupDetails) (string,
 
 	log.Printf("[DEBUG] Conformity UpdateGroup request payload: %v\n", string(rb))
 
-	_, err = c.ClientRequest(Patch{}, fmt.Sprintf("/v1/groups/%s", groupId), strings.NewReader(string(rb)), "", &groupDetails)
+	_, err = c.ClientRequest(Patch{}, fmt.Sprintf("/groups/%s", groupId), strings.NewReader(string(rb)), "", &groupDetails)
 	if err != nil {
 		return "", err
 	}

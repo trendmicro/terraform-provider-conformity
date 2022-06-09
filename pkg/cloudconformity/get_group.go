@@ -9,7 +9,7 @@ func (c *Client) GetGroup(groupId string) (*GroupDataList, error) {
 
 	GroupDataList := GroupDataList{}
 
-	_, err := c.ClientRequest(Get{}, fmt.Sprintf("/v1/groups/%s", groupId), nil, "", &GroupDataList)
+	_, err := c.ClientRequest(Get{}, fmt.Sprintf("/groups/%s", groupId), nil, "", &GroupDataList)
 	if err != nil {
 		return nil, err
 	}

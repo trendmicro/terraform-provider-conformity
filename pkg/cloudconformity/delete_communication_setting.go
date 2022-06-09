@@ -9,7 +9,7 @@ func (c *Client) DeleteCommunicationSetting(commSettingId string) (*deleteRespon
 
 	deleteCommResponse := deleteResponse{}
 
-	_, err := c.ClientRequest(Delete{}, fmt.Sprintf("/v1/settings/%s", commSettingId), nil, "", &deleteCommResponse)
+	_, err := c.ClientRequest(Delete{}, fmt.Sprintf("/settings/%s", commSettingId), nil, "", &deleteCommResponse)
 	if err != nil {
 		return nil, err
 	}

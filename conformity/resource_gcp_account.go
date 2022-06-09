@@ -122,7 +122,7 @@ func resourceGCPAccountCreate(ctx context.Context, d *schema.ResourceData, m int
 		}
 	}
 
-	err = updateAccountSettings("GCP", accountId, d, client)
+	err = updateAccountSettings("gcp", accountId, d, client)
 	if err != nil {
 		return diag.FromErr(err)
 	}
@@ -139,7 +139,7 @@ func resourceGCPAccountRead(ctx context.Context, d *schema.ResourceData, m inter
 	accountId := d.Id()
 
 	// get both account details and access settings
-	accountAccessAndDetails, err := client.GetAccount(accountId)
+	accountAccessAndDetails, err := client.GetGCPAccount(accountId)
 	if err != nil {
 		return diag.FromErr(err)
 	}
