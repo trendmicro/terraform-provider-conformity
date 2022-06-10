@@ -1,9 +1,9 @@
 resource "conformity_gcp_org" "gcp_org" {
+    private_key              = var.private_key
     service_account_name     = "MySubscription"
     type                     = "service_account"
     project_id               = "conformity-346910"
     private_key_id           = "c1c3688e7c"
-    private_key              = "-----BEGIN PRIVATE KEY-----\nkey=\n-----END PRIVATE KEY-----\n"
     client_email             = "iam.gserviceaccount.com"
     client_id                = "811129548"
     auth_uri                 = "https://accounts.google.com/o/oauth2/auth"
