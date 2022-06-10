@@ -33,8 +33,26 @@ provider "conformity" {
   region = var.region
   apikey = var.apikey
 }
-
 ```
+## Region Argument reference
+
+- For `legacy accounts` Terraform will just support for below three regions
+   * eu-west-1
+   * us-west-2
+   * ap-southeast-2 
+- For `CloudOne accounts` Terraform will Support below regions
+   * us-1
+   * in-1
+   * gb-1
+   * jp-1
+   * de-1
+   * au-1
+   * ca-1
+   * sg-1
+   
+  Also click <a href="https://cloudone.trendmicro.com/docs/identity-and-account-management/c1-regions/"> here </a> to refer cloudone accounts region document
+   
+
 ### AWS Provider
 
 ```hcl

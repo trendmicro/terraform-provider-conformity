@@ -8,7 +8,6 @@ import (
 	"io/ioutil"
 	"net/http"
 	"net/url"
-	"path"
 	"reflect"
 	"strings"
 )
@@ -56,7 +55,7 @@ func newRequest(c *Client, methodType string, url_path string, payload io.Reader
 	apiUrl := c.Url
 	resource := url_path
 	u, _ := url.ParseRequestURI(apiUrl)
-	urlString := path.Join(u.String(), resource)
+	urlString := u.String() + resource
 
 	client := c.HttpClient
 	log_debug("Request URL: " + urlString)
