@@ -59,7 +59,4 @@ resource "azuread_application_password" "client_secret" {
 
 resource "azuread_service_principal" "service_principal" {
   application_id               = azuread_application.app_registration.application_id
-    provisioner "local-exec" {
-    command = "az ad app permission admin-consent --id ${azuread_application.app_registration.application_id}"
-  }
 }
