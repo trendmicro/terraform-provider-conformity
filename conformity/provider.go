@@ -24,7 +24,9 @@ func Provider() *schema.Provider {
 				Type:         schema.TypeString,
 				Optional:     true,
 				Default:      "us-west-2",
-				ValidateFunc: validation.StringInSlice([]string{"eu-west-1", "us-west-2", "ap-southeast-2"}, true),
+				ValidateFunc: validation.StringInSlice([]string{"eu-west-1", "us-west-2", "ap-southeast-2", "us-1",
+				                                                "in-1", "gb-1", "jp-1", "de-1", "au-1", "ca-1",
+				                                                "sg-1"}, true),
 			},
 		},
 		ResourcesMap: map[string]*schema.Resource{

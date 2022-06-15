@@ -19,7 +19,7 @@ func (c *Client) UpdateAccount(accountId string, AccountPayload AccountPayload) 
 
 	log.Printf("[DEBUG] Conformity UpdateAccount request payload: %v\n", string(rb))
 
-	_, err = c.ClientRequest(Patch{}, fmt.Sprintf("/v1/accounts/%s", accountId), strings.NewReader(string(rb)), "", &accountResponse)
+	_, err = c.ClientRequest(Patch{}, fmt.Sprintf("/accounts/%s", accountId), strings.NewReader(string(rb)), "", &accountResponse)
 	if err != nil {
 		return "", err
 	}

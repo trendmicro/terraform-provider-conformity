@@ -9,7 +9,7 @@ func (c *Client) GetCommunicationSetting(commSettingId string) (*CommunicationSe
 
 	CommunicationSettings := CommunicationSettings{}
 
-	_, err := c.ClientRequest(Get{}, fmt.Sprintf("/v1/settings/%s", commSettingId), nil, "", &CommunicationSettings)
+	_, err := c.ClientRequest(Get{}, fmt.Sprintf("/settings/%s", commSettingId), nil, "", &CommunicationSettings)
 	if err != nil {
 		return nil, err
 	}

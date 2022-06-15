@@ -9,7 +9,7 @@ func (c *Client) DeleteGroup(groupId string) (*deleteResponse, error) {
 
 	deleteGroupResponse := deleteResponse{}
 
-	_, err := c.ClientRequest(Delete{}, fmt.Sprintf("/v1/groups/%s", groupId), nil, "", &deleteGroupResponse)
+	_, err := c.ClientRequest(Delete{}, fmt.Sprintf("/groups/%s", groupId), nil, "", &deleteGroupResponse)
 	if err != nil {
 		return nil, err
 	}

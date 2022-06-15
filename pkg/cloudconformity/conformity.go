@@ -13,7 +13,7 @@ import (
 )
 
 type method interface {
-	genericRequest(Client *Client, path string, payload io.Reader, rawQuery string, result interface{}) ([]byte, error)
+	genericRequest(Client *Client, url_path string, payload io.Reader, rawQuery string, result interface{}) ([]byte, error)
 }
 type Get struct{}
 
@@ -22,24 +22,24 @@ type Post struct{}
 type Patch struct{}
 type Delete struct{}
 
-func (Post) genericRequest(Client *Client, path string, payload io.Reader, rawQuery string, result interface{}) ([]byte, error) {
+func (Post) genericRequest(Client *Client, url_path string, payload io.Reader, rawQuery string, result interface{}) ([]byte, error) {
 	//do post request
-	return newRequest(Client, "POST", path, payload, rawQuery, result)
+	return newRequest(Client, "POST", url_path, payload, rawQuery, result)
 }
 
-func (Get) genericRequest(Client *Client, path string, payload io.Reader, rawQuery string, result interface{}) ([]byte, error) {
+func (Get) genericRequest(Client *Client, url_path string, payload io.Reader, rawQuery string, result interface{}) ([]byte, error) {
 	//do get request
-	return newRequest(Client, "GET", path, payload, rawQuery, result)
+	return newRequest(Client, "GET", url_path, payload, rawQuery, result)
 }
 
-func (Patch) genericRequest(Client *Client, path string, payload io.Reader, rawQuery string, result interface{}) ([]byte, error) {
+func (Patch) genericRequest(Client *Client, url_path string, payload io.Reader, rawQuery string, result interface{}) ([]byte, error) {
 	//do patch request
-	return newRequest(Client, "PATCH", path, payload, rawQuery, result)
+	return newRequest(Client, "PATCH", url_path, payload, rawQuery, result)
 }
 
-func (Delete) genericRequest(Client *Client, path string, payload io.Reader, rawQuery string, result interface{}) ([]byte, error) {
+func (Delete) genericRequest(Client *Client, url_path string, payload io.Reader, rawQuery string, result interface{}) ([]byte, error) {
 	//do delete request
-	return newRequest(Client, "DELETE", path, payload, rawQuery, result)
+	return newRequest(Client, "DELETE", url_path, payload, rawQuery, result)
 }
 
 func (c *Client) headers(request *http.Request) {
@@ -50,14 +50,13 @@ func (c *Client) headers(request *http.Request) {
 	}
 }
 
-func newRequest(c *Client, methodType string, path string, payload io.Reader, rawQuery string, result interface{}) ([]byte, error) {
+func newRequest(c *Client, methodType string, url_path string, payload io.Reader, rawQuery string, result interface{}) ([]byte, error) {
 
 	apiUrl := c.Url
-	resource := path
-
+	resource := url_path
 	u, _ := url.ParseRequestURI(apiUrl)
-	u.Path = resource
-	urlString := u.String()
+	urlString := u.String() + resource
+
 	client := c.HttpClient
 	log_debug("Request URL: " + urlString)
 	log_debug("Method: " + methodType)
@@ -102,6 +101,6 @@ func newRequest(c *Client, methodType string, path string, payload io.Reader, ra
 	return body, nil
 }
 
-func (client *Client) ClientRequest(m method, path string, payload io.Reader, rawQuery string, result interface{}) ([]byte, error) {
-	return m.genericRequest(client, path, payload, rawQuery, result)
+func (client *Client) ClientRequest(m method, url_path string, payload io.Reader, rawQuery string, result interface{}) ([]byte, error) {
+	return m.genericRequest(client, url_path, payload, rawQuery, result)
 }

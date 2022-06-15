@@ -18,7 +18,7 @@ func (c *Client) CreateGCPAccount(AccountPayload AccountPayload) (string, error)
 
 	log.Printf("[DEBUG] Conformity CreateGCPAccount request payload: %v\n", string(rb))
 
-	_, err = c.ClientRequest(Post{}, "/v1/accounts/gcp/", strings.NewReader(string(rb)), "", &accountResponse)
+	_, err = c.ClientRequest(Post{}, "/accounts/gcp/", strings.NewReader(string(rb)), "", &accountResponse)
 	if err != nil {
 		return "", err
 	}

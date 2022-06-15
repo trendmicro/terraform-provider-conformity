@@ -19,7 +19,7 @@ func (c *Client) InviteLegacyUser(userPayload UserDetails) (string, error) {
 
 	log.Printf("[DEBUG] Conformity InviteUser request payload: %v\n", string(rb))
 
-	_, err = c.ClientRequest(Post{}, "/v1/users/", strings.NewReader(string(rb)), "", &userDetails)
+	_, err = c.ClientRequest(Post{}, "/users/", strings.NewReader(string(rb)), "", &userDetails)
 	if err != nil {
 		return "", err
 	}

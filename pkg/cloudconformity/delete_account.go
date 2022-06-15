@@ -9,7 +9,7 @@ func (c *Client) DeleteAccount(accountId string) (*deleteResponse, error) {
 
 	deleteAccountResponse := deleteResponse{}
 
-	_, err := c.ClientRequest(Delete{}, fmt.Sprintf("/v1/accounts/%s", accountId), nil, "", &deleteAccountResponse)
+	_, err := c.ClientRequest(Delete{}, fmt.Sprintf("/accounts/%s", accountId), nil, "", &deleteAccountResponse)
 	if err != nil {
 		return nil, err
 	}

@@ -17,7 +17,7 @@ func (c *Client) UpdateAccountBotSettings(accountId string, accountBotSettings A
 		return "", err
 	}
 
-	url := fmt.Sprintf("/v1/accounts/%s/settings/bot", accountId)
+	url := fmt.Sprintf("/accounts/%s/settings/bot", accountId)
 	log.Printf("[DEBUG] Conformity UpdateAccountBotSettings request url: %s\n", url)
 	log.Printf("[DEBUG] Conformity UpdateAccountBotSettings request payload: %v\n", string(rb))
 

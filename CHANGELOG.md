@@ -1,3 +1,8 @@
+## 0.4.1
+* GCP read issue fixed
+* Cloudone URL changes and region support
+* Made GCP private key sensitive
+
 ## 0.4.0
 * GCP integration
 

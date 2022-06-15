@@ -18,7 +18,7 @@ func (c *Client) CreateGCPOrg(GCPOrgPayload GCPOrgPayload) (string, error) {
 
 	log.Printf("[DEBUG] Conformity CreateGCPOrg request payload: %v\n", string(rb))
 
-	_, err = c.ClientRequest(Post{}, "/v1/gcp/organisations/", strings.NewReader(string(rb)), "", &orgResponse)
+	_, err = c.ClientRequest(Post{}, "/gcp/organisations/", strings.NewReader(string(rb)), "", &orgResponse)
 	if err != nil {
 		return "", err
 	}

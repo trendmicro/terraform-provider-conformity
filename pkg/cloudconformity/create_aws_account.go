@@ -18,7 +18,7 @@ func (c *Client) CreateAwsAccount(AccountPayload AccountPayload) (string, error)
 
 	log.Printf("[DEBUG] Conformity CreateAwsAccount request payload: %v\n", string(rb))
 
-	_, err = c.ClientRequest(Post{}, "/v1/accounts/", strings.NewReader(string(rb)), "", &accountResponse)
+	_, err = c.ClientRequest(Post{}, "/accounts/", strings.NewReader(string(rb)), "", &accountResponse)
 	if err != nil {
 		return "", err
 	}

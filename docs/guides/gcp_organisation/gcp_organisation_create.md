@@ -19,11 +19,11 @@ Provides instruction on how to create or add GCP Organisation on Conformity usin
 1. Create terraform `cloud_formation.tf` on `example/gcp_organisation` folder for Cloudformation module, create the file if not existing and add the following values:
 ```hcl
 resource "conformity_gcp_org" "gcp_org" {
+    private_key              = var.private_key
     service_account_name     = "MySubscription"
     type                     = "service_account"
     project_id               = "conformity-346910"
     private_key_id           = "c1c3688e7c"
-    private_key              = "-----BEGIN PRIVATE KEY-----\nkey=\n-----END PRIVATE KEY-----\n"
     client_email             = "iam.gserviceaccount.com"
     client_id                = "811129548"
     auth_uri                 = "https://accounts.google.com/o/oauth2/auth"
@@ -39,6 +39,7 @@ resource "conformity_gcp_org" "gcp_org" {
 ```hcl
 apikey = "CLOUD-CONFORMITY-API-KEY"
 region = "GCP-REGION"
+private_key = "-----BEGIN PRIVATE KEY-----\nkey=\n-----END PRIVATE KEY-----\n"
 ```
 Note: You can always change the values declared according to your choice.
 

@@ -13,7 +13,7 @@ func (c *Client) GetProfile(profileId string) (*ProfileSettings, error) {
 	q := url.Values{}
 	q.Add("includes", "ruleSettings")
 
-	_, err := c.ClientRequest(Get{}, fmt.Sprintf("/v1/profiles/%s", profileId), nil, q.Encode(), &profileSettings)
+	_, err := c.ClientRequest(Get{}, fmt.Sprintf("/profiles/%s", profileId), nil, q.Encode(), &profileSettings)
 	if err != nil {
 		return nil, err
 	}
