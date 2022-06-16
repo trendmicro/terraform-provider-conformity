@@ -1,45 +1,60 @@
 ---
-page_title: "conformity_azure_account"
-subcategory: "Azure"
+page_title: "conformity_gcp_account Resource"
+subcategory: "GCP"
 description: |-
-  Provides a Conformity Azure Account.
+  Provides a Conformity Account.
 ---
 
-# Resource `conformity_azure_account`
-Provides a Conformity Azure Account.
+# Resource `conformity_gcp_account`
+Provides a Conformity GCP Account.
 
-# Prerequisite
-1. Setup a app registry in Azure by using the `azure_app_registry` in the examples folder or by following the manual steps here https://www.cloudconformity.com/help/add-cloud-account/add-an-azure-account.html
-2. In all cases you need to add the Azure Active Directory manually in the Conformity Application like described here https://www.cloudconformity.com/help/add-cloud-account/add-an-azure-account.html#add-an-azure-active-directory
-
-## Example Usage
+## Example Usage With GCP Conformity To Create Account Only
 ```hcl
-resource "conformity_azure_account" "azure" {
-    name                = "azure-conformity"
-    environment         = "development"
-    active_directory_id = "your-active-directory-id"
-    subscription_id     = "your-subscription-id"
+
+resource "conformity_gcp_account" "gcp" {
+  name                      = "MyProject"
+  project_id                = "conformity-346910"
+  project_name              = "conformity"
+  service_account_unique_id = "10307221"
+  environment               = "dev"
+  tags = ["staging"]
+  settings {
+      bot {
+          delay            = 1
+          disabled         = false
+          disabled_regions = [ "ap-east-1", "ap-south-1" ]
+      }
+      // implement multiple-object-values
+      rule {
+          rule_id = "CloudAPI-001"
+          settings {
+              enabled     = true
+              risk_level  = "MEDIUM"
+              extra_settings {
+                  name    = "rotatingPeriod"
+                  type    = "single-number-value"
+                  value   = 90
+              }
+          }
+      }
+  }
 }
 ```
 
 ## Argument reference
  - `name` (String) - (Required) The name of your account.
  - `environment` (String) - (Required) The environment for your account.
- - `subscription_id` (String) - (Required) The Azure Subscription ID
- - `active_directory_id` - (String) - (Required) The Azure Active Directory ID
+ - `projectId` (String) - (Required) The ID of your GCP Project.
+ - `projectName` (String) - (Required) The name of your GCP Project.
+ - `serviceAccountUniqueId` (String) - (Required) The unique ID of your GCP Service Account.
+ - `settings` - (Optional) List: (Can be multiple declaration)
   
   Inside `settings` there can be a `bot` set.
 
  - `bot` - (Optional) List: (Can be multiple declaration)
      * `disabled` (Bool) - (Optional) True to disable or false to enable the Conformity Bot.
+     * `disabled_regions` (Array of Strings) - (Optional) - Possible values are "af-south-1", "ap-east-1", "ap-south-1", "ap-southeast-1", "ap-southeast-2", "ap-northeast-1", "ap-northeast-2", "ap-northeast-3", "ca-central-1", "eu-central-1", "eu-north-1", "eu-south-1", "eu-west-1", "eu-west-2", "eu-west-3", "me-south-1", "sa-east-1", "us-east-1", "us-east-2", "us-west-1", "us-west-2". This field can only be applied to AWS accounts. An attribute object containing a list of AWS regions for which Conformity Bot runs will be disabled.
      * `delay` (Int) - (Optional) Sets the number of hours delay between Conformity Bot runs.
-
-  Inside `settings` there can be multiple `rule` set.
-
- - `rule` - (Optional) List: (Can be multiple declaration)
-     * `rule_id` (String) - (Optional) - Rule ID, same as the one provided in the endpoint.
-  
-  Inside `settings` under `rule` set, there can be one `settings` set. 
 
  - `settings` - (Optional)
      * `enabled` (Bool) - (Optional) True for inclusion in bot detection, false for exclusion.
@@ -94,39 +109,12 @@ resource "conformity_azure_account" "azure" {
 
 In addition to all arguments above, the following attributes are exported:
 
- - `id` - The ID of the Azure account in Conformity managed by this resource
+ - `id` - The ID of the AWS account in Conformity managed by this resource
 
 Example usage on the template:
 
 ```hcl
 account {
-    id = conformity_azure_account.azure.id
+    id = conformity_aws_account.aws.id
 }
-```
-
-## Import
-Azure Account - Can import based on the `Account ID` that can be found under the Conformity web console.
-
-To get the Azure Account ID:
-Open Conformity Admin Web console > navigate to Account dashboard > choose the Azure account you would like to import.
-Notice the URL, you should be able to get the account ID e.g. https://cloudone.trendmicro.com/conformity/account/account-ID
-
-Run `terraform init`:
-```hcl
-terraform init
-```
-
-Import the conformity_azure_account resources into Terraform. Replace the {CLOUDCONFORMITY-ACCOUNT-ID-AZURE} value.
-```hcl
-terraform import conformity_azure_account.azure {CLOUDCONFORMITY-ACCOUNT-ID-AZURE}
-```
-
-Use the `state` subcommand to verify Terraform successfully imported the conformity_azure_account resources.
-```hcl
-terraform state show conformity_azure_account.azure
-```
-
-Run `terraform show -no-color >> main.tf` to import the resources on the `main.tf` file. Be sure to remove the id from the resource
-```hcl
-terraform show -no-color >> main.tf
 ```

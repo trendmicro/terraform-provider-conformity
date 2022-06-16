@@ -22,7 +22,7 @@ func resourceAzureAccount() *schema.Resource {
 			},
 			"environment": {
 				Type:     schema.TypeString,
-				Required: true,
+				Optional: true,
 			},
 			"subscription_id": {
 				Type:     schema.TypeString,
