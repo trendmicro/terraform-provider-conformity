@@ -1,6 +1,7 @@
 ## 0.4.2
 * Made GCP private key sensitive through schema
 * GCP Account Doc
+* conformity_azure_account: environment field should not be required
 
 ## 0.4.1
 * GCP read issue fixed
