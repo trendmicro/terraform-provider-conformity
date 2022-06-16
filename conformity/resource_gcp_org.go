@@ -34,6 +34,7 @@ func resourceGCPOrg() *schema.Resource {
             "private_key": {
                 Type:     schema.TypeString,
                 Required: true,
+                Sensitive:   true,
             },
             "client_email": {
                 Type:     schema.TypeString,
