@@ -21,6 +21,12 @@ func (c *Client) InviteLegacyUser(userPayload UserDetails) (string, error) {
 
 	_, err = c.ClientRequest(Post{}, "/users/", strings.NewReader(string(rb)), "", &userDetails)
 	if err != nil {
+	    if strings.Contains(string(err), "Unable to call this endpoint, use Cloud One UI or API to invite users"){
+	        log_debug(`This Terraform service is not applicable to users who are part of the Cloud One Platform.
+	         Please refer to Cloud One User Management Documentation - Add and manage users to invite new users.
+	         https://cloudone.trendmicro.com/docs/conformity/api-reference/tag/Users#paths/~1users/get`)
+
+	    }
 		return "", err
 	}
 
