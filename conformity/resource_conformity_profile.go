@@ -421,7 +421,8 @@ func flattenProfileExtraSettings(extra []cloudconformity.IncludedExtraSettings) 
 		if extraSettings.Type == "single-string-value" ||
 			extraSettings.Type == "single-number-value" ||
 			extraSettings.Type == "ttl" ||
-			extraSettings.Type == "single-value-regex" {
+			extraSettings.Type == "single-value-regex" ||
+			extraSettings.Type == "choice-single-value" {
 			es["value"] = fmt.Sprintf("%s", extraSettings.Value)
 		} else if extraSettings.Type == "regions" {
 			es["values_array"] = extraSettings.Values
