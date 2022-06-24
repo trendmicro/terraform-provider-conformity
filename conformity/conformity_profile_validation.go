@@ -21,6 +21,17 @@ func CustomizeDiffValidateProfileValue(_ context.Context, diff *schema.ResourceD
 			for esi, es := range ess {
 				esItem := es.(map[string]interface{})
 				value := esItem["value"].(string)
+
+				// only provide either of value, values, or valuesArr
+				clauseA := value != "" && esItem["values"] != nil && len(esItem["values"].(*schema.Set).List()) > 0
+				clauseB := value != "" && esItem["values_array"] != nil && len(esItem["values_array"].(*schema.Set).List()) > 0
+				clauseC := esItem["values"] != nil && esItem["values_array"] != nil && len(esItem["values"].(*schema.Set).List()) > 0 && len(esItem["values_array"].(*schema.Set).List()) > 0
+				if clauseA || clauseB || clauseC {
+					return fmt.Errorf(
+						"only provide either of value, values, or values_arr for the extra_settings %s", esItem["name"].(string),
+					)
+				}
+
 				log.Printf("[DEBUG] customize type: %v", esItem["type"].(string))
 
 				if esItem["type"].(string) == "single-number-value" || esItem["type"].(string) == "ttl" {

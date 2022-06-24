@@ -102,12 +102,20 @@ func resourceConformityProfile() *schema.Resource {
 									"type": {
 										Type:     schema.TypeString,
 										Required: true,
-										ValidateFunc: validation.StringInSlice([]string{"multiple-string-values", "multiple-number-values", "multiple-aws-account-values",
+										ValidateFunc: validation.StringInSlice([]string{"regions", "multiple-string-values", "multiple-number-values", "multiple-aws-account-values",
 											"choice-multiple-value", "choice-single-value", "single-number-value", "single-string-value", "ttl", "single-value-regex", "tags"}, true),
 									},
 									"value": {
 										Type:     schema.TypeString,
 										Optional: true,
+									},
+									// changes schema to allow []string
+									"values_array": {
+										Type:     schema.TypeSet,
+										Optional: true,
+										Elem: &schema.Schema{
+											Type: schema.TypeString,
+										},
 									},
 									"values": {
 										Type:     schema.TypeSet,
@@ -317,21 +325,23 @@ func proccessExtraSettings(v []interface{}, a *cloudconformity.IncludedAttribute
 		c[i].Type = item["type"].(string)
 		// check when to use `value` and `values` base on the type
 		// single-number-value, ttl, single-value-regex, single-string-value - uses `value` and the other type uses `values`
-		if c[i].Type == "single-string-value" || c[i].Type == "single-number-value" || c[i].Type == "ttl" || c[i].Type == "single-value-regex" {
+		if c[i].Type == "single-string-value" || c[i].Type == "single-number-value" || c[i].Type == "ttl" || c[i].Type == "single-value-regex" || c[i].Type == "choice-single-value" {
 			c[i].Value = item["value"].(string)
+		} else if c[i].Type == "regions" {
+			processProfileValuesStringsSlices(item["values_array"].(*schema.Set).List(), &c[i])
 		} else {
-			proccessProfileValues(item["values"].(*schema.Set).List(), &c[i])
+			processProfileValues(item["values"].(*schema.Set).List(), &c[i])
 		}
 
 	}
 	a.ExtraSettings = c
 }
 
-func proccessProfileValues(v []interface{}, ies *cloudconformity.IncludedExtraSettings) {
-	c := make([]*cloudconformity.ProfileValues, 0, len(v))
+func processProfileValues(v []interface{}, ies *cloudconformity.IncludedExtraSettings) {
+	c := make([]interface{}, 0, len(v))
 
 	for _, values := range v {
-		profileValues := &cloudconformity.ProfileValues{}
+		profileValues := cloudconformity.ProfileValues{}
 
 		item := values.(map[string]interface{})
 
@@ -343,7 +353,16 @@ func proccessProfileValues(v []interface{}, ies *cloudconformity.IncludedExtraSe
 	}
 
 	ies.Values = c
+}
 
+func processProfileValuesStringsSlices(v []interface{}, ies *cloudconformity.IncludedExtraSettings) {
+	c := make([]interface{}, 0, len(v))
+
+	for _, value := range v {
+		c = append(c, value.(string))
+	}
+
+	ies.Values = c
 }
 
 func flattenProfileIncluded(included []cloudconformity.ProfileIncluded) []interface{} {
@@ -404,6 +423,8 @@ func flattenProfileExtraSettings(extra []cloudconformity.IncludedExtraSettings) 
 			extraSettings.Type == "ttl" ||
 			extraSettings.Type == "single-value-regex" {
 			es["value"] = fmt.Sprintf("%s", extraSettings.Value)
+		} else if extraSettings.Type == "regions" {
+			es["values_array"] = extraSettings.Values
 		} else {
 			es["values"] = flattenProfileValues(extraSettings.Values)
 		}
@@ -413,22 +434,21 @@ func flattenProfileExtraSettings(extra []cloudconformity.IncludedExtraSettings) 
 	return ess
 }
 
-func flattenProfileValues(values []*cloudconformity.ProfileValues) []interface{} {
+func flattenProfileValues(values []interface{}) []interface{} {
 	if values == nil {
 		return make([]interface{}, 0)
-
 	}
 
 	vs := make([]interface{}, 0, len(values))
-	for _, value := range values {
-		v := make(map[string]interface{})
-		if value != nil {
-			v["enabled"] = value.Enabled
-			v["label"] = value.Label
-			v["value"] = value.Value
-			vs = append(vs, v)
-		}
 
+	for _, value := range values {
+		// handle case when ProfileValues
+		castedVal := value.(map[string]interface{})
+		v := make(map[string]interface{})
+		v["enabled"] = castedVal["enabled"]
+		v["label"] = castedVal["label"]
+		v["value"] = castedVal["value"]
+		vs = append(vs, v)
 	}
 	return vs
 }

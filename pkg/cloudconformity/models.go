@@ -17,13 +17,13 @@ type AccountKeys struct {
 	ExternalId string `json:"externalId"`
 }
 type accountAccess struct {
-	Keys              *AccountKeys `json:"keys,omitempty"`
-	Type              string       `json:"type,omitempty"`
-	SubscriptionId    string       `json:"subscriptionId,omitempty"`
-	ActiveDirectoryId string       `json:"activeDirectoryId,omitempty"`
-	ProjectId		  string       `json:"projectId,omitempty"`
-	ProjectName 	  string       `json:"projectName,omitempty"`
-	ServiceAccountUniqueId string  `json:"serviceAccountUniqueId,omitempty"`
+	Keys                   *AccountKeys `json:"keys,omitempty"`
+	Type                   string       `json:"type,omitempty"`
+	SubscriptionId         string       `json:"subscriptionId,omitempty"`
+	ActiveDirectoryId      string       `json:"activeDirectoryId,omitempty"`
+	ProjectId              string       `json:"projectId,omitempty"`
+	ProjectName            string       `json:"projectName,omitempty"`
+	ServiceAccountUniqueId string       `json:"serviceAccountUniqueId,omitempty"`
 }
 type AccountConfiguration struct {
 	ExternalId string `json:"externalId,omitempty"`
@@ -165,13 +165,13 @@ type AccountSettings struct {
 }
 
 type accountAttributes struct {
-	Name          string                `json:"name"`
-	Environment   string                `json:"environment"`
-	ManagedGroupId  string                `json:"managed-group-id"`
-	Tags          []string              `json:"tags"`
+	Name           string   `json:"name"`
+	Environment    string   `json:"environment"`
+	ManagedGroupId string   `json:"managed-group-id"`
+	Tags           []string `json:"tags"`
 	//Access        accountAccess         `json:"access,omitempty"`
 	Configuration *AccountConfiguration `json:"configuration,omitempty"`
-	CloudType      string                `json:"cloud-type,omitempty"`
+	CloudType     string                `json:"cloud-type,omitempty"`
 	CloudData     *CloudData            `json:"cloud-data,omitempty"`
 	Settings      *AccountSettings      `json:"settings,omitempty"`
 }
@@ -182,7 +182,7 @@ type createAccountAttributes struct {
 	Tags          []string              `json:"tags"`
 	Access        accountAccess         `json:"access,omitempty"`
 	Configuration *AccountConfiguration `json:"configuration,omitempty"`
-	CloudType      string                `json:"cloud-type,omitempty"`
+	CloudType     string                `json:"cloud-type,omitempty"`
 	CloudData     *CloudData            `json:"cloud-data,omitempty"`
 	Settings      *AccountSettings      `json:"settings,omitempty"`
 }
@@ -193,7 +193,7 @@ type accountData struct {
 }
 
 type createAccountData struct {
-	Type       string            `json:"type,omitempty"`
+	Type       string                  `json:"type,omitempty"`
 	Attributes createAccountAttributes `json:"attributes"`
 }
 
@@ -429,19 +429,21 @@ type IncludedExceptions struct {
 	Resources  []string `json:"resources,omitempty"`
 	Tags       []string `json:"tags,omitempty"`
 }
+
 type ProfileValues struct {
-	Label   string `json:"label,omitempty"`
-	Value   string `json:"value,omitempty"`
-	Enabled bool   `json:"enabled,omitempty"`
+	Label   string      `json:"label,omitempty"`
+	Value   interface{} `json:"value,omitempty"`
+	Enabled bool        `json:"enabled,omitempty"`
 }
+
 type IncludedExtraSettings struct {
-	Countries bool             `json:"countries,omitempty"`
-	Multiple  bool             `json:"multiple,omitempty"`
-	Name      string           `json:"name,omitempty"`
-	Regions   bool             `json:"regions,omitempty"`
-	Type      string           `json:"type,omitempty"`
-	Value     interface{}      `json:"value,omitempty"`
-	Values    []*ProfileValues `json:"values,omitempty"`
+	Countries bool          `json:"countries,omitempty"`
+	Multiple  bool          `json:"multiple,omitempty"`
+	Name      string        `json:"name,omitempty"`
+	Regions   bool          `json:"regions,omitempty"`
+	Type      string        `json:"type,omitempty"`
+	Value     interface{}   `json:"value,omitempty"`
+	Values    []interface{} `json:"values,omitempty"`
 }
 type IncludedAttributes struct {
 	Enabled       bool                    `json:"enabled"`
@@ -487,33 +489,33 @@ type ApplyProfileResponse struct {
 }
 
 type GCPKeyJSON struct {
-    Type  string `json:"type"`
-    ProjectId  string `json:"project_id"`
-    PrivateKeyId string `json:"private_key_id"`
-    PrivateKey string `json:"private_key"`
-    ClientEmail string `json:"client_email"`
-    ClientId  string `json:"client_id"`
-    AuthUri   string `json:"auth_uri"`
-    TokenUri   string `json:"token_uri"`
-    AuthProviderX509CertUrl  string `json:"auth_provider_x509_cert_url"`
-    ClientX509CertUrl     string `json:"client_x509_cert_url"`
+	Type                    string `json:"type"`
+	ProjectId               string `json:"project_id"`
+	PrivateKeyId            string `json:"private_key_id"`
+	PrivateKey              string `json:"private_key"`
+	ClientEmail             string `json:"client_email"`
+	ClientId                string `json:"client_id"`
+	AuthUri                 string `json:"auth_uri"`
+	TokenUri                string `json:"token_uri"`
+	AuthProviderX509CertUrl string `json:"auth_provider_x509_cert_url"`
+	ClientX509CertUrl       string `json:"client_x509_cert_url"`
 }
 
 type GCPOrgPayload struct {
-    Data struct {
-		ServiceAccountName      string          `json:"serviceAccountName"`
-		ServiceAccountKeyJson   GCPKeyJSON      `json:"serviceAccountKeyJson"`
+	Data struct {
+		ServiceAccountName    string     `json:"serviceAccountName"`
+		ServiceAccountKeyJson GCPKeyJSON `json:"serviceAccountKeyJson"`
 	} `json:"data"`
 }
 
 type GCPOrgAttributes struct {
-    ServiceAccountName string `json:"serviceAccountName"`
-    ServiceAccountUniqueId string `json:"ServiceAccountUniqueId"`
+	ServiceAccountName     string `json:"serviceAccountName"`
+	ServiceAccountUniqueId string `json:"ServiceAccountUniqueId"`
 }
 
 type GCPOrgResponse struct {
 	Data struct {
-		ID         string            `json:"id"`
+		ID         string           `json:"id"`
 		Attributes GCPOrgAttributes `json:"attributes"`
 	} `json:"data"`
 }
