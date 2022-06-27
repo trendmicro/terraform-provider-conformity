@@ -4,7 +4,7 @@ import (
 	"context"
 	"github.com/trendmicro/terraform-provider-conformity/pkg/cloudconformity"
 	"regexp"
-
+    "strings"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
@@ -88,7 +88,16 @@ func resourceConformityUserCreate(ctx context.Context, d *schema.ResourceData, m
 	//invite a user to the non-cloudone platform
 	userId, err := client.InviteLegacyUser(payload)
 	if err != nil {
-		return diag.FromErr(err)
+	    if strings.Contains(err.Error(), "Unable to call this endpoint, use Cloud One UI or API to invite users"){
+            diags = append(diags, diag.Diagnostic{
+                Severity: diag.Error,
+                Summary:  "Unable to Invite Conformity Cloud One user",
+                Detail:   "This Terraform service is not applicable to users who are part of the Cloud One Platform.\nPlease refer to Cloud One User Management Documentation - Add and manage users to invite new users. https://cloudone.trendmicro.com/docs/conformity/api-reference/tag/Users#paths/~1users/get",
+		    })
+		    return diags
+	    }
+	    return diag.FromErr(err)
+
 	}
 	d.SetId(userId)
 	resourceConformityUserRead(ctx, d, m)

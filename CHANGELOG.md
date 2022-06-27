@@ -1,3 +1,8 @@
+## 0.4.3
+* conformity_report_config: Cannot set risk_levels filter 
+* User creation failure for normal user
+* conformity_azure_account does not read tags from backend
+
 ## 0.4.2
 * Made GCP private key sensitive through schema
 * GCP Account Doc

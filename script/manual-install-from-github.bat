@@ -11,7 +11,7 @@ cd %download%
 set owner=trendmicro
 set name=conformity
 set repo=terraform-provider-%name%
-set version=0.4.2
+set version=0.4.3
 set token=YOUR_TOKEN
 set os_arch=windows_amd64
 

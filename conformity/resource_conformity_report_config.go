@@ -190,9 +190,12 @@ func resourceConformityReportConfig() *schema.Resource {
 							},
 						},
 						"risk_levels": {
-							Type:         schema.TypeString,
-							Optional:     true,
-							ValidateFunc: validation.StringInSlice([]string{"LOW", "MEDIUM", "HIGH", "VERY_HIGH", "EXTREME"}, false),
+							Type:     schema.TypeSet,
+							Optional: true,
+							Elem: &schema.Schema{
+								Type: schema.TypeString,
+								ValidateFunc: validation.StringInSlice([]string{"LOW", "MEDIUM", "HIGH", "VERY_HIGH", "EXTREME"}, false),
+							},
 						},
 						"rule_ids": {
 							Type:     schema.TypeSet,

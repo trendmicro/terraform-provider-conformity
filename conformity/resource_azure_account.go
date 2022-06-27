@@ -155,6 +155,9 @@ func resourceAzureAccountRead(ctx context.Context, d *schema.ResourceData, m int
 	if err := d.Set("subscription_id", accountDetails.Data.Attributes.CloudData.Azure.SubscriptionId); err != nil {
 		return diag.FromErr(err)
 	}
+	if err := d.Set("tags", accountDetails.Data.Attributes.Tags); err != nil {
+		return diag.FromErr(err)
+	}
 	// rule setting for azure is not yet done
 	settings := flattenAccountSettings(accountDetails.Data.Attributes.Settings, ruleSettings.Data.Attributes.Settings.Rules)
 	if err := d.Set("settings", settings); err != nil {
