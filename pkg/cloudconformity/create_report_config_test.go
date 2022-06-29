@@ -85,7 +85,7 @@ var testCreateupdateReportGroupResponseSuccess = `
 					"categories": [
 						"security"
 					],
-					"riskLevels": "HIGH",
+					"riskLevels": ["HIGH"],
 					"complianceStandards": [
 						"NIST4",
 						"AWAF"

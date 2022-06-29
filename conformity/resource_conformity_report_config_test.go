@@ -23,7 +23,7 @@ type filter struct {
 	Resource                   string
 	ResourceSearchMode         string
 	ResourceTypes              []string
-	RiskLevels                 string
+	RiskLevels                 []string
 	RuleIds                    []string
 	Services                   []string
 	Statuses                   []string
@@ -62,7 +62,7 @@ func TestAccResourceconformityReportConfig(t *testing.T) {
 		Resource:                   "joh?Smh",
 		ResourceSearchMode:         "text",
 		ResourceTypes:              []string{"some_resource"},
-		RiskLevels:                 "VERY_HIGH",
+		RiskLevels:                 []string{"VERY_HIGH"},
 		RuleIds:                    []string{"EC2"},
 		Services:                   []string{"IAM"},
 		Statuses:                   []string{"SUCCESS"},
@@ -108,7 +108,7 @@ func TestAccResourceconformityReportConfig(t *testing.T) {
 	UpdatedFilter.ReportComplianceStandardId = "CISAWSF"
 	UpdatedFilter.Resource = "some_resource"
 	UpdatedFilter.ResourceTypes = []string{"some_resource_2"}
-	UpdatedFilter.RiskLevels = "LOW"
+	UpdatedFilter.RiskLevels = []string{"LOW"}
 	UpdatedFilter.RuleIds = []string{"AppService"}
 	UpdatedFilter.Services = []string{"AppService"}
 	UpdatedFilter.Statuses = []string{"FAILURE"}
@@ -194,7 +194,7 @@ func TestAccResourceconformityReportConfig(t *testing.T) {
 					resource.TestCheckResourceAttr("conformity_report_config.report", "filter.0.resource", "joh?Smh"),
 					resource.TestCheckResourceAttr("conformity_report_config.report", "filter.0.resource_search_mode", "text"),
 					resource.TestCheckResourceAttr("conformity_report_config.report", "filter.0.resource_types.0", "some_resource"),
-					resource.TestCheckResourceAttr("conformity_report_config.report", "filter.0.risk_levels", "VERY_HIGH"),
+					resource.TestCheckResourceAttr("conformity_report_config.report", "filter.0.risk_levels.0", "VERY_HIGH"),
 					resource.TestCheckResourceAttr("conformity_report_config.report", "filter.0.rule_ids.0", "EC2"),
 					resource.TestCheckResourceAttr("conformity_report_config.report", "filter.0.services.0", "IAM"),
 					resource.TestCheckResourceAttr("conformity_report_config.report", "filter.0.statuses.0", "SUCCESS"),
@@ -240,7 +240,7 @@ func TestAccResourceconformityReportConfig(t *testing.T) {
 					resource.TestCheckResourceAttr("conformity_report_config.report", "filter.0.resource", "some_resource"),
 					resource.TestCheckResourceAttr("conformity_report_config.report", "filter.0.resource_search_mode", "text"),
 					resource.TestCheckResourceAttr("conformity_report_config.report", "filter.0.resource_types.0", "some_resource_2"),
-					resource.TestCheckResourceAttr("conformity_report_config.report", "filter.0.risk_levels", "LOW"),
+					resource.TestCheckResourceAttr("conformity_report_config.report", "filter.0.risk_levels.0", "LOW"),
 					resource.TestCheckResourceAttr("conformity_report_config.report", "filter.0.rule_ids.0", "AppService"),
 					resource.TestCheckResourceAttr("conformity_report_config.report", "filter.0.services.0", "AppService"),
 					resource.TestCheckResourceAttr("conformity_report_config.report", "filter.0.statuses.0", "FAILURE"),
@@ -344,7 +344,7 @@ func testAccCheckConformityReportConfigBasic(f filter, c configuration, groupId 
 			resource  = "` + f.Resource + `"
 			resource_search_mode = "` + f.ResourceSearchMode + `"
 			resource_types = ["` + f.ResourceTypes[0] + `"]
-			risk_levels = "` + f.RiskLevels + `"
+			risk_levels = ["` + f.RiskLevels[0] + `"]
 			rule_ids = ["` + f.RuleIds[0] + `"]
 			services = ["` + f.Services[0] + `"]
 			statuses = ["` + f.Statuses[0] + `"]
