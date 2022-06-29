@@ -61,7 +61,7 @@ jobs:
         name: Prepare The Pipeline
         run: |
           cd pipeline
-          sed -i 's,trendmicro/conformity,trendmicro/cloudone/conformity,g' provider.tf
+          sed -i 's,trendmicro/conformity,trendmicro.com/cloudone/conformity,g' provider.tf
           cd ..
       - 
         name: Terraform Init
