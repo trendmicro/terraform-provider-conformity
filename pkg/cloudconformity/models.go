@@ -288,7 +288,7 @@ type ReportConfigFilter struct {
 	Resource                   string   `json:"resource,omitempty"`
 	ResourceSearchMode         string   `json:"resourceSearchMode,omitempty"`
 	ResourceTypes              []string `json:"resourceTypes,omitempty"`
-	RiskLevels                 string   `json:"riskLevels,omitempty"`
+	RiskLevels                 []string `json:"riskLevels,omitempty"`
 	RuleIds                    []string `json:"ruleIds,omitempty"`
 	Services                   []string `json:"services,omitempty"`
 	Statuses                   []string `json:"statuses,omitempty"`

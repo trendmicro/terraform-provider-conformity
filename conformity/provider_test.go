@@ -655,7 +655,7 @@ func getReportconfigResponse() string {
 						"resourceTypes": [
 							"` + reportConfigDetails.Data.Attributes.Configuration.Filter.ResourceTypes[0] + `"
 						],
-						"riskLevels": "` + reportConfigDetails.Data.Attributes.Configuration.Filter.RiskLevels + `",
+						"riskLevels": ["` + reportConfigDetails.Data.Attributes.Configuration.Filter.RiskLevels[0] + `"],
 						"ruleIds": [
 							"` + reportConfigDetails.Data.Attributes.Configuration.Filter.RuleIds[0] + `"
 						],
