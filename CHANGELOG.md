@@ -1,3 +1,6 @@
+## 0.4.3
+* Extend conformity profile handling
+
 ## 0.4.2
 * Made GCP private key sensitive through schema
 * GCP Account Doc

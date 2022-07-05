@@ -196,9 +196,6 @@ func resourceConformityProfileRead(ctx context.Context, d *schema.ResourceData, 
 	if err != nil {
 		return diag.FromErr(err)
 	}
-	if err := d.Set("profile_id", profileSettings.Data.ID); err != nil {
-		return diag.FromErr(err)
-	}
 	if err := d.Set("name", profileSettings.Data.Attributes.Name); err != nil {
 		return diag.FromErr(err)
 	}
