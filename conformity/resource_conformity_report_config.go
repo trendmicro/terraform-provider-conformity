@@ -190,9 +190,12 @@ func resourceConformityReportConfig() *schema.Resource {
 							},
 						},
 						"risk_levels": {
-							Type:         schema.TypeString,
-							Optional:     true,
-							ValidateFunc: validation.StringInSlice([]string{"LOW", "MEDIUM", "HIGH", "VERY_HIGH", "EXTREME"}, false),
+							Type:     schema.TypeSet,
+							Optional: true,
+							Elem: &schema.Schema{
+								Type: schema.TypeString,
+								ValidateFunc: validation.StringInSlice([]string{"LOW", "MEDIUM", "HIGH", "VERY_HIGH", "EXTREME"}, false),
+							},
 						},
 						"rule_ids": {
 							Type:     schema.TypeSet,
@@ -415,7 +418,7 @@ func proccessInputFilter(payload *cloudconformity.ReportConfigDetails, d *schema
 	payload.Data.Attributes.Configuration.Filter.Resource = f["resource"].(string)
 	payload.Data.Attributes.Configuration.Filter.ResourceSearchMode = f["resource_search_mode"].(string)
 	payload.Data.Attributes.Configuration.Filter.ResourceTypes = expandStringList(f["resource_types"].(*schema.Set).List())
-	payload.Data.Attributes.Configuration.Filter.RiskLevels = f["risk_levels"].(string)
+	payload.Data.Attributes.Configuration.Filter.RiskLevels = expandStringList(f["risk_levels"].(*schema.Set).List())
 	payload.Data.Attributes.Configuration.Filter.RuleIds = expandStringList(f["rule_ids"].(*schema.Set).List())
 	payload.Data.Attributes.Configuration.Filter.Services = expandStringList(f["services"].(*schema.Set).List())
 	payload.Data.Attributes.Configuration.Filter.Statuses = expandStringList(f["statuses"].(*schema.Set).List())

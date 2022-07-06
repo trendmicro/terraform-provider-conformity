@@ -1,0 +1,90 @@
+# This GitHub action can test if the provider has any issues for CRD for latest development
+name: test
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+jobs:
+  test:
+    permissions: read-all
+    runs-on: ubuntu-latest
+    env:
+      MY_KEY_VAR: ${{ secrets.MY_KEY_VAR }}
+      MY_CONFORMITY_API_KEY: ${{ secrets.MY_CONFORMITY_API_KEY }}
+      MY_AWS_ACCESS_KEY: ${{ secrets.MY_AWS_ACCESS_KEY }} 
+      MY_AWS_SECRET_KEY: ${{ secrets.MY_AWS_SECRET_KEY }}
+    steps:
+      -
+        name: Checkout
+        uses: actions/checkout@v3
+        with:
+          path: main
+      -
+        name: Unshallow
+        run: |
+          cd main 
+          git fetch --prune --unshallow
+          cd ..
+      -
+        name: Set up Go
+        uses: actions/setup-go@v3
+        with:
+          go-version: 1.17
+      -
+        name: Install Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_wrapper: false
+      - 
+        name: Create Provider
+        run: |
+          cd main
+          go mod tidy
+          go mod vendor
+          make install
+          cd ..
+      - 
+        name: Run Unit Test
+        run: |
+          cd main/conformity
+          TF_ACC=1 go test -v
+          cd ../../
+      - 
+        name: Clone the provider pipeline
+        uses: actions/checkout@v3
+        with:
+          path: pipeline
+          repository: shunyeka-spl/tf-provider-test-pipeline
+          token: ${{ secrets.PIPELINE_PAT }} # `PIPELINE_PAT` is a secret that contains PAT
+      - 
+        name: Prepare The Pipeline
+        run: |
+          cd pipeline
+          sed -i 's,trendmicro/conformity,trendmicro.com/cloudone/conformity,g' provider.tf
+          cd ..
+      - 
+        name: Terraform Init
+        run: |
+          cd pipeline
+          terraform init
+          cd ..
+      - 
+        name: Terraform Plan
+        run: |
+          cd pipeline
+          terraform plan -var "key=$MY_KEY_VAR"  -var "apikey=$MY_CONFORMITY_API_KEY" -var "access_key=$MY_AWS_ACCESS_KEY" -var "secret_key=$MY_AWS_SECRET_KEY"
+          cd ..
+      - 
+        name: Terraform Apply
+        run: |
+          cd pipeline
+          terraform apply --auto-approve -var "key=$MY_KEY_VAR"  -var "apikey=$MY_CONFORMITY_API_KEY" -var "access_key=$MY_AWS_ACCESS_KEY" -var "secret_key=$MY_AWS_SECRET_KEY"
+          cd ..
+      - 
+        if: always()
+        name: Terraform Destroy
+        run: |
+          cd pipeline
+          terraform destroy --auto-approve -var "key=$MY_KEY_VAR"  -var "apikey=$MY_CONFORMITY_API_KEY" -var "access_key=$MY_AWS_ACCESS_KEY" -var "secret_key=$MY_AWS_SECRET_KEY"
+          cd ..
