@@ -1,5 +1,15 @@
-## 0.4.3
+## 0.4.5
 * Extend conformity profile handling
+
+## 0.4.4
+* Terraform Plan/Destroy test PR checks
+* Added unit testing as part of the PR checks
+* Fixes the conformity_report_config: Cannot set risk_levels filter related issue.
+
+## 0.4.3
+* conformity_report_config: Cannot set risk_levels filter 
+* User creation failure for normal user
+* conformity_azure_account does not read tags from backend
 
 ## 0.4.2
 * Made GCP private key sensitive through schema
