@@ -1,3 +1,6 @@
+## 0.4.5
+* Extend conformity profile handling
+
 ## 0.4.4
 * Terraform Plan/Destroy test PR checks
 * Added unit testing as part of the PR checks

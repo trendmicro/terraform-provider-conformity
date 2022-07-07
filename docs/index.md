@@ -77,7 +77,7 @@ provider "aws" {
 terraform {
   required_providers {
     conformity = {
-      version = "0.4.4"
+      version = "0.4.5"
       source  = "trendmicro/conformity"
     }
       aws = {
