@@ -519,3 +519,30 @@ type GCPOrgResponse struct {
 		Attributes GCPOrgAttributes `json:"attributes"`
 	} `json:"data"`
 }
+
+type CheckDetails struct {
+	Data struct {
+		Id         string `json:"id,omitempty"`
+		Type       string `json:"type"` // must be 'checks'
+		Attributes struct {
+			Suppressed bool   `json:"suppressed"`
+			Region     string `json:"region,omitempty"`
+			Resource   string `json:"resource,omitempty"`
+		} `json:"attributes"`
+		Relationships struct {
+			Rule struct {
+				Data struct {
+					Id string `json:"id,omitempty""`
+				} `json:"data,omitempty"`
+			} `json:"rule,omitempty"`
+			Account struct {
+				Data struct {
+					Id string `json:"id,omitempty""`
+				} `json:"data,omitempty"`
+			} `json:"account,omitempty"`
+		} `json:"relationships,omitempty"`
+	} `json:"data"`
+	Meta struct {
+		Note string `json:"note,omitempty"`
+	} `json:"meta,omitempty"`
+}
