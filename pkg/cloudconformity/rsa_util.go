@@ -5,16 +5,16 @@ import (
 	"crypto/rsa"
 	"crypto/sha512"
 	"crypto/x509"
+	"encoding/base64"
 	"encoding/pem"
-    "log"
-    "encoding/base64"
+	"log"
 )
 
 // GenerateKeyPair generates a new key pair
 func CheckError(e error) {
-    if e != nil {
-        log.Println(e.Error)
-    }
+	if e != nil {
+		log.Println(e.Error())
+	}
 }
 func GenerateKeyPair(bits int) (*rsa.PrivateKey, *rsa.PublicKey) {
 	privkey, err := rsa.GenerateKey(rand.Reader, bits)
@@ -55,9 +55,9 @@ func BytesToPublicKey(pub []byte) *rsa.PublicKey {
 }
 
 func EncryptWithPublicKey(secretMessage string, key *rsa.PublicKey) string {
-    label := []byte("OAEP Encrypted")
-    rng := rand.Reader
-    ciphertext, err := rsa.EncryptOAEP(sha512.New(), rng, key, []byte(secretMessage), label)
-    CheckError(err)
-    return base64.StdEncoding.EncodeToString(ciphertext)
+	label := []byte("OAEP Encrypted")
+	rng := rand.Reader
+	ciphertext, err := rsa.EncryptOAEP(sha512.New(), rng, key, []byte(secretMessage), label)
+	CheckError(err)
+	return base64.StdEncoding.EncodeToString(ciphertext)
 }
