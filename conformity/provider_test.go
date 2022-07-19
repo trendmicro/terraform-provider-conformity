@@ -99,6 +99,7 @@ func createConformityMock() (*cloudconformity.Client, *httptest.Server) {
 		var postProfile = regexp.MustCompile(`^/profiles/$`)
 		var getProfile = regexp.MustCompile(`^/profiles/(.*)$`)
 		var patchBotSettings = regexp.MustCompile(`^/accounts/(.*)/settings/bot$`)
+		var getAzureSubscriptions = regexp.MustCompile(`^/azure/active-directories/(.*)/subscriptions/?(.*)$`)
 
 		switch {
 		case getOrganizationalExternalId.MatchString(r.URL.Path):
@@ -503,7 +504,8 @@ func createConformityMock() (*cloudconformity.Client, *httptest.Server) {
 							}		
 						}
 					}`))
-
+		case getAzureSubscriptions.MatchString(r.URL.Path) && r.Method == "GET":
+			w.Write([]byte(testGetAzureSubscriptions200Response))
 		}
 	}))
 	// we do not Close() the server, it will be kept alive until all tests are finished
@@ -708,3 +710,17 @@ func getReportconfigResponse() string {
 	`
 	return response
 }
+
+var testGetAzureSubscriptions200Response = `{
+  "data": [
+    {
+      "type": "subscriptions",
+      "id": "AZURE_SUBSCRIPTION_ID",
+      "attributes": {
+        "display-name": "A Azure Subscription",
+        "state": "Enabled",
+        "added-to-conformity": true
+      }
+    }
+  ]
+}`
