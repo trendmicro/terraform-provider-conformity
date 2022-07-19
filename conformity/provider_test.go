@@ -30,6 +30,8 @@ var profileSetting cloudconformity.ProfileSettings
 var botSetting cloudconformity.AccountBotSettingsRequest
 var ruleSetting1, ruleSetting2, ruleSetting3 *cloudconformity.AccountRuleSettings
 var testServer *httptest.Server
+var customRule *cloudconformity.CustomRule
+var customRuleResponse = cloudconformity.CustomRuleResponse{}
 
 func init() {
 	testAccConformityProvider = Provider()
@@ -99,6 +101,7 @@ func createConformityMock() (*cloudconformity.Client, *httptest.Server) {
 		var postProfile = regexp.MustCompile(`^/profiles/$`)
 		var getProfile = regexp.MustCompile(`^/profiles/(.*)$`)
 		var patchBotSettings = regexp.MustCompile(`^/accounts/(.*)/settings/bot$`)
+		var endPointCustomRule = regexp.MustCompile(`^/custom-rules/(.*)$`)
 
 		switch {
 		case getOrganizationalExternalId.MatchString(r.URL.Path):
@@ -503,6 +506,28 @@ func createConformityMock() (*cloudconformity.Client, *httptest.Server) {
 							}		
 						}
 					}`))
+		case endPointCustomRule.MatchString(r.URL.Path) && (r.Method == "POST" || r.Method == "PUT"):
+			_ = readRequestBody(r, &customRule)
+			customRuleResponse.ID = "some_id"
+			customRuleResponse.Type = "CustomRule"
+			customRuleResponse.Attributes.Name = customRule.Name
+			customRuleResponse.Attributes.Description = customRule.Description
+			customRuleResponse.Attributes.Enabled = customRule.Enabled
+			customRuleResponse.Attributes.Categories = customRule.Categories
+			customRuleResponse.Attributes.Severity = customRule.Severity
+			customRuleResponse.Attributes.RemediationNotes = customRule.RemediationNotes
+			customRuleResponse.Attributes.Service = customRule.Service
+			customRuleResponse.Attributes.Provider = customRule.Provider
+			customRuleResponse.Attributes.ResourceType = customRule.ResourceType
+			customRuleResponse.Attributes.Attributes = customRule.Attributes
+			customRuleResponse.Attributes.Rules = customRule.Rules
+			bytes, _ := json.Marshal(cloudconformity.CustomRuleCreateResponse{Data: customRuleResponse})
+			w.Write(bytes)
+		case endPointCustomRule.MatchString(r.URL.Path) && r.Method == "GET":
+			bytes, _ := json.Marshal(cloudconformity.CustomRuleGetResponse{Data: []cloudconformity.CustomRuleResponse{customRuleResponse}})
+			w.Write(bytes)
+		case endPointCustomRule.MatchString(r.URL.Path) && r.Method == "DELETE":
+			w.Write([]byte(`{"meta": {"status": "deleted" } }`))
 
 		}
 	}))

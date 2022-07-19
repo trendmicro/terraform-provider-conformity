@@ -519,3 +519,83 @@ type GCPOrgResponse struct {
 		Attributes GCPOrgAttributes `json:"attributes"`
 	} `json:"data"`
 }
+
+type CustomRule struct {
+	ID               string                 `json:"id"`
+	Name             string                 `json:"name"`
+	Description      string                 `json:"description"`
+	RemediationNotes string                 `json:"remediationNotes,omitempty"`
+	Service          string                 `json:"service"`
+	ResourceType     string                 `json:"resourceType"`
+	Categories       []string               `json:"categories"`
+	Severity         string                 `json:"severity"`
+	Provider         string                 `json:"provider"`
+	Enabled          bool                   `json:"enabled"`
+	Attributes       []CustomRuleAttributes `json:"attributes"`
+	Rules            []CustomRuleRules      `json:"rules"`
+}
+
+type CustomRuleRequest struct {
+	Name             string                 `json:"name"`
+	Description      string                 `json:"description"`
+	RemediationNotes string                 `json:"remediationNotes,omitempty"`
+	Service          string                 `json:"service"`
+	ResourceType     string                 `json:"resourceType"`
+	Categories       []string               `json:"categories"`
+	Severity         string                 `json:"severity"`
+	Provider         string                 `json:"provider"`
+	Enabled          bool                   `json:"enabled"`
+	Attributes       []CustomRuleAttributes `json:"attributes"`
+	Rules            []CustomRuleRules      `json:"rules"`
+}
+
+type CustomRuleAttributes struct {
+	Name     string `json:"name"`
+	Path     string `json:"path"`
+	Required bool   `json:"required"`
+}
+
+type CustomRuleRules struct {
+	Conditions struct {
+		All []CustomRuleCondition `json:"all,omitempty"`
+		Any []CustomRuleCondition `json:"any,omitempty"`
+	} `json:"conditions,omitempty"`
+	Event CustomRuleEvent `json:"event,omitempty"`
+}
+
+type CustomRuleEvent struct {
+	Type string `json:"type,omitempty"`
+}
+
+type CustomRuleCondition struct {
+	Fact     string `json:"fact"`
+	Operator string `json:"operator"`
+	Path     string `json:"path,omitempty"`
+	Value    string `json:"value"`
+}
+
+type CustomRuleCreateResponse struct {
+	Data CustomRuleResponse `json:"data"`
+}
+
+type CustomRuleGetResponse struct {
+	Data []CustomRuleResponse `json:"data"`
+}
+
+type CustomRuleResponse struct {
+	Type       string `json:"type"`
+	ID         string `json:"id"`
+	Attributes struct {
+		Name             string                 `json:"name"`
+		Description      string                 `json:"description"`
+		Service          string                 `json:"service"`
+		ResourceType     string                 `json:"resourceType"`
+		RemediationNotes string                 `json:"remediationNotes"`
+		Attributes       []CustomRuleAttributes `json:"attributes"`
+		Rules            []CustomRuleRules      `json:"rules"`
+		Severity         string                 `json:"severity"`
+		Provider         string                 `json:"provider"`
+		Categories       []string               `json:"categories"`
+		Enabled          bool                   `json:"enabled"`
+	} `json:"attributes"`
+}
