@@ -73,6 +73,7 @@ func resourceConformityGroupRead(ctx context.Context, d *schema.ResourceData, m 
 			Summary:  "Conformity Group Tags - Empty",
 			Detail:   "Conformity API return empty tag list",
 		})
+		d.SetId("")
 		return diags
 	}
 	if err := d.Set("name", GroupDataList.Data[0].Attributes.Name); err != nil {

@@ -182,6 +182,19 @@ func createConformityMock() (*cloudconformity.Client, *httptest.Server) {
 				stringTags = "null"
 			}
 
+			if groupDetails.Data.Attributes.Name == "404-group" {
+				w.WriteHeader(http.StatusUnprocessableEntity)
+				w.Write([]byte(`{
+					"errors": [
+						{
+							"status": 422,
+							"detail": "Group ID entered is invalid"
+						}
+					]
+				}`))
+				break
+			}
+
 			w.Write([]byte(`{
 				"data": [{
 				"type": "groups",
