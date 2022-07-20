@@ -19,6 +19,7 @@ func TestAccResourceconformityGroup(t *testing.T) {
 	updatedTags := []string{"dev-1", "prod-1"}
 
 	notFoundName := "404-group"
+	updatedNotFoundName := "404-group-v2"
 
 	// send a specific name 'no-tag' will trigger the mock to send a response without tags
 	noTagName := "no-tag"
@@ -30,11 +31,19 @@ func TestAccResourceconformityGroup(t *testing.T) {
 		Steps: []resource.TestStep{
 			{
 				Config: testAccCheckConformityGroupConfigNotFound(notFoundName, tags),
-				// when a group does not exist aka deleted outside terraform
-				// the response should have empty id
 				// related issue: https://github.com/trendmicro/terraform-provider-conformity/issues/30
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttr("conformity_group.group_404", "id", ""),
+					resource.TestCheckResourceAttr("conformity_group.group_404", "name", notFoundName),
+				),
+			},
+			{
+				Config: testAccCheckConformityGroupConfigNotFound(updatedNotFoundName, tags),
+				// when a group does not exist aka deleted outside terraform
+				// the response should have empty id
+				// and terraform should attempt to recreate the resource in the plan/apply stage
+				// related issue: https://github.com/trendmicro/terraform-provider-conformity/issues/30
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttr("conformity_group.group_404", "name", updatedNotFoundName),
 				),
 			},
 			{

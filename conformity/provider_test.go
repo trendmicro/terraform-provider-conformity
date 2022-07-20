@@ -30,6 +30,7 @@ var profileSetting cloudconformity.ProfileSettings
 var botSetting cloudconformity.AccountBotSettingsRequest
 var ruleSetting1, ruleSetting2, ruleSetting3 *cloudconformity.AccountRuleSettings
 var testServer *httptest.Server
+var counterGroupReads = 0
 
 func init() {
 	testAccConformityProvider = Provider()
@@ -182,7 +183,7 @@ func createConformityMock() (*cloudconformity.Client, *httptest.Server) {
 				stringTags = "null"
 			}
 
-			if groupDetails.Data.Attributes.Name == "404-group" {
+			if counterGroupReads > 1 && groupDetails.Data.Attributes.Name == "404-group" {
 				w.WriteHeader(http.StatusUnprocessableEntity)
 				w.Write([]byte(`{
 					"errors": [
@@ -193,6 +194,8 @@ func createConformityMock() (*cloudconformity.Client, *httptest.Server) {
 					]
 				}`))
 				break
+			} else if groupDetails.Data.Attributes.Name == "404-group" {
+				counterGroupReads++
 			}
 
 			w.Write([]byte(`{
