@@ -141,7 +141,7 @@ func resourceConformityProfile() *schema.Resource {
 						"provider": {
 							Type:         schema.TypeString,
 							Optional:     true,
-							ValidateFunc: validation.StringInSlice([]string{"aws", "azure"}, true),
+							ValidateFunc: validation.StringInSlice([]string{"aws", "azure", "gcp"}, true),
 						},
 						"risk_level": {
 							Type:         schema.TypeString,
