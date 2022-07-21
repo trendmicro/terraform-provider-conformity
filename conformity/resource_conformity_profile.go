@@ -18,10 +18,6 @@ func resourceConformityProfile() *schema.Resource {
 		UpdateContext: resourceConformityProfileUpdate,
 		DeleteContext: resourceConformityProfileDelete,
 		Schema: map[string]*schema.Schema{
-			"profile_id": {
-				Type:     schema.TypeString,
-				Optional: true,
-			},
 			"name": {
 				Type:     schema.TypeString,
 				Required: true,
@@ -172,7 +168,6 @@ func resourceConformityProfileCreate(ctx context.Context, d *schema.ResourceData
 	var diags diag.Diagnostics
 
 	payload := cloudconformity.ProfileSettings{}
-	payload.Data.ID = d.Get("profile_id").(string)
 	payload.Data.Attributes.Name = d.Get("name").(string)
 	payload.Data.Attributes.Description = d.Get("description").(string)
 	payload.Data.Type = "profiles"
