@@ -1,5 +1,7 @@
 package cloudconformity
 
+import "time"
+
 type externalIdData struct {
 	Data struct {
 		Type string `json:"type"`
@@ -517,6 +519,24 @@ type GCPOrgResponse struct {
 	Data struct {
 		ID         string           `json:"id"`
 		Attributes GCPOrgAttributes `json:"attributes"`
+	} `json:"data"`
+}
+
+type GcpProjectsResponse struct {
+	Data []struct {
+		Type       string `json:"type"`
+		Attributes struct {
+			ProjectNumber  string    `json:"project-number"`
+			ProjectID      string    `json:"project-id"`
+			LifecycleState string    `json:"lifecycle-state"`
+			Name           string    `json:"name"`
+			CreateTime     time.Time `json:"create-time"`
+			Parent         struct {
+				Type string `json:"type"`
+				ID   string `json:"id"`
+			} `json:"parent"`
+			AddedToConformity bool `json:"added-to-conformity"`
+		} `json:"attributes"`
 	} `json:"data"`
 }
 

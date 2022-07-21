@@ -45,6 +45,7 @@ func Provider() *schema.Provider {
 		DataSourcesMap: map[string]*schema.Resource{
 			"conformity_external_id":   dataSourceExternalId(),
 			"conformity_apply_profile": dataSourceApplyProfile(),
+			"conformity_gcp_projects":  dataSourceGcpProjects(),
 		},
 		ConfigureContextFunc: providerConfigure,
 	}
