@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"github.com/trendmicro/terraform-provider-conformity/pkg/cloudconformity"
+	"sort"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/customdiff"
@@ -362,6 +363,12 @@ func flattenProfileIncluded(included []cloudconformity.ProfileIncluded) []interf
 	if included == nil {
 		return make([]interface{}, 0)
 	}
+
+	// Conformity uses lexographical alphabetical sorting for included
+	// sorting accordingly prevents Terraform from observing the changed order as a change in state
+	sort.SliceStable(included, func(i, j int) bool {
+		return included[i].ID < included[j].ID
+	})
 
 	pis := make([]interface{}, len(included))
 	for i, includedItem := range included {
