@@ -40,11 +40,13 @@ func Provider() *schema.Provider {
 			"conformity_report_config":         resourceConformityReportConfig(),
 			"conformity_communication_setting": resourceConformityCommSetting(),
 			"conformity_profile":               resourceConformityProfile(),
+			"conformity_custom_rule":           resourceConformityCustomRule(),
 		},
 		DataSourcesMap: map[string]*schema.Resource{
 			"conformity_external_id":         dataSourceExternalId(),
 			"conformity_apply_profile":       dataSourceApplyProfile(),
 			"conformity_azure_subscriptions": dataSourceAzureSubscription(),
+      "conformity_gcp_projects":  dataSourceGcpProjects(),
 		},
 		ConfigureContextFunc: providerConfigure,
 	}
