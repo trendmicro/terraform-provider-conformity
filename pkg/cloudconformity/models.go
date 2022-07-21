@@ -522,6 +522,18 @@ type GCPOrgResponse struct {
 	} `json:"data"`
 }
 
+
+type AzureSubscriptionsResponse struct {
+	Data []struct {
+		Type       string `json:"type"`
+		ID         string `json:"id"`
+		Attributes struct {
+			DisplayName       string `json:"display-name"`
+			State             string `json:"state"`
+			AddedToConformity bool   `json:"added-to-conformity"`
+		} `json:"attributes"`
+	} `json:"data"`
+}
 type GcpProjectsResponse struct {
 	Data []struct {
 		Type       string `json:"type"`

@@ -102,9 +102,9 @@ func createConformityMock() (*cloudconformity.Client, *httptest.Server) {
 		var postProfile = regexp.MustCompile(`^/profiles/$`)
 		var getProfile = regexp.MustCompile(`^/profiles/(.*)$`)
 		var patchBotSettings = regexp.MustCompile(`^/accounts/(.*)/settings/bot$`)
+		var getAzureSubscriptions = regexp.MustCompile(`^/azure/active-directories/(.*)/subscriptions/?(.*)$`)
 		var getGcpProjects = regexp.MustCompile(`^/gcp/organisations/(.*)/projects/?(.*)$`)
 		var endPointCustomRule = regexp.MustCompile(`^/custom-rules/(.*)$`)
-
 
 		switch {
 		case getOrganizationalExternalId.MatchString(r.URL.Path):
@@ -524,6 +524,9 @@ func createConformityMock() (*cloudconformity.Client, *httptest.Server) {
 							}		
 						}
 					}`))
+		case getAzureSubscriptions.MatchString(r.URL.Path) && r.Method == "GET":
+			w.Write([]byte(testGetAzureSubscriptions200Response))
+
 		case getGcpProjects.MatchString(r.URL.Path) && r.Method == "GET":
 			w.Write([]byte(testGetGcpProjects200Response))
 
@@ -548,8 +551,7 @@ func createConformityMock() (*cloudconformity.Client, *httptest.Server) {
 			bytes, _ := json.Marshal(cloudconformity.CustomRuleGetResponse{Data: []cloudconformity.CustomRuleResponse{customRuleResponse}})
 			w.Write(bytes)
 		case endPointCustomRule.MatchString(r.URL.Path) && r.Method == "DELETE":
-			w.Write([]byte(`{"meta": {"status": "deleted" } }`))
-      
+			w.Write([]byte(`{"meta": {"status": "deleted" } }`))      
 		}
 	}))
 	// we do not Close() the server, it will be kept alive until all tests are finished
@@ -756,21 +758,35 @@ func getReportconfigResponse() string {
 }
 
 var testGetGcpProjects200Response = `{
-  "data": [
-    {
-      "type": "projects",
-      "attributes": {
-        "project-number": "415104041262",
-        "project-id": "project-id-1",
-        "lifecycle-state": "ACTIVE",
-        "added-to-conformity": true,
-        "create-time": "2021-05-17T11:21:58.012Z",
-        "name": "My Project",
-        "parent": {
-          "type": "folder",
-          "id": "415104041262"
+    "data": [
+      {
+        "type": "projects",
+        "attributes": {
+          "project-number": "415104041262",
+          "project-id": "project-id-1",
+          "lifecycle-state": "ACTIVE",
+          "added-to-conformity": true,
+          "create-time": "2021-05-17T11:21:58.012Z",
+          "name": "My Project",
+          "parent": {
+            "type": "folder",
+            "id": "415104041262"
+          }
         }
       }
-    }
-  ]
-}`
+    ]
+  }`
+
+var testGetAzureSubscriptions200Response = `{
+    "data": [
+      {
+        "type": "subscriptions",
+        "id": "AZURE_SUBSCRIPTION_ID",
+        "attributes": {
+          "display-name": "A Azure Subscription",
+          "state": "Enabled",
+          "added-to-conformity": true
+        }
+      }
+    ]
+  }`
