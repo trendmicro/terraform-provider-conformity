@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"github.com/trendmicro/terraform-provider-conformity/pkg/cloudconformity"
+	"sort"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/customdiff"
@@ -18,10 +19,6 @@ func resourceConformityProfile() *schema.Resource {
 		UpdateContext: resourceConformityProfileUpdate,
 		DeleteContext: resourceConformityProfileDelete,
 		Schema: map[string]*schema.Schema{
-			"profile_id": {
-				Type:     schema.TypeString,
-				Optional: true,
-			},
 			"name": {
 				Type:     schema.TypeString,
 				Required: true,
@@ -145,7 +142,7 @@ func resourceConformityProfile() *schema.Resource {
 						"provider": {
 							Type:         schema.TypeString,
 							Optional:     true,
-							ValidateFunc: validation.StringInSlice([]string{"aws", "azure"}, true),
+							ValidateFunc: validation.StringInSlice([]string{"aws", "azure", "gcp"}, true),
 						},
 						"risk_level": {
 							Type:         schema.TypeString,
@@ -172,7 +169,6 @@ func resourceConformityProfileCreate(ctx context.Context, d *schema.ResourceData
 	var diags diag.Diagnostics
 
 	payload := cloudconformity.ProfileSettings{}
-	payload.Data.ID = d.Get("profile_id").(string)
 	payload.Data.Attributes.Name = d.Get("name").(string)
 	payload.Data.Attributes.Description = d.Get("description").(string)
 	payload.Data.Type = "profiles"
@@ -367,6 +363,12 @@ func flattenProfileIncluded(included []cloudconformity.ProfileIncluded) []interf
 	if included == nil {
 		return make([]interface{}, 0)
 	}
+
+	// Conformity uses lexographical alphabetical sorting for included
+	// sorting accordingly prevents Terraform from observing the changed order as a change in state
+	sort.SliceStable(included, func(i, j int) bool {
+		return included[i].ID < included[j].ID
+	})
 
 	pis := make([]interface{}, len(included))
 	for i, includedItem := range included {

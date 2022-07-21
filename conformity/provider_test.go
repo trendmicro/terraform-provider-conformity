@@ -32,6 +32,7 @@ var ruleSetting1, ruleSetting2, ruleSetting3 *cloudconformity.AccountRuleSetting
 var testServer *httptest.Server
 var customRule *cloudconformity.CustomRule
 var customRuleResponse = cloudconformity.CustomRuleResponse{}
+var counterGroupReads = 0
 
 func init() {
 	testAccConformityProvider = Provider()
@@ -183,6 +184,21 @@ func createConformityMock() (*cloudconformity.Client, *httptest.Server) {
 
 			if groupDetails.Data.Attributes.Name == "no-tag" {
 				stringTags = "null"
+			}
+
+			if counterGroupReads > 1 && groupDetails.Data.Attributes.Name == "404-group" {
+				w.WriteHeader(http.StatusUnprocessableEntity)
+				w.Write([]byte(`{
+					"errors": [
+						{
+							"status": 422,
+							"detail": "Group ID entered is invalid"
+						}
+					]
+				}`))
+				break
+			} else if groupDetails.Data.Attributes.Name == "404-group" {
+				counterGroupReads++
 			}
 
 			w.Write([]byte(`{

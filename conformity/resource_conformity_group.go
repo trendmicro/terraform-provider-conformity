@@ -64,6 +64,11 @@ func resourceConformityGroupRead(ctx context.Context, d *schema.ResourceData, m 
 
 	// get group details: name and tags
 	GroupDataList, err := client.GetGroup(groupId)
+	if !d.IsNewResource() && (err != nil || GroupDataList.Data == nil) {
+		// The resource was deleted manually
+		d.SetId("")
+		return diags
+	}
 	if err != nil {
 		return diag.FromErr(err)
 	}
