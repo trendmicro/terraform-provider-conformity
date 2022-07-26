@@ -8,9 +8,11 @@ import (
 	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
+	"net/url"
 	"os"
 	"regexp"
 	"strconv"
+	"strings"
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
@@ -30,6 +32,10 @@ var profileSetting cloudconformity.ProfileSettings
 var botSetting cloudconformity.AccountBotSettingsRequest
 var ruleSetting1, ruleSetting2, ruleSetting3 *cloudconformity.AccountRuleSettings
 var testServer *httptest.Server
+var checkDetails *cloudconformity.CheckDetails
+var customRule *cloudconformity.CustomRule
+var customRuleResponse = cloudconformity.CustomRuleResponse{}
+var counterGroupReads = 0
 
 func init() {
 	testAccConformityProvider = Provider()
@@ -99,6 +105,11 @@ func createConformityMock() (*cloudconformity.Client, *httptest.Server) {
 		var postProfile = regexp.MustCompile(`^/profiles/$`)
 		var getProfile = regexp.MustCompile(`^/profiles/(.*)$`)
 		var patchBotSettings = regexp.MustCompile(`^/accounts/(.*)/settings/bot$`)
+		var getCheck = regexp.MustCompile(`^/checks/(.*)$`)
+		var patchCheck = regexp.MustCompile(`^/checks/(.*)$`)
+		var getAzureSubscriptions = regexp.MustCompile(`^/azure/active-directories/(.*)/subscriptions/?(.*)$`)
+		var getGcpProjects = regexp.MustCompile(`^/gcp/organisations/(.*)/projects/?(.*)$`)
+		var endPointCustomRule = regexp.MustCompile(`^/custom-rules/(.*)$`)
 
 		switch {
 		case getOrganizationalExternalId.MatchString(r.URL.Path):
@@ -180,6 +191,21 @@ func createConformityMock() (*cloudconformity.Client, *httptest.Server) {
 
 			if groupDetails.Data.Attributes.Name == "no-tag" {
 				stringTags = "null"
+			}
+
+			if counterGroupReads > 1 && groupDetails.Data.Attributes.Name == "404-group" {
+				w.WriteHeader(http.StatusUnprocessableEntity)
+				w.Write([]byte(`{
+					"errors": [
+						{
+							"status": 422,
+							"detail": "Group ID entered is invalid"
+						}
+					]
+				}`))
+				break
+			} else if groupDetails.Data.Attributes.Name == "404-group" {
+				counterGroupReads++
 			}
 
 			w.Write([]byte(`{
@@ -503,7 +529,50 @@ func createConformityMock() (*cloudconformity.Client, *httptest.Server) {
 							}		
 						}
 					}`))
+		case getCheck.MatchString(r.URL.Path) && r.Method == "GET":
+			if checkDetails == nil {
+				checkDetails.Data.Id = "ccc:8d99dfce-dca2-4f13-8699-20631a5c77c9:Resources-001:Resources:global:/subscriptions/ae9124e0-d61c-4d7d-833d-c58e6f9941f8/providers/Microsoft.Authorization/roleDefinitions/00482a5a-887f-4fb3-b363-3b7fe8e74483"
+				checkDetails.Data.Attributes.Region = "global"
+				checkDetails.Data.Attributes.Suppressed = false
+				checkDetails.Data.Attributes.Resource = "/subscriptions/ae9124e0-d61c-4d7d-833d-c58e6f9941f8/providers/Microsoft.Authorization/roleDefinitions/00482a5a-887f-4fb3-b363-3b7fe8e74483"
+				checkDetails.Data.Relationships.Account.Data.Id = "8d99dfce-dca2-4f13-8699-20631a5c77c9"
+				checkDetails.Data.Relationships.Rule.Data.Id = "Resources-001"
+			}
+			w.Write([]byte(getCheckDetailsResponse()))
+		case patchCheck.MatchString(r.URL.Path) && r.Method == "PATCH":
+			_ = readRequestBody(r, &checkDetails)
+			split := strings.Split(r.URL.RawPath, "/")
+			checkDetails.Data.Id, _ = url.QueryUnescape(split[2])
+			w.Write([]byte(getCheckDetailsResponse()))
 
+		case getAzureSubscriptions.MatchString(r.URL.Path) && r.Method == "GET":
+			w.Write([]byte(testGetAzureSubscriptions200Response))
+
+		case getGcpProjects.MatchString(r.URL.Path) && r.Method == "GET":
+			w.Write([]byte(testGetGcpProjects200Response))
+
+		case endPointCustomRule.MatchString(r.URL.Path) && (r.Method == "POST" || r.Method == "PUT"):
+			_ = readRequestBody(r, &customRule)
+			customRuleResponse.ID = "some_id"
+			customRuleResponse.Type = "CustomRule"
+			customRuleResponse.Attributes.Name = customRule.Name
+			customRuleResponse.Attributes.Description = customRule.Description
+			customRuleResponse.Attributes.Enabled = customRule.Enabled
+			customRuleResponse.Attributes.Categories = customRule.Categories
+			customRuleResponse.Attributes.Severity = customRule.Severity
+			customRuleResponse.Attributes.RemediationNotes = customRule.RemediationNotes
+			customRuleResponse.Attributes.Service = customRule.Service
+			customRuleResponse.Attributes.Provider = customRule.Provider
+			customRuleResponse.Attributes.ResourceType = customRule.ResourceType
+			customRuleResponse.Attributes.Attributes = customRule.Attributes
+			customRuleResponse.Attributes.Rules = customRule.Rules
+			bytes, _ := json.Marshal(cloudconformity.CustomRuleCreateResponse{Data: customRuleResponse})
+			w.Write(bytes)
+		case endPointCustomRule.MatchString(r.URL.Path) && r.Method == "GET":
+			bytes, _ := json.Marshal(cloudconformity.CustomRuleGetResponse{Data: []cloudconformity.CustomRuleResponse{customRuleResponse}})
+			w.Write(bytes)
+		case endPointCustomRule.MatchString(r.URL.Path) && r.Method == "DELETE":
+			w.Write([]byte(`{"meta": {"status": "deleted" } }`))      
 		}
 	}))
 	// we do not Close() the server, it will be kept alive until all tests are finished
@@ -708,3 +777,109 @@ func getReportconfigResponse() string {
 	`
 	return response
 }
+
+func getCheckDetailsResponse() string {
+	response := `{
+    "data": {
+        "type": "checks",
+        "id": "ccc:8d99dfce-dca2-4f13-8699-20631a5c77c9:Resources-001:Resources:global:/subscriptions/ae9124e0-d61c-4d7d-833d-c58e6f9941f8/providers/Microsoft.Authorization/roleDefinitions/00482a5a-887f-4fb3-b363-3b7fe8e74483",
+        "attributes": {
+            "region": "global",
+            "status": "FAILURE",
+            "risk-level": "LOW",
+            "pretty-risk-level": "Low",
+            "message": "00482a5a-887f-4fb3-b363-3b7fe8e74483 has [Owner, CostID, Application, DemandID, Stage, ITServiceID, ITServiceName] tags missing",
+            "resource": "/subscriptions/ae9124e0-d61c-4d7d-833d-c58e6f9941f8/providers/Microsoft.Authorization/roleDefinitions/00482a5a-887f-4fb3-b363-3b7fe8e74483",
+            "descriptorType": "access-control-roles",
+            "link-title": "/subscriptions/ae9124e0-d61c-4d7d-833d-c58e6f9941f8/providers/Microsoft.Authorization/roleDefinitions/00482a5a-887f-4fb3-b363-3b7fe8e74483",
+            "resourceName": "00482a5a-887f-4fb3-b363-3b7fe8e74483",
+            "last-modified-date": 1656482101900,
+            "created-date": 1653906818310,
+            "categories": [
+                "security",
+                "reliability",
+                "performance-efficiency",
+                "cost-optimisation",
+                "operational-excellence"
+            ],
+            "compliances": [
+                "NIST5",
+                "NIST-CSF",
+                "AGISM",
+                "HITRUST",
+                "MAS",
+                "CSA"
+            ],
+            "suppressed": false,
+            "failure-discovery-date": 1656482101900,
+            "ccrn": "ccrn:azure:8d99dfce-dca2-4f13-8699-20631a5c77c9:AccessControl:global:/subscriptions/ae9124e0-d61c-4d7d-833d-c58e6f9941f8/providers/Microsoft.Authorization/roleDefinitions/00482a5a-887f-4fb3-b363-3b7fe8e74483",
+            "extradata": [
+                {
+                    "name": "DETAILED_STATUS",
+                    "label": "Resource tags status for 00482a5a-887f-4fb3-b363-3b7fe8e74483",
+                    "value": "{\"service\":\"AccessControl\",\"resourceName\":\"00482a5a-887f-4fb3-b363-3b7fe8e74483\",\"tags\":[{\"key\":\"Owner\",\"hasValue\":false},{\"key\":\"CostID\",\"hasValue\":false},{\"key\":\"Application\",\"hasValue\":false},{\"key\":\"DemandID\",\"hasValue\":false},{\"key\":\"Stage\",\"hasValue\":false},{\"key\":\"ITServiceID\",\"hasValue\":false},{\"key\":\"ITServiceName\",\"hasValue\":false}]}",
+                    "type": "META",
+                    "internal": true
+                }
+            ],
+            "tags": [],
+            "suppressed-until": null,
+            "not-scored": false,
+            "excluded": false,
+            "rule-title": "Tags",
+            "provider": "azure",
+            "resolution-page-url": "https://www.cloudconformity.com/knowledge-base/azure/Resources/use-tags-organize-resources.html#503824401549",
+            "service": "Resources"
+        },
+        "relationships": {
+            "rule": {
+                "data": {
+                    "type": "rules",
+                    "id": "` + strings.Split(checkDetails.Data.Id, ":")[2] + `"
+                }
+            },
+            "account": {
+                "data": {
+                    "type": "accounts",
+                    "id": "8d99dfce-dca2-4f13-8699-20631a5c77c9"
+                }
+            }
+        }
+    }
+}
+`
+	return response
+}
+var testGetGcpProjects200Response = `{
+    "data": [
+      {
+        "type": "projects",
+        "attributes": {
+          "project-number": "415104041262",
+          "project-id": "project-id-1",
+          "lifecycle-state": "ACTIVE",
+          "added-to-conformity": true,
+          "create-time": "2021-05-17T11:21:58.012Z",
+          "name": "My Project",
+          "parent": {
+            "type": "folder",
+            "id": "415104041262"
+          }
+        }
+      }
+    ]
+  }`
+
+var testGetAzureSubscriptions200Response = `{
+    "data": [
+      {
+        "type": "subscriptions",
+        "id": "AZURE_SUBSCRIPTION_ID",
+        "attributes": {
+          "display-name": "A Azure Subscription",
+          "state": "Enabled",
+          "added-to-conformity": true
+        }
+      }
+    ]
+  }`

@@ -21,12 +21,12 @@ func Provider() *schema.Provider {
 			},
 			// if region is not specify us-west-2 will be use
 			"region": {
-				Type:         schema.TypeString,
-				Optional:     true,
-				Default:      "us-west-2",
+				Type:     schema.TypeString,
+				Optional: true,
+				Default:  "us-west-2",
 				ValidateFunc: validation.StringInSlice([]string{"eu-west-1", "us-west-2", "ap-southeast-2", "us-1",
-				                                                "in-1", "gb-1", "jp-1", "de-1", "au-1", "ca-1",
-				                                                "sg-1"}, true),
+					"in-1", "gb-1", "jp-1", "de-1", "au-1", "ca-1",
+					"sg-1"}, true),
 			},
 		},
 		ResourcesMap: map[string]*schema.Resource{
@@ -40,10 +40,14 @@ func Provider() *schema.Provider {
 			"conformity_report_config":         resourceConformityReportConfig(),
 			"conformity_communication_setting": resourceConformityCommSetting(),
 			"conformity_profile":               resourceConformityProfile(),
+			"conformity_check_suppression":     resourceConformityCheckSuppression(),
+			"conformity_custom_rule":           resourceConformityCustomRule(),
 		},
 		DataSourcesMap: map[string]*schema.Resource{
-			"conformity_external_id":   dataSourceExternalId(),
-			"conformity_apply_profile": dataSourceApplyProfile(),
+			"conformity_external_id":         dataSourceExternalId(),
+			"conformity_apply_profile":       dataSourceApplyProfile(),
+			"conformity_azure_subscriptions": dataSourceAzureSubscription(),
+      "conformity_gcp_projects":  dataSourceGcpProjects(),
 		},
 		ConfigureContextFunc: providerConfigure,
 	}

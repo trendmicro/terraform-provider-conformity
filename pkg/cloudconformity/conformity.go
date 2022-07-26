@@ -16,10 +16,9 @@ type method interface {
 	genericRequest(Client *Client, url_path string, payload io.Reader, rawQuery string, result interface{}) ([]byte, error)
 }
 type Get struct{}
-
 type Post struct{}
-
 type Patch struct{}
+type Put struct{}
 type Delete struct{}
 
 func (Post) genericRequest(Client *Client, url_path string, payload io.Reader, rawQuery string, result interface{}) ([]byte, error) {
@@ -35,6 +34,11 @@ func (Get) genericRequest(Client *Client, url_path string, payload io.Reader, ra
 func (Patch) genericRequest(Client *Client, url_path string, payload io.Reader, rawQuery string, result interface{}) ([]byte, error) {
 	//do patch request
 	return newRequest(Client, "PATCH", url_path, payload, rawQuery, result)
+}
+
+func (Put) genericRequest(Client *Client, url_path string, payload io.Reader, rawQuery string, result interface{}) ([]byte, error) {
+	//do patch request
+	return newRequest(Client, "PUT", url_path, payload, rawQuery, result)
 }
 
 func (Delete) genericRequest(Client *Client, url_path string, payload io.Reader, rawQuery string, result interface{}) ([]byte, error) {
@@ -92,7 +96,7 @@ func newRequest(c *Client, methodType string, url_path string, payload io.Reader
 	}
 
 	if resp.StatusCode != 200 {
-		log_debug("Conformity request error: " + string(resp.StatusCode))
+		log_debug(fmt.Sprintf("Conformity request error: %d", resp.StatusCode))
 		log_debug("Conformity response body error" + string(body))
 
 		return body, errors.New(string(body))

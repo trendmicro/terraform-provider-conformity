@@ -76,13 +76,11 @@ provider "aws" {
 ```hcl
 terraform {
   required_providers {
-    conformity = {
-      version = "0.4.5"
+    conformity = {      
       source  = "trendmicro/conformity"
     }
-      aws = {
-      source  = "hashicorp/aws"
-      version = ">= 3.44.0"
+    aws = {
+      source  = "hashicorp/aws"      
     }
   }
 }
