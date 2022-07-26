@@ -547,6 +547,7 @@ type CheckDetails struct {
 	Meta struct {
 		Note string `json:"note,omitempty"`
 	} `json:"meta,omitempty"`
+}
 
 type AzureSubscriptionsResponse struct {
 	Data []struct {
