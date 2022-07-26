@@ -33,6 +33,9 @@ var botSetting cloudconformity.AccountBotSettingsRequest
 var ruleSetting1, ruleSetting2, ruleSetting3 *cloudconformity.AccountRuleSettings
 var testServer *httptest.Server
 var checkDetails *cloudconformity.CheckDetails
+var customRule *cloudconformity.CustomRule
+var customRuleResponse = cloudconformity.CustomRuleResponse{}
+var counterGroupReads = 0
 
 func init() {
 	testAccConformityProvider = Provider()
@@ -104,6 +107,9 @@ func createConformityMock() (*cloudconformity.Client, *httptest.Server) {
 		var patchBotSettings = regexp.MustCompile(`^/accounts/(.*)/settings/bot$`)
 		var getCheck = regexp.MustCompile(`^/checks/(.*)$`)
 		var patchCheck = regexp.MustCompile(`^/checks/(.*)$`)
+		var getAzureSubscriptions = regexp.MustCompile(`^/azure/active-directories/(.*)/subscriptions/?(.*)$`)
+		var getGcpProjects = regexp.MustCompile(`^/gcp/organisations/(.*)/projects/?(.*)$`)
+		var endPointCustomRule = regexp.MustCompile(`^/custom-rules/(.*)$`)
 
 		switch {
 		case getOrganizationalExternalId.MatchString(r.URL.Path):
@@ -185,6 +191,21 @@ func createConformityMock() (*cloudconformity.Client, *httptest.Server) {
 
 			if groupDetails.Data.Attributes.Name == "no-tag" {
 				stringTags = "null"
+			}
+
+			if counterGroupReads > 1 && groupDetails.Data.Attributes.Name == "404-group" {
+				w.WriteHeader(http.StatusUnprocessableEntity)
+				w.Write([]byte(`{
+					"errors": [
+						{
+							"status": 422,
+							"detail": "Group ID entered is invalid"
+						}
+					]
+				}`))
+				break
+			} else if groupDetails.Data.Attributes.Name == "404-group" {
+				counterGroupReads++
 			}
 
 			w.Write([]byte(`{
@@ -523,6 +544,35 @@ func createConformityMock() (*cloudconformity.Client, *httptest.Server) {
 			split := strings.Split(r.URL.RawPath, "/")
 			checkDetails.Data.Id, _ = url.QueryUnescape(split[2])
 			w.Write([]byte(getCheckDetailsResponse()))
+
+		case getAzureSubscriptions.MatchString(r.URL.Path) && r.Method == "GET":
+			w.Write([]byte(testGetAzureSubscriptions200Response))
+
+		case getGcpProjects.MatchString(r.URL.Path) && r.Method == "GET":
+			w.Write([]byte(testGetGcpProjects200Response))
+
+		case endPointCustomRule.MatchString(r.URL.Path) && (r.Method == "POST" || r.Method == "PUT"):
+			_ = readRequestBody(r, &customRule)
+			customRuleResponse.ID = "some_id"
+			customRuleResponse.Type = "CustomRule"
+			customRuleResponse.Attributes.Name = customRule.Name
+			customRuleResponse.Attributes.Description = customRule.Description
+			customRuleResponse.Attributes.Enabled = customRule.Enabled
+			customRuleResponse.Attributes.Categories = customRule.Categories
+			customRuleResponse.Attributes.Severity = customRule.Severity
+			customRuleResponse.Attributes.RemediationNotes = customRule.RemediationNotes
+			customRuleResponse.Attributes.Service = customRule.Service
+			customRuleResponse.Attributes.Provider = customRule.Provider
+			customRuleResponse.Attributes.ResourceType = customRule.ResourceType
+			customRuleResponse.Attributes.Attributes = customRule.Attributes
+			customRuleResponse.Attributes.Rules = customRule.Rules
+			bytes, _ := json.Marshal(cloudconformity.CustomRuleCreateResponse{Data: customRuleResponse})
+			w.Write(bytes)
+		case endPointCustomRule.MatchString(r.URL.Path) && r.Method == "GET":
+			bytes, _ := json.Marshal(cloudconformity.CustomRuleGetResponse{Data: []cloudconformity.CustomRuleResponse{customRuleResponse}})
+			w.Write(bytes)
+		case endPointCustomRule.MatchString(r.URL.Path) && r.Method == "DELETE":
+			w.Write([]byte(`{"meta": {"status": "deleted" } }`))      
 		}
 	}))
 	// we do not Close() the server, it will be kept alive until all tests are finished
@@ -800,3 +850,36 @@ func getCheckDetailsResponse() string {
 `
 	return response
 }
+var testGetGcpProjects200Response = `{
+    "data": [
+      {
+        "type": "projects",
+        "attributes": {
+          "project-number": "415104041262",
+          "project-id": "project-id-1",
+          "lifecycle-state": "ACTIVE",
+          "added-to-conformity": true,
+          "create-time": "2021-05-17T11:21:58.012Z",
+          "name": "My Project",
+          "parent": {
+            "type": "folder",
+            "id": "415104041262"
+          }
+        }
+      }
+    ]
+  }`
+
+var testGetAzureSubscriptions200Response = `{
+    "data": [
+      {
+        "type": "subscriptions",
+        "id": "AZURE_SUBSCRIPTION_ID",
+        "attributes": {
+          "display-name": "A Azure Subscription",
+          "state": "Enabled",
+          "added-to-conformity": true
+        }
+      }
+    ]
+  }`
