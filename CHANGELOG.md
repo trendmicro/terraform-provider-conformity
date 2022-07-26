@@ -1,3 +1,13 @@
+## 0.4.6
+* Issue 26: Conformity Profile always triggers a change
+* Issue 30: conformity group resource does not handle unmanaged deletions
+* Issue 31: Conformity Profile doesn't allow GCP
+* Issue 33: Sort Included Settings
+* Conformits Customer Rules
+* Conformity Suppression Check Resource
+* Conformity GCP Projects
+* Conformity Azure Subscriptions
+
 ## 0.4.5
 * Extend conformity profile handling
 
