@@ -40,6 +40,7 @@ func Provider() *schema.Provider {
 			"conformity_report_config":         resourceConformityReportConfig(),
 			"conformity_communication_setting": resourceConformityCommSetting(),
 			"conformity_profile":               resourceConformityProfile(),
+			"conformity_check_suppression":     resourceConformityCheckSuppression(),
 			"conformity_custom_rule":           resourceConformityCustomRule(),
 		},
 		DataSourcesMap: map[string]*schema.Resource{

@@ -40,6 +40,6 @@ sample/
 # Keep windows files with windows line endings
 *.winfile eol=crlf
 
-/coverage.txt
 /go.sum
+/coverage.txt
 
