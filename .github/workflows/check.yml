@@ -11,6 +11,9 @@ jobs:
       MY_AWS_ACCESS_KEY: ${{ secrets.MY_AWS_ACCESS_KEY }} 
       MY_AWS_SECRET_KEY: ${{ secrets.MY_AWS_SECRET_KEY }}
       MY_PAGERDUTY_TOKEN: ${{ secrets.MY_PAGERDUTY_TOKEN }}
+      LEGACY_API_KEY: ${{ secrets.LEGACY_API_KEY }}
+      LEGACY_AWS_ACCESS_KEY: ${{ secrets.LEGACY_AWS_ACCESS_KEY }}
+      LEGACY_AWS_SECRET_KEY: ${{ secrets.LEGACY_AWS_SECRET_KEY }}
     steps:
       -
         name: Checkout
@@ -70,18 +73,18 @@ jobs:
         name: Terraform Plan
         run: |
           cd pipeline
-          terraform plan -var "key=$MY_KEY_VAR"  -var "apikey=$MY_CONFORMITY_API_KEY" -var "access_key=$MY_AWS_ACCESS_KEY" -var "secret_key=$MY_AWS_SECRET_KEY" -var "pagerduty_token=$MY_PAGERDUTY_TOKEN"
+          terraform plan -var "key=$MY_KEY_VAR"  -var "apikey=$MY_CONFORMITY_API_KEY" -var "access_key=$MY_AWS_ACCESS_KEY" -var "secret_key=$MY_AWS_SECRET_KEY" -var "pagerduty_token=$MY_PAGERDUTY_TOKEN" -var "legacy_apikey=$LEGACY_API_KEY" -var "legacy_aws_access_key=$LEGACY_AWS_ACCESS_KEY" -var "legacy_aws_secret_key=$LEGACY_AWS_SECRET_KEY"
           cd ..
       - 
         name: Terraform Apply
         run: |
           cd pipeline
-          terraform apply --auto-approve -var "key=$MY_KEY_VAR"  -var "apikey=$MY_CONFORMITY_API_KEY" -var "access_key=$MY_AWS_ACCESS_KEY" -var "secret_key=$MY_AWS_SECRET_KEY" -var "pagerduty_token=$MY_PAGERDUTY_TOKEN"
+          terraform apply --auto-approve -var "key=$MY_KEY_VAR"  -var "apikey=$MY_CONFORMITY_API_KEY" -var "access_key=$MY_AWS_ACCESS_KEY" -var "secret_key=$MY_AWS_SECRET_KEY" -var "pagerduty_token=$MY_PAGERDUTY_TOKEN" -var "legacy_apikey=$LEGACY_API_KEY" -var "legacy_aws_access_key=$LEGACY_AWS_ACCESS_KEY" -var "legacy_aws_secret_key=$LEGACY_AWS_SECRET_KEY"
           cd ..
       - 
         if: always()
         name: Terraform Destroy
         run: |
           cd pipeline
-          terraform destroy --auto-approve -var "key=$MY_KEY_VAR"  -var "apikey=$MY_CONFORMITY_API_KEY" -var "access_key=$MY_AWS_ACCESS_KEY" -var "secret_key=$MY_AWS_SECRET_KEY" -var "pagerduty_token=$MY_PAGERDUTY_TOKEN"
+          terraform destroy --auto-approve -var "key=$MY_KEY_VAR"  -var "apikey=$MY_CONFORMITY_API_KEY" -var "access_key=$MY_AWS_ACCESS_KEY" -var "secret_key=$MY_AWS_SECRET_KEY" -var "pagerduty_token=$MY_PAGERDUTY_TOKEN" -var "legacy_apikey=$LEGACY_API_KEY" -var "legacy_aws_access_key=$LEGACY_AWS_ACCESS_KEY" -var "legacy_aws_secret_key=$LEGACY_AWS_SECRET_KEY"
           cd ..
