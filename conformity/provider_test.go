@@ -76,7 +76,6 @@ func readRequestBody(r *http.Request, payload interface{}) error {
 	}
 	return nil
 }
-
 func createConformityMock() (*cloudconformity.Client, *httptest.Server) {
 
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -84,6 +83,7 @@ func createConformityMock() (*cloudconformity.Client, *httptest.Server) {
 		w.WriteHeader(http.StatusOK)
 
 		var getOrganizationalExternalId = regexp.MustCompile(`^/organisation/external-id/$`)
+		var getCurrentUser = regexp.MustCompile(`^/users/whoami$`)
 		var postApplyProfile = regexp.MustCompile(`^/profiles/(.*)/apply$`)
 		var postAccount = regexp.MustCompile(`^/accounts/$`)
 		var patchAccountRuleSetting = regexp.MustCompile(`^/accounts/(.*)/settings/rules/(.*)$`)
@@ -108,12 +108,52 @@ func createConformityMock() (*cloudconformity.Client, *httptest.Server) {
 		var getCheck = regexp.MustCompile(`^/checks/(.*)$`)
 		var patchCheck = regexp.MustCompile(`^/checks/(.*)$`)
 		var getAzureSubscriptions = regexp.MustCompile(`^/azure/active-directories/(.*)/subscriptions/?(.*)$`)
+		var postAzureActiveDirectory = regexp.MustCompile(`^/azure/active-directories$`)
 		var getGcpProjects = regexp.MustCompile(`^/gcp/organisations/(.*)/projects/?(.*)$`)
 		var endPointCustomRule = regexp.MustCompile(`^/custom-rules/(.*)$`)
 
 		switch {
 		case getOrganizationalExternalId.MatchString(r.URL.Path):
 			w.Write([]byte(`{ "data": { "type": "external-ids", "id": "3ff84b20-0f4c-11eb-a7b7-7d9b3c0e866e" } }`))
+		case getCurrentUser.MatchString(r.URL.Path):
+			w.Write([]byte(`
+			{
+  "data": {
+    "type": "users",
+    "id": "517uNyIvG",
+    "attributes": {
+    "first-name": "John",
+	"last-name": "Smith",
+	"email": "john.smith@company.com",
+	"status": "ACTIVE",
+       "created_date":0,
+      "has_credentials":false,
+       "is_api_key_user" : false,
+		"is_cloud_one_user" : false,
+		"last_login_date" : 0,
+		"mfa" : false,
+		"role" : "ADMIN",
+		"summary_email_opt_out" : true
+	
+    },
+    "relationships": {
+      "organisation": {
+        "data": {
+          "type": "organisations",
+          "id": "B1nHYYpwx"
+        }
+      },
+      "accountAccessList": [
+        {
+          "account": "A9_DsY12z",
+          "level": "NONE"
+        }
+      ]
+    }
+  }
+}
+			
+			`))
 		case postApplyProfile.MatchString(r.URL.Path):
 			w.Write([]byte(`{
 				"meta": {
@@ -547,7 +587,8 @@ func createConformityMock() (*cloudconformity.Client, *httptest.Server) {
 
 		case getAzureSubscriptions.MatchString(r.URL.Path) && r.Method == "GET":
 			w.Write([]byte(testGetAzureSubscriptions200Response))
-
+		case postAzureActiveDirectory.MatchString(r.URL.Path) && r.Method == "POST":
+			w.Write([]byte(testPostAzureActiveDirectory200Response))
 		case getGcpProjects.MatchString(r.URL.Path) && r.Method == "GET":
 			w.Write([]byte(testGetGcpProjects200Response))
 
@@ -572,7 +613,7 @@ func createConformityMock() (*cloudconformity.Client, *httptest.Server) {
 			bytes, _ := json.Marshal(cloudconformity.CustomRuleGetResponse{Data: []cloudconformity.CustomRuleResponse{customRuleResponse}})
 			w.Write(bytes)
 		case endPointCustomRule.MatchString(r.URL.Path) && r.Method == "DELETE":
-			w.Write([]byte(`{"meta": {"status": "deleted" } }`))      
+			w.Write([]byte(`{"meta": {"status": "deleted" } }`))
 		}
 	}))
 	// we do not Close() the server, it will be kept alive until all tests are finished
@@ -850,6 +891,7 @@ func getCheckDetailsResponse() string {
 `
 	return response
 }
+
 var testGetGcpProjects200Response = `{
     "data": [
       {
@@ -883,3 +925,15 @@ var testGetAzureSubscriptions200Response = `{
       }
     ]
   }`
+var testPostAzureActiveDirectory200Response = `{
+  "data": {
+    "type": "active-directories",
+    "id": "CREATED_ACITVE_DIRECTORY_ID",
+    "attributes": {
+      "name": "MyAzureActiveDirectory",
+      "directory-id": "YOUR_ACTIVE_DIRECTORY_ID",
+      "created-date": 1635230845449,
+      "last-modified-date": 1635230845449
+    }
+  }
+}`

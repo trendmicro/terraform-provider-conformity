@@ -2,9 +2,9 @@ package conformity
 
 import (
 	"fmt"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/trendmicro/terraform-provider-conformity/pkg/cloudconformity"
 	"testing"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
 
 func TestAccResourceGCPOrganisation(t *testing.T) {
@@ -19,20 +19,20 @@ func TestAccResourceGCPOrganisation(t *testing.T) {
 	ruleSetting3 = nil
 
 	service_account_name := "MySubscription"
-    acc_type := "service_account"
-    project_id := "conformity-346910"
-    private_key_id := "c1c3688e7c"
-    private_key := "-----BEGIN PRIVATE KEY-----key=-----END PRIVATE KEY-----"
-    client_email := "iam.gserviceaccount.com"
-    client_id := "811129548"
-    auth_uri := "https://accounts.google.com/o/oauth2/auth"
-    token_uri := "https://oauth2.googleapis.com/token"
-    auth_provider_x509_cert_url := "https://www.googleapis.com/oauth2/v1/certs"
-    client_x509_cert_url := "https://www.googleapis.com/robot/v1/metadata/x509/cloud-one-conformity-bot%40conformity-346910.iam.gserviceaccount.com"
+	acc_type := "service_account"
+	project_id := "conformity-346910"
+	private_key_id := "c1c3688e7c"
+	private_key := "-----BEGIN PRIVATE KEY-----key=-----END PRIVATE KEY-----"
+	client_email := "iam.gserviceaccount.com"
+	client_id := "811129548"
+	auth_uri := "https://accounts.google.com/o/oauth2/auth"
+	token_uri := "https://oauth2.googleapis.com/token"
+	auth_provider_x509_cert_url := "https://www.googleapis.com/oauth2/v1/certs"
+	client_x509_cert_url := "https://www.googleapis.com/robot/v1/metadata/x509/cloud-one-conformity-bot%40conformity-346910.iam.gserviceaccount.com"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccConformityPreCheck(t) },
-		Providers:    testAccConformityProviders,
+		PreCheck:  func() { testAccConformityPreCheck(t) },
+		Providers: testAccConformityProviders,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccCheckGCPOrgConfigBasic(service_account_name, acc_type, project_id, private_key_id, private_key, client_email, client_id, auth_uri, token_uri, auth_provider_x509_cert_url, client_x509_cert_url),
@@ -48,7 +48,6 @@ func TestAccResourceGCPOrganisation(t *testing.T) {
 					resource.TestCheckResourceAttr("conformity_gcp_org.gcp_org", "token_uri", "https://oauth2.googleapis.com/token"),
 					resource.TestCheckResourceAttr("conformity_gcp_org.gcp_org", "auth_provider_x509_cert_url", "https://www.googleapis.com/oauth2/v1/certs"),
 					resource.TestCheckResourceAttr("conformity_gcp_org.gcp_org", "client_x509_cert_url", "https://www.googleapis.com/robot/v1/metadata/x509/cloud-one-conformity-bot%40conformity-346910.iam.gserviceaccount.com"),
-
 				),
 			},
 		},

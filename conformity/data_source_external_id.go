@@ -21,7 +21,6 @@ func dataSourceExternalId() *schema.Resource {
 		},
 	}
 }
-
 func dataSourceExternalIdRead(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	client := m.(*cloudconformity.Client)
 	// Warning or errors can be collected in a slice type
