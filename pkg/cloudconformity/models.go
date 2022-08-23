@@ -250,7 +250,7 @@ type UserAccountAccessList struct {
 
 // New Created for the New Response For the CUrrent user
 type Meta struct {
-	Is_api_key_user bool `json :"is-cloud-one-user,omitempty"`
+	IsApiKeyUser bool `json :"is_api_key_user,omitempty"`
 }
 type userAttributes struct {
 	FirstName    string                  `json:"firstName,omitempty"`
@@ -264,10 +264,10 @@ type userAttributes struct {
 	AccessList   []UserAccountAccessList `json:"accessList,omitempty"`
 
 	//New Created for the new response for the current user
-	Is_cloud_one_user     bool `json :"is-cloud-one-user,omitempty"`
-	Created_Date          int  `json:"created_date,omitempty"`
-	Summary_Email_Opt_Out bool `json:"summary_email_opt_out"`
-	Has_Credentials       bool `json:"has-credentials,omitempty"`
+	IsCloudOneUser     bool `json :"is_cloud_one_user,omitempty"`
+	CreatedDate        int  `json:"created_date,omitempty"`
+	SummaryEmailOptOut bool `json:"summary_email_opt_out"`
+	HasCredentials     bool `json:"has_credentials,omitempty"`
 }
 type userRelationships struct {
 	AccountAccessList []UserAccountAccessList `json:"accountAccessList"`

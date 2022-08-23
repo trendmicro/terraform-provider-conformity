@@ -80,19 +80,19 @@ func dataSourceCurrentUserRead(ctx context.Context, d *schema.ResourceData, m in
 	if err != nil {
 		return diag.FromErr(err)
 	}
-	if err := d.Set("is_cloud_one_user", data.Data.Attributes.Is_cloud_one_user); err != nil {
+	if err := d.Set("is_cloud_one_user", data.Data.Attributes.IsCloudOneUser); err != nil {
 		return diag.FromErr(err)
 	}
-	if err := d.Set("is_api_key_user", data.Data.Meta.Is_api_key_user); err != nil {
+	if err := d.Set("is_api_key_user", data.Data.Meta.IsApiKeyUser); err != nil {
 		return diag.FromErr(err)
 	}
-	if err := d.Set("created_date", data.Data.Attributes.Created_Date); err != nil {
+	if err := d.Set("created_date", data.Data.Attributes.CreatedDate); err != nil {
 		return diag.FromErr(err)
 	}
-	if err := d.Set("summary_email_opt_out", data.Data.Attributes.Summary_Email_Opt_Out); err != nil {
+	if err := d.Set("summary_email_opt_out", data.Data.Attributes.SummaryEmailOptOut); err != nil {
 		return diag.FromErr(err)
 	}
-	if err := d.Set("has_credentials", data.Data.Attributes.Has_Credentials); err != nil {
+	if err := d.Set("has_credentials", data.Data.Attributes.HasCredentials); err != nil {
 		return diag.FromErr(err)
 	}
 

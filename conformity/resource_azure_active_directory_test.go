@@ -21,10 +21,10 @@ func TestAccResourceAzureActiveDirectory(t *testing.T) {
 			{
 				Config: testAccCheckAzureActiveDirectoryConfigBasic(name, directory_id, application_id, application_key),
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttr("conformity_azure_active_directory.azure", "name", "Azure Active Directory"),
-					resource.TestCheckResourceAttr("conformity_azure_active_directory.azure", "directory_id", "761d49c9-8898-5d35-c4db-ed8582f20dbf"),
-					resource.TestCheckResourceAttr("conformity_azure_active_directory.azure", "application_id", "c5187d37-8de6-5920-99df-4d8eb3f8cc05"),
-					resource.TestCheckResourceAttr("conformity_azure_active_directory.azure", "application_key", "kjx9Q~.CeN4.AxZZVvT8qFRmcx9v9HDVBxgA3mc1"),
+					resource.TestCheckResourceAttr("conformity_azure_active_directory.azure", "name", name),
+					resource.TestCheckResourceAttr("conformity_azure_active_directory.azure", "directory_id", directory_id),
+					resource.TestCheckResourceAttr("conformity_azure_active_directory.azure", "application_id", application_id),
+					resource.TestCheckResourceAttr("conformity_azure_active_directory.azure", "application_key", application_key),
 				),
 			},
 		},
