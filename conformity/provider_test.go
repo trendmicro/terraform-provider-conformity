@@ -572,7 +572,7 @@ func createConformityMock() (*cloudconformity.Client, *httptest.Server) {
 			bytes, _ := json.Marshal(cloudconformity.CustomRuleGetResponse{Data: []cloudconformity.CustomRuleResponse{customRuleResponse}})
 			w.Write(bytes)
 		case endPointCustomRule.MatchString(r.URL.Path) && r.Method == "DELETE":
-			w.Write([]byte(`{"meta": {"status": "deleted" } }`))      
+			w.Write([]byte(`{"meta": {"status": "deleted" } }`))
 		}
 	}))
 	// we do not Close() the server, it will be kept alive until all tests are finished
@@ -850,6 +850,7 @@ func getCheckDetailsResponse() string {
 `
 	return response
 }
+
 var testGetGcpProjects200Response = `{
     "data": [
       {
@@ -883,3 +884,16 @@ var testGetAzureSubscriptions200Response = `{
       }
     ]
   }`
+
+var testPostAzureActiveDirectory200Response = `{
+  "data": {
+    "type": "active-directories",
+    "id": "CREATED_ACITVE_DIRECTORY_ID",
+    "attributes": {
+      "name": "MyAzureActiveDirectory",
+      "directory-id": "YOUR_ACTIVE_DIRECTORY_ID",
+      "created-date": 1635230845449,
+      "last-modified-date": 1635230845449
+    }
+  }
+}`
