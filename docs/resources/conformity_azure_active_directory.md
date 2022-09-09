@@ -2,25 +2,18 @@
 page_title: "conformity_azure_active_directory"
 subcategory: "Azure"
 description: |-
- Allows you to create an Azure Active Directory
+  Provides an  instruction on how to create an Azure Active Directory.
 ---
 
-
 # Resource `conformity_azure_active_directory`
-
- Allows you to create an Azure Active Directory
+Provides an  instruction on how to create an Azure Active Directory.
 
 ## Example Usage
-
-```
-resource "conformity_azure_active_directory" "azure" {
-    name = "Azure Active Directory"
-    directory_id    = " directoryId"
-    application_id     = " applicationId"
-    application_key = " applicationKey"
+```hcl
+resource "conformity_azure_account" "azure" {
+    name                = "azure-conformity"
+    environment         = "development"
+    active_directory_id = "your-active-directory-id"
+    subscription_id     = "your-subscription-id"
 }
-output "ad_detail"{
-    value=conformity_azure_active_directory.azure
-}
-
 ```
