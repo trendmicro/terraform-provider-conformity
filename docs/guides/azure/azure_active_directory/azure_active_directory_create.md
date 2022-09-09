@@ -17,20 +17,22 @@ Provides instruction on how to create an create an Azure Active Directory..
 
 ##### Terraform Configuration
 
-1. To create an Azure Active Directory, create `main.td` on `example/azure/azure_active_directory` folder and add the following values:
-
-## Example Usage for `main.tf`
+1. Create terraform `main.tf` on `example/azure/azure_active_directory` folder for Azure Active Directory Module, create the file if not existing and add the following values:
 ```hcl
-apikey = "CLOUD-CONFORMITY-API-KEY"
-region = "AWS-ACCOUNT-REGION"
-
-# conformity_azure_active_directory
 resource "conformity_azure_active_directory" "azure" {
     name = "Azure Active Directory"
     directory_id    = "761d49c9-8898-5d35-c4db-ed8582f20dbf"
     application_id     = var.application_id
     application_key = var.application_key
 }
+```
+2. To use Conformity and its resources, add the  Region where the resources will be created and API Key from Conformity Organisation to the `variable.tf`. 
+
+3. Create `variable.tf` on `example/azure/azure_active_directory` folder and add the following values:
+
+```hcl
+apikey = "CLOUD-CONFORMITY-API-KEY"
+region = "GCP-REGION"
 
 ```
 Note: You can always change the values declared according to your choice.
@@ -58,3 +60,4 @@ terraform init
 terraform plan
 terraform apply
 ```
+

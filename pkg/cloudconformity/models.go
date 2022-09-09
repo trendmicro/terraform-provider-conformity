@@ -247,6 +247,11 @@ type UserAccountAccessList struct {
 	Account string `json:"account"`
 	Level   string `json:"level"`
 }
+
+// New Created for the New Response For the CUrrent user
+type Meta struct {
+	IsApiKeyUser bool `json :"is_api_key_user,omitempty"`
+}
 type userAttributes struct {
 	FirstName    string                  `json:"firstName,omitempty"`
 	LastName     string                  `json:"lastName,omitempty"`
@@ -257,6 +262,12 @@ type userAttributes struct {
 	Email        string                  `json:"email"`
 	Role         string                  `json:"role"`
 	AccessList   []UserAccountAccessList `json:"accessList,omitempty"`
+
+	//New Created for the new response for the current user
+	IsCloudOneUser     bool `json :"is_cloud_one_user,omitempty"`
+	CreatedDate        int  `json:"created_date,omitempty"`
+	SummaryEmailOptOut bool `json:"summary_email_opt_out"`
+	HasCredentials     bool `json:"has_credentials,omitempty"`
 }
 type userRelationships struct {
 	AccountAccessList []UserAccountAccessList `json:"accountAccessList"`
@@ -266,6 +277,7 @@ type UserDetails struct {
 		Type          string            `json:"type,omitempty"`
 		ID            string            `json:"id,omitempty"`
 		Attributes    userAttributes    `json:"attributes,omitempty"`
+		Meta          Meta              `json:"meta,omitempty"`
 		Relationships userRelationships `json:"relationships,omitempty"`
 	} `json:"data"`
 }
@@ -655,5 +667,26 @@ type CustomRuleResponse struct {
 		Provider         string                 `json:"provider"`
 		Categories       []string               `json:"categories"`
 		Enabled          bool                   `json:"enabled"`
+	} `json:"attributes"`
+}
+type azureActiveDirectoryAttributes struct {
+	Name           string `json:"name,omitempty"`
+	DirectoryId    string `json:"directoryId,omitempty"`
+	ApplicationId  string `json:"applicationId,omitempty"`
+	Applicationkey string `json:"applicationKey,omitempty"`
+}
+type ActiveAzureDirectory struct {
+	Data struct {
+		Attributes azureActiveDirectoryAttributes `json:"attributes,omitempty"`
+	} `json:"data"`
+}
+type AzureActiveDirectoryResponse struct {
+	Data struct {
+		Type string `json:"type,omitempty"`
+		ID   string `json:"id,omitempty"`
+	} `json:"data"`
+	Attributes struct {
+		Name        string `json:"name,omitempty"`
+		DirectoryId string `json:"directoryId,omitempty"`
 	} `json:"attributes"`
 }

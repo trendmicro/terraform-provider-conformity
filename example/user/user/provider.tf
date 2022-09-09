@@ -8,6 +8,6 @@ terraform {
 }
 
 provider "conformity" {
-  region = var.region
-  apikey = var.apikey
+  region =  var.region
+  apikey = var.apikey 
 }

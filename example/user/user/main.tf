@@ -3,7 +3,7 @@ resource "conformity_user" "user" {
   last_name  = var.last_name
   email      = var.email
   role       = var.role
-
+ 
   # access_list {
   #   account = var.account01
   #   level   = var.level01
@@ -18,3 +18,4 @@ resource "conformity_user" "user" {
   output "user"{
     value = conformity_user.user
   }
+  
