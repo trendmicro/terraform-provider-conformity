@@ -1,13 +1,13 @@
 resource "conformity_custom_rule" "example" {
    
-    name= "S3 Bucket Custom Rule"
+    name= "Bucket testing for custom rule"
     description      = "This custom rule ensures S3 buckets follow our best practice updated"
 	remediation_notes = "If this is broken, please follow these steps:\n1. Step one \n2. Step two\n updated"
 	service          = "S3"
 	resource_type     = "s3-bucket"
 	categories       = ["security"]
 	severity         = "HIGH"
-	cloud_provider   = "azure"
+	cloud_provider   = "aws"
 	enabled          = true
 	attributes {
 		name     = "bucketName"
@@ -19,9 +19,13 @@ resource "conformity_custom_rule" "example" {
 		conditions {
 		  fact     = "bucketName"
 		  operator = "pattern"
-		  value    = "^([a-zA-Z0-9_-]){1,32}$"
+		  value=  "^shunyekaa$"
 		}
-		event_type = "Bucket name is longer than 32 characters"
+		event_type = "Bucket name should be shunyeka"
 	  }
+}
+
+output "customrule"{
+    value=conformity_custom_rule.example
 }
 
