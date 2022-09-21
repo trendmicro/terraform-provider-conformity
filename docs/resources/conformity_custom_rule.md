@@ -2,7 +2,7 @@
 page_title: "conformity_custom_rule Resource"
 subcategory: "Custom Rules"
 description: |-
-  Allows you to create Custom Rules on Conformity. 
+  Allows you to create and Run  Custom Rules on Conformity. 
 ---
 
 # Resource `conformity_custom_rule`
@@ -211,7 +211,7 @@ AWS Storage Naming-:
 GCP:-
 resource "conformity_custom_rule" "example"{
   "name": "Gcp Google Cloud  Custom Rule testing",
-  "description": "This custom rule ensures Azure Storage Account follow our best practice",
+  "description": "This custom rule ensures "Gcp Google Cloud follow our best practice",
   "service": "CloudStorage",
   "resourceType": "cloudstorage-buckets",
   "categories": [
