@@ -1,16 +1,17 @@
 ---
-page_title: "Azure Active Directory Guide"
+page_title: "Create an Azure Active Directory"
 subcategory: "Azure"
 description: |-
-  Provides instruction on how to create an Azure Active Directory
+  Provides instruction on how to create an Azure Active Directory.
 ---
 
-# How To create an Azure Active Directory on a local machine
-Provides instruction on how to create an  Azure Active Directory using Terraform.
+# How To Create  an Azure Active Directory
+Provides instruction on how to create an create an Azure Active Directory..
 
 ## Things needed:
-1. name,directoryId,applicationId and applicationKey
-2. Conformity API Key
+1. Conformity API Key
+2. name,directory_id,application_id,application_key
+
 
 #### Step 1
 
@@ -42,7 +43,7 @@ Note: You can always change the values declared according to your choice.
 
 #### 1. Navigate to project directory:
 ```sh
-cd /path/terraform-provider-conformity/
+cd /path/terraform-provider-conformity
 ```
 #### 2. Install dependencies:
 ```sh
@@ -59,10 +60,4 @@ terraform init
 terraform plan
 terraform apply
 ```
-#### 5. Bash script that can run to automate the whole process 1-5:
 
-Under script folder run:
-```sh
-cd script/gcp_organisation
-sh terraform-gcp-organisation-create.sh
-```

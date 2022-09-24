@@ -32,12 +32,12 @@ func TestAccResourceAzureActiveDirectory(t *testing.T) {
 }
 func testAccCheckAzureActiveDirectoryConfigBasic(name, directory_id, application_id, application_key string) string {
 	return fmt.Sprintf(`
-resource "conformity_azure_active_directory" "azure" {
-    name = "%s"
-    directory_id    = "%s"
-    application_id     = "%s"
-    application_key = "%s"
-}
+	resource "conformity_azure_active_directory" "azure" {
+	    name = "%s"
+	    directory_id    = "%s"
+	    application_id     = "%s"
+	    application_key = "%s"
+	}
 `, name, directory_id, application_id, application_key)
 
 }
