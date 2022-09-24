@@ -209,7 +209,7 @@ func createConformityMock() (*cloudconformity.Client, *httptest.Server) {
 				"subscriptionId": "test-subscrition-id"
 				} } } } }`))
 		case postazureactivedirectory.MatchString(r.URL.Path) && r.Method == "POST":
-			w.write([]byte(testPostAzureActiveDirectory200Response))
+			w.Write([]byte(testPostAzureActiveDirectory200Response))
 		case accountDetails.MatchString(r.URL.Path) && r.Method == "DELETE":
 			w.Write([]byte(`{
 				"meta": {
