@@ -32,7 +32,7 @@ func resourceConformityCheckSuppression() *schema.Resource {
 			},
 			"rule_id": {
 				Type:        schema.TypeString,
-				Optional:    true,
+				Required:    true,
 				Description: "ID of the rule to be suppressed. Example: 'Resources-001'",
 				ForceNew:    true,
 				ValidateFunc: validation.StringMatch(
@@ -47,7 +47,7 @@ func resourceConformityCheckSuppression() *schema.Resource {
 			},
 			"resource_id": {
 				Type:        schema.TypeString,
-				Optional:    true,
+				Required:    true,
 				Description: "The ID of the resource if the check should be suppressed only for a specific resource. Example: '/subscriptions/8dfbsdfe-we13-46we-9963-188868997f40/resourceGroups/myDevResources/providers/Microsoft.KeyVault/vaults/myDevKeyVault-eastus'",
 				ForceNew:    true,
 			},

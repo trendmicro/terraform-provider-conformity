@@ -111,7 +111,7 @@ func createConformityMock() (*cloudconformity.Client, *httptest.Server) {
 		var postAzureActiveDirectory = regexp.MustCompile(`^/azure/active-directories$`)
 		var getGcpProjects = regexp.MustCompile(`^/gcp/organisations/(.*)/projects/?(.*)$`)
 		var endPointCustomRule = regexp.MustCompile(`^/custom-rules/(.*)$`)
-
+		var postazureactivedirectory = regexp.MustCompile(`^/azure/active-directories(.*)$`)
 		switch {
 		case getOrganizationalExternalId.MatchString(r.URL.Path):
 			w.Write([]byte(`{ "data": { "type": "external-ids", "id": "3ff84b20-0f4c-11eb-a7b7-7d9b3c0e866e" } }`))
@@ -208,7 +208,8 @@ func createConformityMock() (*cloudconformity.Client, *httptest.Server) {
 				"azure": {
 				"subscriptionId": "test-subscrition-id"
 				} } } } }`))
-
+		case postazureactivedirectory.MatchString(r.URL.Path) && r.Method == "POST":
+			w.Write([]byte(testPostAzureActiveDirectory200Response))
 		case accountDetails.MatchString(r.URL.Path) && r.Method == "DELETE":
 			w.Write([]byte(`{
 				"meta": {
@@ -925,6 +926,7 @@ var testGetAzureSubscriptions200Response = `{
       }
     ]
   }`
+
 var testPostAzureActiveDirectory200Response = `{
   "data": {
     "type": "active-directories",
