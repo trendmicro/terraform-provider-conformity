@@ -62,3 +62,82 @@ terraform import aws_cloudformation_stack.stack CloudConformity
 | [aws_cloudformation_stack.cloud-conformity](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudformation_stack) | resource |
 | conformity_aws_account.aws | resource |
 | conformity_external_id.external | data source |
+
+
+## Least Priviledge Policy for the CloudFormation stack terraform operation
+
+```json
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "IAM",
+            "Effect": "Allow",
+            "Action": [
+                "iam:GetRole",
+                "iam:DetachRolePolicy",
+                "iam:CreateRole",
+                "iam:DeletePolicy",
+                "iam:CreatePolicy",
+                "iam:DeleteRole",
+                "iam:AttachRolePolicy",
+                "iam:UpdateRole",
+                "iam:GetPolicyVersion",
+                "iam:GetPolicy",
+                "iam:CreatePolicyVersion",
+                "iam:DeletePolicyVersion",
+                "iam:SetDefaultPolicyVersion",
+                "iam:ListPolicyVersions"
+            ],
+            "Resource": [
+                "arn:aws:iam::*:role/CloudConformity",
+                "arn:aws:iam::*:policy/CloudConformityPart2",
+                "arn:aws:iam::*:policy/CloudConformityPart1"
+            ]
+        },
+        {
+            "Sid": "EventBridge",
+            "Effect": "Allow",
+            "Action": [
+                "events:DescribeRule",
+                "events:EnableRule",
+                "events:PutRule",
+                "events:DeleteRule",
+                "events:PutTargets",
+                "events:RemoveTargets",
+                "events:ListTargetsByRule",
+                "events:DisableRule"
+            ],
+            "Resource": [
+                "arn:aws:events:*:*:rule/*/CloudConformityMonitoring",
+                "arn:aws:events:*:*:rule/CloudConformityMonitoring"
+            ]
+        },
+        {
+            "Sid": "General",
+            "Effect": "Allow",
+            "Action": [
+                "events:ListRules",
+                "sts:GetCallerIdentity"
+            ],
+            "Resource": "*"
+        },
+        {
+            "Sid": "CloudFormation",
+            "Effect": "Allow",
+            "Action": [
+                "cloudformation:DescribeStackEvents",
+                "cloudformation:CreateStack",
+                "cloudformation:GetTemplate",
+                "cloudformation:DeleteStack",
+                "cloudformation:UpdateStack",
+                "cloudformation:DescribeStacks"
+            ],
+            "Resource": [
+                "arn:aws:cloudformation:*:*:stack/CloudConformity/*",
+                "arn:aws:cloudformation:*:*:stack/CloudConformityMonitoring/*"
+            ]
+        }
+    ]
+}
+```
