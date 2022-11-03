@@ -447,7 +447,7 @@ type IncludedExceptions struct {
 type ProfileValues struct {
 	Label   string      `json:"label,omitempty"`
 	Value   interface{} `json:"value,omitempty"`
-	Enabled bool        `json:"enabled,omitempty"`
+	Enabled interface{} `json:"enabled,omitempty"`
 }
 
 type IncludedExtraSettings struct {
