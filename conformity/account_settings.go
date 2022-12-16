@@ -1,11 +1,11 @@
 package conformity
 
 import (
+	"fmt"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/trendmicro/terraform-provider-conformity/pkg/cloudconformity"
 	"reflect"
 	"strings"
-
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
 func flattenAccountSettings(settings *cloudconformity.AccountSettings, rule []cloudconformity.GetRuleSettings) []interface{} {
