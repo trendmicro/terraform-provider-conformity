@@ -2,7 +2,6 @@ package cloudconformity
 
 import (
 	"fmt"
-	"log"
 	"strings"
 )
 
