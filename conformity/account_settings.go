@@ -157,7 +157,7 @@ func flattenRuleValues(values []interface{}) []interface{} {
 		if l, ok := item["label"].(string); ok && l != "" {
 			v["label"] = l
 		}
-		itemvalue := fmt.Sprint("%s", item["value"])
+		itemvalue := fmt.Sprintf("%s", item["value"])
 		if itemvalue != "" {
 			v["value"] = string((itemvalue))
 		}
