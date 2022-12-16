@@ -15,10 +15,10 @@ func TestAccResourceAwsAccount(t *testing.T) {
 
 	// accountPayload,ruleSetting1,rulesetting2, ruleSetting3 also uses by the other resource testing, expect not empty struct
 	// To make sure  all are empty
-	accountPayload = cloudconformity.AccountPayload{}
-	ruleSetting1 = nil
-	ruleSetting2 = nil
-	ruleSetting3 = nil
+	// accountPayload := cloudconformity.AccountPayload{}
+	// ruleSetting1 = nil
+	// ruleSetting2 = nil
+	// ruleSetting3 = nil
 
 	name := "test-name"
 	environment := "test-env"
@@ -48,14 +48,14 @@ func TestAccResourceAwsAccount(t *testing.T) {
 					resource.TestCheckResourceAttr("conformity_aws_account.aws", "settings.0.bot.0.delay", "0"),
 					resource.TestCheckResourceAttr("conformity_aws_account.aws", "settings.0.bot.0.disabled_regions.0", "ap-east-1"),
 					resource.TestCheckResourceAttr("conformity_aws_account.aws", "settings.0.bot.0.disabled_regions.1", "ap-south-1"),
-					resource.TestCheckResourceAttr("conformity_aws_account.aws", "settings.0.rule.0.rule_id", "RTM-005"),
+					resource.TestCheckResourceAttr("conformity_aws_account.aws", "settings.0.rule.0.rule_id", "EC2-034"),
 					resource.TestCheckResourceAttr("conformity_aws_account.aws", "settings.0.rule.0.settings.0.enabled", "true"),
-					resource.TestCheckResourceAttr("conformity_aws_account.aws", "settings.0.rule.0.settings.0.exceptions.0.tags.0", "some_tag"),
-					resource.TestCheckResourceAttr("conformity_aws_account.aws", "settings.0.rule.0.settings.0.extra_settings.0.type", "countries"),
-					resource.TestCheckResourceAttr("conformity_aws_account.aws", "settings.0.rule.0.settings.0.extra_settings.0.values.0.value", "CA"),
-					resource.TestCheckResourceAttr("conformity_aws_account.aws", "settings.0.rule.0.settings.0.extra_settings.0.values.0.label", "Canada"),
-					resource.TestCheckResourceAttr("conformity_aws_account.aws", "settings.0.rule.0.settings.0.extra_settings.0.values.1.value", "US"),
-					resource.TestCheckResourceAttr("conformity_aws_account.aws", "settings.0.rule.0.settings.0.extra_settings.0.values.1.label", "United States"),
+					// resource.TestCheckResourceAttr("conformity_aws_account.aws", "settings.0.rule.0.settings.0.exceptions.0.tags.0", "some_tag"),
+					resource.TestCheckResourceAttr("conformity_aws_account.aws", "settings.0.rule.0.settings.0.extra_settings.0.type", "multiple-number-values"),
+					resource.TestCheckResourceAttr("conformity_aws_account.aws", "settings.0.rule.0.settings.0.extra_settings.0.values.0.value", 80),
+					// resource.TestCheckResourceAttr("conformity_aws_account.aws", "settings.0.rule.0.settings.0.extra_settings.0.values.0.label", "Canada"),
+					resource.TestCheckResourceAttr("conformity_aws_account.aws", "settings.0.rule.0.settings.0.extra_settings.0.values.1.value", 443),
+					// resource.TestCheckResourceAttr("conformity_aws_account.aws", "settings.0.rule.0.settings.0.extra_settings.0.values.1.label", "United States"),
 					resource.TestCheckResourceAttr("conformity_aws_account.aws", "settings.0.rule.1.rule_id", "RTM-011"),
 					resource.TestCheckResourceAttr("conformity_aws_account.aws", "settings.0.rule.1.settings.0.extra_settings.0.type", "multiple-object-values"),
 					resource.TestCheckResourceAttr("conformity_aws_account.aws", "settings.0.rule.1.settings.0.extra_settings.0.multiple_object_values.0.event_name", "^(iam.amazonaws.com)"),
@@ -115,28 +115,26 @@ func testAccCheckAwsAccountConfigBasic(name, environment, roleARN, externalID st
 				disabled_regions = [ "ap-east-1", "ap-south-1" ]
 			}
 			// implement multiple values
-			rule {
-				rule_id = "RTM-005"
-				settings {
+			
+			rule{
+				rule_id = "EC2-034"
+				settings{
 					enabled     = true
 					risk_level  = "MEDIUM"
 					rule_exists = false
-					exceptions {
-						tags = ["some_tag"]
-					}
-					extra_settings {
-						name  = "authorisedCountries"
-						type  = "countries"
-						values {
-							value = "CA"
-							label = "Canada"
+					extra_settings{
+						name="commonlyUsedPorts"
+						type="multiple-number-values"
+						values{
+							value=80
 						}
-						values {
-							value = "US"
-							label = "United States"
+						values{
+							value=443
 						}
+						
 					}
 				}
+				
 			}
 			// implement multiple-object-values
 			rule {
@@ -156,6 +154,8 @@ func testAccCheckAwsAccountConfigBasic(name, environment, roleARN, externalID st
 					}
 				}
 			}
+			
+			
 			// implement mappings
 			rule {
 				rule_id = "VPC-013"

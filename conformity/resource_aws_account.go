@@ -2,11 +2,15 @@ package conformity
 
 import (
 	"context"
-	"github.com/trendmicro/terraform-provider-conformity/pkg/cloudconformity"
 
+	"encoding/json"
+	"fmt"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
+	"github.com/trendmicro/terraform-provider-conformity/pkg/cloudconformity"
+	"log"
+	// "reflect"
 )
 
 func resourceAwsAccount() *schema.Resource {
@@ -161,8 +165,22 @@ func resourceAwsAccountRead(ctx context.Context, d *schema.ResourceData, m inter
 		if err := d.Set("settings", nil); err != nil {
 			return diag.FromErr(err)
 		}
-	}else {
+	} else {
 		settings := flattenAccountSettings(accountAccessAndDetails.AccountDetails.Data.Attributes.Settings, accountAccessAndDetails.RuleSettings.Data.Attributes.Settings.Rules)
+		b, err := json.Marshal(settings)
+		if err != nil {
+			fmt.Println(err)
+		}
+		log.Println("[DEBUG] The Setting from the resource Account setting is ", string(b))
+		// log.Println("[DEBUG] The Setting from the resource Account setting is ", reflect.TypeOf(settings))
+
+		// array_of_object := make([]interface{}, 1)
+		// m := make(map[string]interface{})
+		// m["rule"] = []int{}
+		// m["bot"] = []string{"rule_id": "RTM-008"}
+		// array_of_object[0] = m
+
+		log.Println("[DEBUG] The Setting from the resource Account setting is ", settings)
 		if err := d.Set("settings", settings); err != nil {
 			return diag.FromErr(err)
 		}

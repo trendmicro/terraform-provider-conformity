@@ -1,7 +1,7 @@
 terraform {
   required_providers {
     conformity = {
-      source  = "trendmicro/conformity"
+      source  = "trendmicro.com/conformity"
     }
     aws = {
       source  = "hashicorp/aws"

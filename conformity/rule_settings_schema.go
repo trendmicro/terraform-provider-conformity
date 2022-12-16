@@ -1,10 +1,11 @@
 package conformity
 
 import (
-	"regexp"
-
+	"fmt"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
+	"log"
+	"regexp"
 )
 
 func ExceptionsSchema() *schema.Schema {
@@ -61,6 +62,11 @@ func ExtraSettingSchema() *schema.Schema {
 				"value": {
 					Type:     schema.TypeString,
 					Optional: true,
+					StateFunc: func(val interface{}) string {
+						log.Println("[DEBUG] the value inside the Extra Setting scema  is", val)
+						return fmt.Sprintf("%s", val)
+
+					},
 				},
 				"regions": {
 					Type:     schema.TypeSet,
@@ -159,6 +165,10 @@ func valuesSchema() *schema.Schema {
 				"value": {
 					Type:     schema.TypeString,
 					Required: true,
+					StateFunc: func(val interface{}) string {
+						log.Println("[DEBUG] the value inside the valueschema is", val)
+						return fmt.Sprintf("%v", val)
+					},
 				},
 				"enabled": {
 					Type:     schema.TypeBool,

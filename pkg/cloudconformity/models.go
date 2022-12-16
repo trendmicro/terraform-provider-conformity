@@ -82,9 +82,11 @@ type RuleSettingMultipleObject struct {
 		UserIdentityType string `json:"userIdentityType,omitempty"`
 	} `json:"value,omitempty"`
 }
+
 type RuleSettingExtra struct {
 	Name      string      `json:"name,omitempty"`
 	Type      string      `json:"type,omitempty"`
+	Label     string      `json:"label,omitempty"`
 	Regions   *bool       `json:"regions,omitempty"`
 	ValueKeys *[]string   `json:"valueKeys,omitempty"`
 	Value     interface{} `json:"value,omitempty"`

@@ -64,6 +64,11 @@ func resourceConformityReportConfig() *schema.Resource {
 							Default:      "GENERIC",
 							ValidateFunc: validation.StringInSlice([]string{"GENERIC", "COMPLIANCE-STANDARD"}, false),
 						},
+						"include_account_names": {
+							Type:     schema.TypeBool,
+							Optional: true,
+							Default:  true,
+						},
 						"include_checks": {
 							Type:     schema.TypeBool,
 							Optional: true,
@@ -122,7 +127,7 @@ func resourceConformityReportConfig() *schema.Resource {
 							Elem: &schema.Schema{
 								Type: schema.TypeString,
 								ValidateFunc: validation.StringInSlice([]string{"security", "cost-optimisation", "reliability", "performance-efficiency",
-									"operational-excellence"}, false),
+									"operational-excellence", "sustainability"}, false),
 							},
 						},
 						"compliance_standards": {
@@ -130,8 +135,9 @@ func resourceConformityReportConfig() *schema.Resource {
 							Optional: true,
 							Elem: &schema.Schema{
 								Type: schema.TypeString,
-								ValidateFunc: validation.StringInSlice([]string{"AWAF", "CISAWSF", "CISAZUREF", "PCI", "HIPAA", "GDPR", "APRA", "NIST4", "SOC2",
-									"NIST-CSF", "ISO27001", "AGISM", "ASAE-3150", "MAS", "FEDRAMP"}, false),
+
+								ValidateFunc: validation.StringInSlice([]string{"AWAF", "CISAWSF", "CISAWSF-1_3_0", "CISAWSF-1_4_0", "CISAZUREF", "CISGCPF", "CIS-V8", "PCI", "HIPAA", "GDPR", "APRA", "NIST4", "NIST5", "SOC2",
+									"NIST-CSF", "ISO27001", "AGISM", "ASAE-3150", "MAS", "FEDRAMP", "ENISA", "FISC-V9", "LGPD", "AZUREWAF"}, false),
 							},
 						},
 						"filter_tags": {
@@ -171,8 +177,8 @@ func resourceConformityReportConfig() *schema.Resource {
 						"report_compliance_standard_id": {
 							Type:     schema.TypeString,
 							Optional: true,
-							ValidateFunc: validation.StringInSlice([]string{"AWAF", "CISAWSF", "CISAZUREF", "PCI", "HIPAA", "GDPR", "APRA", "NIST4", "SOC2",
-								"NIST-CSF", "ISO27001", "AGISM", "ASAE-3150", "MAS", "FEDRAMP"}, false),
+							ValidateFunc: validation.StringInSlice([]string{"AWAF", "CISAWSF", "CISAWSF-1_3_0", "CISAWSF-1_4_0", "CISAZUREF", "CISGCPF", "CIS-V8", "PCI", "HIPAA", "GDPR", "APRA", "NIST4", "NIST5", "SOC2",
+								"NIST-CSF", "ISO27001", "AGISM", "ASAE-3150", "MAS", "FEDRAMP", "ENISA", "FISC-V9", "LGPD", "AZUREWAF"}, false),
 						},
 						"resource": {
 							Type:     schema.TypeString,
@@ -193,7 +199,7 @@ func resourceConformityReportConfig() *schema.Resource {
 							Type:     schema.TypeSet,
 							Optional: true,
 							Elem: &schema.Schema{
-								Type: schema.TypeString,
+								Type:         schema.TypeString,
 								ValidateFunc: validation.StringInSlice([]string{"LOW", "MEDIUM", "HIGH", "VERY_HIGH", "EXTREME"}, false),
 							},
 						},

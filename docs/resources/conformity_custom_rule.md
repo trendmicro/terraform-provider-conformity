@@ -267,7 +267,7 @@ resource "conformity_custom_rule" "example"{
     6.Copy the id from the successfull response
     7.Run the Run Custom Rule api by passing the accountId of your aws account and rule id (which you will get in Create Custom Rule api response)
     8.Copy the same body of Create Custom Rule api 
-    9.Run the api you will see your bucket details over there and your rule status whether its failed / Success
+      9.Run the api you will see your bucket details over there and your rule status whether its failed / Success
   
   ### If you dont know the Security Group Details and also what to pass in path of attributes and rules
     1.You need to run the Run Custom Rule api by providing the aws accoundid and the rule id and also the set the resourceData=true
@@ -279,7 +279,8 @@ resource "conformity_custom_rule" "example"{
 ## Example Usage of Create Custom Rule API for AWS
 
 ```
-     resource "conformity_custom_rule" "example" {
+     resource "conformity_custom_rule" "example" 
+     {
           "name": "AWS Security Group for Mongo db port restriction",
           "description": "This custom rule ensures AWS Security Group  follow our best practice",
           "service": "EC2",
@@ -359,7 +360,8 @@ resource "conformity_custom_rule" "example"{
 ## Example Usage of Create Custom Rule API for Azure
 
 ```
-          resource "conformity_custom_rule" "example" {
+          resource "conformity_custom_rule" "example" 
+          {
               "name": "Azure Network Security Group Mongo db port Restriction",
               "description": "This custom rule ensures Azure Network Security follow our best practice",
               "service": "Network",
@@ -437,7 +439,7 @@ resource "conformity_custom_rule" "example"{
     3.Just change the resourceType,service ,provider and other related details
     4.Run it and you can see in response resourceData where you can get your Firewall Rule Details and you can apply rule to any attributes
 
-## Example Usage of Create Custom Rule API for Azure
+## Example Usage of Create Custom Rule API for GCP
 
 ```
           resource "conformity_custom_rule" "example" {

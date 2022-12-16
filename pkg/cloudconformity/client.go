@@ -37,17 +37,18 @@ func (c *Client) validateApiKey() (*apiKeyList, error) {
 	return &apiKeyListResult, nil
 }
 func stringInSlice(str string, list []string) bool {
-    for _, b := range list {
-        if b == str {
-            return true
-        }
-    }
-    return false
+	for _, b := range list {
+		if b == str {
+			return true
+		}
+	}
+	return false
 }
+
 //generate Valid conformity URI
 func getUrl(region string) string {
-    if stringInSlice(region, []string{"eu-west-1", "us-west-2", "ap-southeast-2"}){
-        return fmt.Sprintf("https://%s-api.cloudconformity.com/v1/", region)
-    }
+	if stringInSlice(region, []string{"eu-west-1", "us-west-2", "ap-southeast-2"}) {
+		return fmt.Sprintf("https://%s-api.cloudconformity.com/v1/", region)
+	}
 	return fmt.Sprintf("https://conformity.%s.cloudone.trendmicro.com/api/", region)
 }

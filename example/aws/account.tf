@@ -30,7 +30,7 @@ resource "conformity_aws_account" "aws" {
                 extra_settings {
                     name    = "threshold"
                     type    = "single-number-value"
-                    value   = "90"
+                    value   = 90.90
                 }
             }
         }

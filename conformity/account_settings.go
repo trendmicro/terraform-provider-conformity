@@ -1,15 +1,17 @@
 package conformity
 
 import (
+	"fmt"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/trendmicro/terraform-provider-conformity/pkg/cloudconformity"
+	"log"
 	"reflect"
 	"strings"
-
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
 func flattenAccountSettings(settings *cloudconformity.AccountSettings, rule []cloudconformity.GetRuleSettings) []interface{} {
 
+	log.Println("[DEBUG] The Details of rule setting from parameter  is ", rule)
 	c := make(map[string]interface{})
 
 	if settings == nil || (settings.Bot == nil && rule == nil) {
@@ -22,6 +24,7 @@ func flattenAccountSettings(settings *cloudconformity.AccountSettings, rule []cl
 	return []interface{}{c}
 }
 func flattenRuleSettings(rules []cloudconformity.GetRuleSettings) []interface{} {
+	log.Println("[DEBUG] The Details of rule setting is ", rules)
 	if rules == nil {
 		return make([]interface{}, 0)
 	}
@@ -76,6 +79,7 @@ func flattenBotDisabledRegions(regions *cloudconformity.BotDisabledRegions) []st
 }
 
 func flattenSettings(rules cloudconformity.GetRuleSettings) []interface{} {
+	log.Println("[DEBUG] The Details of rule setting is in Flatten Setting ", rules)
 	c := make(map[string]interface{})
 	c["risk_level"] = rules.RiskLevel
 	c["enabled"] = rules.Enabled
@@ -84,6 +88,8 @@ func flattenSettings(rules cloudconformity.GetRuleSettings) []interface{} {
 		c["exceptions"] = flattenExceptions(rules.Exceptions)
 	}
 	if rules.ExtraSettings != nil {
+		data := fmt.Sprintf("%s", rules.ExtraSettings)
+		log.Println("[DEBUG] The Details of rules Extra  setting is in Flatten Setting ", data)
 		c["extra_settings"] = flattenExtraSettings(rules.ExtraSettings)
 	}
 
@@ -96,19 +102,25 @@ func flattenExceptions(exceptions *cloudconformity.RuleSettingExceptions) []inte
 	c["filter_tags"] = exceptions.FilterTags
 
 	c["resources"] = exceptions.Resources
-	if len(exceptions.Tags) == 0{
+	if len(exceptions.Tags) == 0 {
 		c["tags"] = nil
-	}else{
+	} else {
 		c["tags"] = exceptions.Tags
 	}
 	return []interface{}{c}
 }
 func flattenExtraSettings(extra []*cloudconformity.RuleSettingExtra) []interface{} {
+
+	log.Println("[DEBUG] Coming inside flatten Extra Setting function ")
+	data := fmt.Sprintf("  %s ", extra)
+	log.Println("[DEBUG] The extra data is  ", data)
 	if extra == nil {
 		return make([]interface{}, 0)
 	}
 	ex := make([]interface{}, len(extra))
 	for i, v := range extra {
+		// 	log.Println("[DEBUG] Coming inside the for loop and the value of the  v is", v)
+		// 	// log.Println("[DEBUG] Coming  inside for LOop of Flatten extra setting")
 		e := make(map[string]interface{})
 		e["name"] = v.Name
 		e["type"] = v.Type
@@ -117,58 +129,118 @@ func flattenExtraSettings(extra []*cloudconformity.RuleSettingExtra) []interface
 		if v.Values != nil {
 
 			values := v.Values.([]interface{})
-			switch v.Type {
-			case "regions":
-
+			val := fmt.Sprintf("%s", values)
+			log.Println("[DEBUG] The Val in if condition is  ", val)
+			if v.Type == "regions" {
+				log.Println("[DEBUG] Coming isnide the if of regions ")
 				e["regions"] = expandStringList(values)
-
-			case "multiple-object-values":
-
+			} else if v.Type == "multiple-object-values" {
+				log.Println("[DEBUG] Coming isnide the if of mu,tiple objevt")
 				e["multiple_object_values"] = flattenRuleMultipleObject(values[0].(map[string]interface{}))
-
-			default:
-
+			} else {
+				log.Println("[DEBUG] Coming isnide the else ")
 				e["values"] = flattenRuleValues(values)
-
 			}
-		}
-		if v.Mappings != nil {
+			// 		switch v.Type {
+			// 		case "regions":
 
-			mappings := v.Mappings.([]interface{})
-			e["mappings"] = flattenRuleMappings(mappings)
+			//
+
+			// 		case "multiple-object-values":
+
+			// 			e["multiple_object_values"] = flattenRuleMultipleObject(values[0].(map[string]interface{}))
+
+			// 		default:
+
+			// 			e["values"] = flattenRuleValues(values)
+
+			// 		}
+			// 	}
+			if v.Mappings != nil {
+
+				mappings := v.Mappings.([]interface{})
+				e["mappings"] = flattenRuleMappings(mappings)
+			}
 		}
 
 		ex[i] = e
 	}
+	// log.Println("THe flatten setting after appending is ", ex)
 	return ex
+	// return make([]interface{}, 0)
 }
 
 func flattenRuleValues(values []interface{}) []interface{} {
 	if values == nil {
 		return make([]interface{}, 0)
 	}
+
+	valdata := fmt.Sprintf("%s", values)
+
+	log.Println("[DEBUG] The values from the parameter iss    ", valdata)
 	vs := make([]interface{}, 0, len(values))
 
 	for _, value := range values {
 
 		v := make(map[string]interface{})
 		item := value.(map[string]interface{})
+		itm := fmt.Sprintf("%s", item)
+		log.Println("[DEBUG] The Item from the for is     ", itm)
+		fmt.Println("[DEBUG] The type of variable is   itm is ", reflect.TypeOf(itm))
+		// v["label"] = item["enabled"].(string)
+		// fmt.Println("[DEBUG] The type of variable is label  is ", reflect.TypeOf(item["label"]))
+		// log.Println("[DEBUG] The label   is ", item["label"])
+		// log.Println("[DEBUG] The item from the flatten rules value is   ", item)
+		// if l, ok := item["label"]; ok {
+		// 	log.Println("The label from the if is  is ", l)
 
+		// }
+
+		// if l, ok := item; ok {
+		// 	log.Println("The label from the if is  is ", l["label"])
+		// }
+		// if ok {
+
+		// }
+		// fmt.Println("[DEBUG] The type of  is value   is ", reflect.TypeOf(item["value"]))
+		// log.Println("[DEBUG] The  value   is ", item["value"])
+
+		// fmt.Println("[DEBUG] The type of  is enabled  is ", reflect.TypeOf(item["enabled"]))
+		// log.Println("[DEBUG] The  enabled is    is ", item["enabled"])
+
+		// if item["label"] != nil {
 		if l, ok := item["label"].(string); ok && l != "" {
+			fmt.Println("The type of variable is value is ", reflect.TypeOf(l))
+			log.Println("[DEBUG] The values from the flattenRUles is ", l)
 			v["label"] = l
+
 		}
-		if val, ok := item["value"].(string); ok && val != "" {
-			v["value"] = val
+		// }
+		itemvalue := fmt.Sprint(item["value"])
+		if itemvalue != "" {
+			log.Println("[DEBUG] The label after converting into string is  ", string(itemvalue))
+			v["value"] = string(itemvalue)
+			// log.Println("[DEBUG] The v[label] is   ", v["label"])
 		}
+
+		// if val, ok := item["value"].(string); ok && val != " " {
+		// 	fmt.Println("The type of variable is value is ", reflect.TypeOf(val))
+		// 	log.Println("[DEBUG] The values from the flattenRUles is ", val)
+		// 	v["value"] = val
+		// }
 
 		if enabled, ok := item["enabled"]; ok && enabled != nil {
 			v["enabled"] = item["enabled"].(bool)
 
 		}
+		// 	log.Println("[DEBUG] The v is ", v)
+
 		vs = append(vs, v)
 
 	}
+	// log.Println("THe rule setting after appending is ", vs)
 	return vs
+	// return make([]interface{}, 0)
 }
 
 func flattenRuleMultipleObject(multiple map[string]interface{}) []interface{} {

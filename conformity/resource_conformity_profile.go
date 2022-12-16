@@ -3,13 +3,13 @@ package conformity
 import (
 	"context"
 	"fmt"
-	"github.com/trendmicro/terraform-provider-conformity/pkg/cloudconformity"
-	"sort"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/customdiff"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
+	"github.com/trendmicro/terraform-provider-conformity/pkg/cloudconformity"
+	"log"
+	"sort"
 )
 
 func resourceConformityProfile() *schema.Resource {
@@ -177,7 +177,7 @@ func resourceConformityProfileCreate(ctx context.Context, d *schema.ResourceData
 		proccessProfileIncluded(&payload, d)
 		proccessRelationships(&payload, d)
 	}
-
+	log.Println("[DEBUG] THe Payload value is ", payload)
 	profileId, err := client.CreateProfileSetting(payload)
 	if err != nil {
 		return diag.FromErr(err)
@@ -323,6 +323,7 @@ func proccessExtraSettings(v []interface{}, a *cloudconformity.IncludedAttribute
 		} else if c[i].Type == "regions" {
 			processProfileValuesStringsSlices(item["values_array"].(*schema.Set).List(), &c[i])
 		} else {
+
 			processProfileValues(item["values"].(*schema.Set).List(), &c[i])
 		}
 
@@ -331,6 +332,7 @@ func proccessExtraSettings(v []interface{}, a *cloudconformity.IncludedAttribute
 }
 
 func processProfileValues(v []interface{}, ies *cloudconformity.IncludedExtraSettings) {
+
 	c := make([]interface{}, 0, len(v))
 
 	for _, values := range v {
@@ -343,6 +345,7 @@ func processProfileValues(v []interface{}, ies *cloudconformity.IncludedExtraSet
 		profileValues.Value = item["value"].(string)
 
 		c = append(c, profileValues)
+
 	}
 
 	ies.Values = c
