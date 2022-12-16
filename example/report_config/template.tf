@@ -11,6 +11,8 @@ resource "conformity_report_config" "report" {
     // optional | type: string | default: GENERIC
     // value can be: "GENERIC", "COMPLIANCE-STANDARD"
     generate_report_type = "" 
+    // optional | type: bool | default: true
+    include_account_names=""
     // optional | type: bool | default: false
     include_checks = bool
     // optional | type: bool | default: false
