@@ -12,10 +12,12 @@ func (c *Client) GetAccount(accountId string) (*accountAccessAndDetails, error) 
 	if err != nil {
 		return nil, err
 	}
+
 	accessSettings, err := c.GetAccountAccessSettings(accountId)
 	if err != nil {
 		return nil, err
 	}
+
 	ruleSettings, err := c.GetAccountRuleSettings(accountId)
 	if err != nil {
 		return nil, err
@@ -66,11 +68,13 @@ func (c *Client) GetAccountAccessSettings(accountId string) (*accountData, error
 // allows you to get the details of the specified account
 // return the account name and evironment
 func (c *Client) GetAccountDetails(accountId string) (*accountDetails, error) {
+
 	accountDetails := &accountDetails{}
 	_, err := c.ClientRequest(Get{}, fmt.Sprintf("/accounts/%s", accountId), nil, "", accountDetails)
 	if err != nil {
 		return nil, err
 	}
+
 	return accountDetails, nil
 }
 
@@ -81,5 +85,6 @@ func (c *Client) GetAccountRuleSettings(accountId string) (*GetAccountRuleSettin
 	if err != nil && !strings.Contains(err.Error(), "404") {
 		return nil, err
 	}
+
 	return ruleSettings, nil
 }

@@ -1,11 +1,11 @@
 package conformity
 
 import (
+	"fmt"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/trendmicro/terraform-provider-conformity/pkg/cloudconformity"
 	"reflect"
 	"strings"
-
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
 func flattenAccountSettings(settings *cloudconformity.AccountSettings, rule []cloudconformity.GetRuleSettings) []interface{} {
@@ -96,9 +96,9 @@ func flattenExceptions(exceptions *cloudconformity.RuleSettingExceptions) []inte
 	c["filter_tags"] = exceptions.FilterTags
 
 	c["resources"] = exceptions.Resources
-	if len(exceptions.Tags) == 0{
+	if len(exceptions.Tags) == 0 {
 		c["tags"] = nil
-	}else{
+	} else {
 		c["tags"] = exceptions.Tags
 	}
 	return []interface{}{c}
@@ -157,10 +157,10 @@ func flattenRuleValues(values []interface{}) []interface{} {
 		if l, ok := item["label"].(string); ok && l != "" {
 			v["label"] = l
 		}
-		if val, ok := item["value"].(string); ok && val != "" {
-			v["value"] = val
+		itemvalue := fmt.Sprintf("%s", item["value"])
+		if itemvalue != "" {
+			v["value"] = string((itemvalue))
 		}
-
 		if enabled, ok := item["enabled"]; ok && enabled != nil {
 			v["enabled"] = item["enabled"].(bool)
 

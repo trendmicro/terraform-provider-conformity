@@ -39,6 +39,7 @@ type configuration struct {
 	Emails                []string
 	Frequency             string
 	GenerateReportType    string
+	IncludeAccountName    string // bool converted to string
 	IncludeChecks         string // bool converted to string
 	Scheduled             string // bool converted to string
 	SendEmail             string // bool converted to string
@@ -77,6 +78,7 @@ func TestAccResourceconformityReportConfig(t *testing.T) {
 		Emails:                []string{"youremail@somecompany.com"},
 		Frequency:             "* * *",
 		GenerateReportType:    "GENERIC",
+		IncludeAccountName:    "false",
 		IncludeChecks:         "true",
 		Scheduled:             "true",
 		SendEmail:             "true",
@@ -91,6 +93,7 @@ func TestAccResourceconformityReportConfig(t *testing.T) {
 	UpdatedConfig.Emails = []string{"joe@somecompany.com"}
 	UpdatedConfig.Frequency = "*/3 * *"
 	UpdatedConfig.GenerateReportType = "COMPLIANCE-STANDARD"
+	UpdatedConfig.IncludeAccountName = "false"
 	UpdatedConfig.IncludeChecks = "false"
 	UpdatedConfig.ShouldEmailIncludeCsv = "false"
 	UpdatedConfig.ShouldEmailIncludePdf = "false"
@@ -173,6 +176,7 @@ func TestAccResourceconformityReportConfig(t *testing.T) {
 					resource.TestCheckResourceAttr("conformity_report_config.report", "configuration.0.emails.0", "youremail@somecompany.com"),
 					resource.TestCheckResourceAttr("conformity_report_config.report", "configuration.0.frequency", "* * *"),
 					resource.TestCheckResourceAttr("conformity_report_config.report", "configuration.0.generate_report_type", "GENERIC"),
+					resource.TestCheckResourceAttr("conformity_report_config.report", "configuration.0.include_account_names", "false"),
 					resource.TestCheckResourceAttr("conformity_report_config.report", "configuration.0.include_checks", "true"),
 					resource.TestCheckResourceAttr("conformity_report_config.report", "configuration.0.scheduled", "true"),
 					resource.TestCheckResourceAttr("conformity_report_config.report", "configuration.0.send_email", "true"),
@@ -219,6 +223,7 @@ func TestAccResourceconformityReportConfig(t *testing.T) {
 					resource.TestCheckResourceAttr("conformity_report_config.report", "configuration.0.emails.0", "joe@somecompany.com"),
 					resource.TestCheckResourceAttr("conformity_report_config.report", "configuration.0.frequency", "*/3 * *"),
 					resource.TestCheckResourceAttr("conformity_report_config.report", "configuration.0.generate_report_type", "COMPLIANCE-STANDARD"),
+					resource.TestCheckResourceAttr("conformity_report_config.report", "configuration.0.include_account_names", "false"),
 					resource.TestCheckResourceAttr("conformity_report_config.report", "configuration.0.include_checks", "false"),
 					resource.TestCheckResourceAttr("conformity_report_config.report", "configuration.0.scheduled", "true"),
 					resource.TestCheckResourceAttr("conformity_report_config.report", "configuration.0.send_email", "true"),
@@ -323,6 +328,7 @@ func testAccCheckConformityReportConfigBasic(f filter, c configuration, groupId 
 			emails = ["` + c.Emails[0] + `"]
 			` + frequency + `
 			generate_report_type = "` + c.GenerateReportType + `"
+			include_account_names="` + c.IncludeAccountName + `"
 			include_checks = "` + c.IncludeChecks + `"
 			scheduled = "` + c.Scheduled + `"
 			send_email = "` + c.SendEmail + `"
