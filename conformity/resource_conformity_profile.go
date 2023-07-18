@@ -3,8 +3,9 @@ package conformity
 import (
 	"context"
 	"fmt"
-	"github.com/trendmicro/terraform-provider-conformity/pkg/cloudconformity"
 	"sort"
+
+	"github.com/trendmicro/terraform-provider-conformity/pkg/cloudconformity"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/customdiff"
