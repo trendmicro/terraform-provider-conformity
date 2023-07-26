@@ -2,6 +2,7 @@ package conformity
 
 import (
 	"fmt"
+	"log"
 	"reflect"
 	"strings"
 
@@ -127,6 +128,9 @@ func flattenExtraSettings(extra []*cloudconformity.RuleSettingExtra) []interface
 
 				e["multiple_object_values"] = flattenRuleMultipleObject(values[0].(map[string]interface{}))
 
+			case "tags":
+				e["tags"] = expandStringList(values)
+
 			default:
 
 				e["values"] = flattenRuleValues(values)
@@ -136,6 +140,7 @@ func flattenExtraSettings(extra []*cloudconformity.RuleSettingExtra) []interface
 		if v.Mappings != nil {
 
 			mappings := v.Mappings.([]interface{})
+			log.Printf("extra setting name /%v", v.Type)
 			e["mappings"] = flattenRuleMappings(mappings)
 		}
 
@@ -151,6 +156,10 @@ func flattenRuleValues(values []interface{}) []interface{} {
 	vs := make([]interface{}, 0, len(values))
 
 	for _, value := range values {
+
+		if reflect.TypeOf(value).String() == "string" {
+			log.Printf("[TEST] string value: %v", value)
+		}
 
 		v := make(map[string]interface{})
 		item := value.(map[string]interface{})
@@ -398,7 +407,6 @@ func processRuleExtraSettings(es []interface{}) []cloudconformity.RuleSettingExt
 		switch extraSetting[i].Type {
 
 		case "single-string-value", "single-number-value", "ttl", "single-value-regex":
-
 			extraSetting[i].Value = item["value"].(string)
 
 		case "regions":
@@ -406,6 +414,14 @@ func processRuleExtraSettings(es []interface{}) []cloudconformity.RuleSettingExt
 			extraSetting[i].Values = expandStringList(item["regions"].(*schema.Set).List())
 			regions := true
 			extraSetting[i].Regions = &regions
+
+		case "ignored-regions":
+
+			extraSetting[i].Values = expandStringList(item["regions"].(*schema.Set).List())
+
+		case "tags":
+
+			extraSetting[i].Values = expandStringList(item["tags"].(*schema.Set).List())
 
 		case "multiple-object-values":
 
