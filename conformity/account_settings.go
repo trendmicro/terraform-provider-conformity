@@ -2,7 +2,6 @@ package conformity
 
 import (
 	"fmt"
-	"log"
 	"reflect"
 	"strings"
 
@@ -140,7 +139,6 @@ func flattenExtraSettings(extra []*cloudconformity.RuleSettingExtra) []interface
 		if v.Mappings != nil {
 
 			mappings := v.Mappings.([]interface{})
-			log.Printf("extra setting name /%v", v.Type)
 			e["mappings"] = flattenRuleMappings(mappings)
 		}
 
@@ -156,10 +154,6 @@ func flattenRuleValues(values []interface{}) []interface{} {
 	vs := make([]interface{}, 0, len(values))
 
 	for _, value := range values {
-
-		if reflect.TypeOf(value).String() == "string" {
-			log.Printf("[TEST] string value: %v", value)
-		}
 
 		v := make(map[string]interface{})
 		item := value.(map[string]interface{})
