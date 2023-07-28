@@ -142,6 +142,42 @@ resource "conformity_aws_account" "aws" {
                 }
             }
         }
+        // implement ignored-regions
+        rule {
+            rule_id = "Config-001"
+            settings {
+                enabled     = true
+                risk_level  = "HIGH"
+
+                extra_settings {
+                    name = "ignoredRegions"
+                    regions = [
+                        "ap-southeast-2",
+                        "us-west-2",
+                        "us-east-2"
+                    ]
+                    type = "ignored-regions"
+                }
+            }
+        }
+        // implement tags
+        rule {
+            rule_id = "CWE-002"
+            settings {
+                enabled     = true
+                risk_level  = "HIGH"
+
+                extra_settings {
+                    name = "accountTags"
+                    tags = [
+                        "Ta1",
+                        "Ta2",
+                        "Ta3"
+                    ]
+                    type = "tags"
+                }
+            }
+        }
     }
 }
 ```
