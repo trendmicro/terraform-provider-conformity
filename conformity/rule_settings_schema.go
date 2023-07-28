@@ -56,7 +56,7 @@ func ExtraSettingSchema() *schema.Schema {
 					Required: true,
 					ValidateFunc: validation.StringInSlice([]string{"multiple-string-values", "multiple-number-values", "multiple-aws-account-values",
 						"choice-multiple-value", "choice-single-value", "single-number-value", "single-string-value", "ttl", "single-value-regex", "tags",
-						"countries", "multiple-ip-values", "regions", "multiple-object-values", "multiple-vpc-gateway-mappings"}, true),
+						"countries", "multiple-ip-values", "regions", "ignored-regions", "multiple-object-values", "multiple-vpc-gateway-mappings"}, true),
 				},
 				"value": {
 					Type:     schema.TypeString,
@@ -69,6 +69,13 @@ func ExtraSettingSchema() *schema.Schema {
 						Type: schema.TypeString,
 						// add validation here
 						// region should follow the correct syntax
+					},
+				},
+				"tags": {
+					Type:     schema.TypeSet,
+					Optional: true,
+					Elem: &schema.Schema{
+						Type: schema.TypeString,
 					},
 				},
 				"multiple_object_values": {

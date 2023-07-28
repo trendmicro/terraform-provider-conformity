@@ -127,6 +127,9 @@ func flattenExtraSettings(extra []*cloudconformity.RuleSettingExtra) []interface
 
 				e["multiple_object_values"] = flattenRuleMultipleObject(values[0].(map[string]interface{}))
 
+			case "tags":
+				e["tags"] = expandStringList(values)
+
 			default:
 
 				e["values"] = flattenRuleValues(values)
@@ -398,7 +401,6 @@ func processRuleExtraSettings(es []interface{}) []cloudconformity.RuleSettingExt
 		switch extraSetting[i].Type {
 
 		case "single-string-value", "single-number-value", "ttl", "single-value-regex":
-
 			extraSetting[i].Value = item["value"].(string)
 
 		case "regions":
@@ -406,6 +408,14 @@ func processRuleExtraSettings(es []interface{}) []cloudconformity.RuleSettingExt
 			extraSetting[i].Values = expandStringList(item["regions"].(*schema.Set).List())
 			regions := true
 			extraSetting[i].Regions = &regions
+
+		case "ignored-regions":
+
+			extraSetting[i].Values = expandStringList(item["regions"].(*schema.Set).List())
+
+		case "tags":
+
+			extraSetting[i].Values = expandStringList(item["tags"].(*schema.Set).List())
 
 		case "multiple-object-values":
 
