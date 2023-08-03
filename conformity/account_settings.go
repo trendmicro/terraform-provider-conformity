@@ -412,6 +412,8 @@ func processRuleExtraSettings(es []interface{}) []cloudconformity.RuleSettingExt
 		case "ignored-regions":
 
 			extraSetting[i].Values = expandStringList(item["regions"].(*schema.Set).List())
+			ignoredRegions := true
+			extraSetting[i].IgnoredRegions = &ignoredRegions
 
 		case "tags":
 

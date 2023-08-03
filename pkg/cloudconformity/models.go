@@ -83,13 +83,14 @@ type RuleSettingMultipleObject struct {
 	} `json:"value,omitempty"`
 }
 type RuleSettingExtra struct {
-	Name      string      `json:"name,omitempty"`
-	Type      string      `json:"type,omitempty"`
-	Regions   *bool       `json:"regions,omitempty"`
-	ValueKeys *[]string   `json:"valueKeys,omitempty"`
-	Value     interface{} `json:"value,omitempty"`
-	Values    interface{} `json:"values,omitempty"`
-	Mappings  interface{} `json:"mappings,omitempty"`
+	Name           string      `json:"name,omitempty"`
+	Type           string      `json:"type,omitempty"`
+	Regions        *bool       `json:"regions,omitempty"`
+	IgnoredRegions *bool       `json:"ignoredRegions,omitempty"`
+	ValueKeys      *[]string   `json:"valueKeys,omitempty"`
+	Value          interface{} `json:"value,omitempty"`
+	Values         interface{} `json:"values,omitempty"`
+	Mappings       interface{} `json:"mappings,omitempty"`
 }
 
 type RuleSetting struct {
