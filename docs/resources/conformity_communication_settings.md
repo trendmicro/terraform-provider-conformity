@@ -24,7 +24,7 @@ resource "conformity_communication_setting" "email_setting" {
         categories  = [
         "security",
         ]
-        comp 7liances = [
+        compliances = [
         "FEDRAMP",
         ]
         filter_tags = [
