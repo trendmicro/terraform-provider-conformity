@@ -12,6 +12,7 @@ resource "conformity_communication_setting" "sns_setting" {
         compliances = [
         "FEDRAMP",
         ]
+        statuses = ["SUCCESS"]
         filter_tags = [
         "tagKey",
         ]

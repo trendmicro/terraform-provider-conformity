@@ -382,6 +382,7 @@ type CommunicationConfiguration struct {
 type CommunicationFilter struct {
 	Categories  []string `json:"categories,omitempty"`
 	Compliances []string `json:"compliances,omitempty"`
+	Statuses    []string `json:"statuses,omitempty"`
 	FilterTags  []string `json:"filterTags,omitempty"`
 	Regions     []string `json:"regions,omitempty"`
 	RiskLevels  []string `json:"riskLevels,omitempty"`

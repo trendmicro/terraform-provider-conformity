@@ -18,6 +18,9 @@ func TestCreateCommunicationSettingSuccess(t *testing.T) {
 	// check the results
 	assert.Nil(t, err)
 	assert.Equal(t, response.Data[0].Attributes.Configuration.ChannelName, expectedChannelName)
+
+	assert.Equal(t, response.Data[1].Attributes.Configuration.ChannelName, "testSNSChannel")
+	assert.Equal(t, response.Data[1].Attributes.Filter.Statuses[0], "SUCCESS")
 }
 
 func TestCreateCommunicationSettingFail(t *testing.T) {
@@ -53,6 +56,40 @@ var testCreateCommunicationSettingSuccessResponse = `
           "users": [
               "t-UoU9CsK"
           ]
+        }
+      },
+      "type": "settings",
+      "relationships": {
+        "account": {
+          "data": {
+            "type": "accounts",
+            "id": "H19NxM15-"
+          }
+        },
+        "organisation": {
+          "data": {
+            "type": "organisations",
+            "id": "ryqMcJn4b"
+          }
+        }
+      }
+    },
+	{
+      "id": "communication:sns-3JD1mAub8",
+      "attributes": {
+        "type": "communication",
+        "channel": "sns",
+        "enabled": true,
+        "filter": {
+          "regions": ["us-east-1"],
+          "services": [
+            "EC2"
+          ],
+          "statuses": ["SUCCESS"]
+        },
+        "configuration": {
+          "channel_name": "testSNSChannel",
+          "arn": "sns-t-UoU9CsK"
         }
       },
       "type": "settings",

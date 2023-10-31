@@ -185,6 +185,10 @@ resource "conformity_communication_setting" "comm_setting" {
     compliances = []
 
     // optional | type: array of string
+    // (only used for SNS and webhook channels) An array of statuses strings from the following: SUCCESS | FAILURE
+    statuses = []
+
+    // optional | type: array of string
     filter_tags = []
 
 
