@@ -2,9 +2,10 @@ package conformity
 
 import (
 	"fmt"
-	"github.com/trendmicro/terraform-provider-conformity/pkg/cloudconformity"
 	"regexp"
 	"testing"
+
+	"github.com/trendmicro/terraform-provider-conformity/pkg/cloudconformity"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
@@ -18,6 +19,8 @@ func TestAccResourceConformityCommSetting(t *testing.T) {
 	slackUrl := "slack-url"
 	snsArn := "sns-arn"
 	snsChannelName := "sns-channel-name"
+	webhookToken := "#security-token-01"
+	webhookURL := "web-hook-url"
 	updatedAccountId := "80b880c9-336a-490d-b212-4e847956a62d"
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccConformityPreCheck(t) },
@@ -49,7 +52,19 @@ func TestAccResourceConformityCommSetting(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr("conformity_communication_setting.sns", "sns.0.channel_name", snsChannelName),
 					resource.TestCheckResourceAttr("conformity_communication_setting.sns", "sns.0.arn", snsArn),
+					resource.TestCheckResourceAttr("conformity_communication_setting.sns", "filter.0.statuses.0", "SUCCESS"),
 				),
+				ExpectNonEmptyPlan: true,
+			},
+
+			{
+				Config: testAccCheckCommunicationSettingWebhook(webhookToken, webhookURL),
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttr("conformity_communication_setting.webhook", "webhook.0.security_token", webhookToken),
+					resource.TestCheckResourceAttr("conformity_communication_setting.webhook", "webhook.0.url", webhookURL),
+					resource.TestCheckResourceAttr("conformity_communication_setting.webhook", "filter.0.statuses.0", "FAILURE"),
+				),
+				ExpectNonEmptyPlan: true,
 			},
 
 			{
@@ -163,6 +178,7 @@ func testAccCheckCommunicationSettingSns(arn, channelName string) string {
 		}
 		filter {
 			categories  = [ "security" ]
+			statuses = ["SUCCESS"]
 		}
 		relationships {
 			account {
@@ -174,6 +190,28 @@ func testAccCheckCommunicationSettingSns(arn, channelName string) string {
 		}
 	}
 	`, arn, channelName)
+}
+func testAccCheckCommunicationSettingWebhook(webhookToken, webhookURL string) string {
+	return fmt.Sprintf(`
+	resource "conformity_communication_setting" "webhook" {
+		webhook {
+			security_token = "%s"
+			url = "%s"
+		}
+		filter {
+			categories  = [ "security" ]
+			statuses = ["FAILURE"]
+		}
+		relationships {
+			account {
+				id = "H19NxM15-"
+			}
+			organisation {
+				id = "ryqMcJn4b"
+			}
+		}
+	}
+	`, webhookToken, webhookURL)
 }
 func testAccCheckCommunicationSettingFail() string {
 	return `

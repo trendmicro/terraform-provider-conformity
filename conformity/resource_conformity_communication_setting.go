@@ -3,10 +3,11 @@ package conformity
 import (
 	"context"
 	"fmt"
-	"github.com/trendmicro/terraform-provider-conformity/pkg/cloudconformity"
 	"log"
 	"regexp"
 	"strings"
+
+	"github.com/trendmicro/terraform-provider-conformity/pkg/cloudconformity"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/customdiff"
@@ -221,6 +222,14 @@ func resourceConformityCommSetting() *schema.Resource {
 								Type: schema.TypeString,
 								ValidateFunc: validation.StringInSlice([]string{"AWAF", "CISAWSF", "CISAZUREF", "CISAWSTTW", "PCI", "HIPAA", "GDPR", "APRA",
 									"NIST4", "SOC2", "NIST-CSF", "ISO27001", "AGISM", "ASAE-3150", "MAS", "FEDRAMP"}, true),
+							},
+						},
+						"statuses": {
+							Type:     schema.TypeSet,
+							Optional: true,
+							Elem: &schema.Schema{
+								Type:         schema.TypeString,
+								ValidateFunc: validation.StringInSlice([]string{"SUCCESS", "FAILURE"}, true),
 							},
 						},
 						"filter_tags": {
@@ -475,6 +484,7 @@ func proccessInputCommSettingFilter(payload *cloudconformity.CommunicationSettin
 
 		filter.Categories = expandStringList(f["categories"].(*schema.Set).List())
 		filter.Compliances = expandStringList(f["compliances"].(*schema.Set).List())
+		filter.Statuses = expandStringList(f["statuses"].(*schema.Set).List())
 		filter.FilterTags = expandStringList(f["filter_tags"].(*schema.Set).List())
 		filter.Regions = expandStringList(f["regions"].(*schema.Set).List())
 		filter.RiskLevels = expandStringList(f["risk_levels"].(*schema.Set).List())
