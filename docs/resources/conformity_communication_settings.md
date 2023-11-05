@@ -109,6 +109,7 @@ Other arguments:
       * `rule_ids` (Array of String) - (Optional) An array of valid rule Ids (e.g. ["S3-016", "EC2-001"]). For more information about rules, please refer to https://cloudone.trendmicro.com/docs/conformity/api-reference/tag/Settings#tag/Services/paths/~1services/get.
       * `services` (Array of String) - (Optional) An array of AWS service strings from the following:
           AutoScaling | CloudConformity | CloudFormation | CloudFront | CloudTrail | CloudWatch | CloudWatchEvents | CloudWatchLogs | Config | DynamoDB | EBS | EC2 | ElastiCache | Elasticsearch | ELB | IAM | KMS | RDS | Redshift | ResourceGroup | Route53 | S3 | SES | SNS | SQS | VPC | WAF | ACM | Inspector | TrustedAdvisor | Shield | EMR | Lambda | Support | Organizations | Kinesis | EFS
+      * `statuses` (only used for SNS and webhook channels) An array of statuses strings from the following: SUCCESS | FAILURE
       * `tags` (Array of String) - (Optional) An array of any assigned metadata tags to your resources.
 
 - `relationships` - (Optional) List: 

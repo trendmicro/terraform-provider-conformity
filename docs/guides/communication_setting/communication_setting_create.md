@@ -223,12 +223,7 @@ resource "conformity_communication_setting" "comm_setting" {
     compliances = []
 
     // optional | type: array of string
-    // (only used for SNS and webhook channels) An array of statuses strings from the following: "SUCCESS" | "FAILURE"
-    statuses = []
-
-    // optional | type: array of string
     filter_tags = []
-
 
   // optional | type: string
  // "global" "us-east-1" "us-east-2" "us-west-1" "us-west-2" "ap-south-1" "ap-northeast-2" "ap-southeast-1"  "ap-southeast-2"
@@ -258,6 +253,11 @@ resource "conformity_communication_setting" "comm_setting" {
     # "MySQL" "PostgreSQL" "Sql" "Monitor" "AppService" "Network" "ActivityLog" "VirtualMachines" "AKS" "KeyVault" "Locks" "AccessControl" "Advisor" "RecoveryServices" 
     # "Resources" "Subscriptions" "CosmosDB" "RedisCache" "Search" "AppInsights"
     services = []
+
+    // optional | type: array of string
+    // (only used for SNS and webhook channels) An array of statuses strings from the following: "SUCCESS" | "FAILURE"
+    statuses = []
+
     // optional | type: array of string
     // An array of any assigned metadata tags to your AWS resources.
     tags = []
