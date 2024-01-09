@@ -19,7 +19,7 @@ func (c *Client) CreateConformityCustomRule(payload CustomRuleRequest) (*CustomR
 
 	log.Printf("[DEBUG] Conformity CreateCustomRule request payload: %v\n", string(rb))
 
-	_, err = c.ClientRequest(Post{}, "/custom-rules/", strings.NewReader(string(rb)), "", &response)
+	_, err = c.ClientRequest(Post{}, "custom-rules", strings.NewReader(string(rb)), "", &response)
 	if err != nil {
 		return nil, err
 	}
