@@ -2,6 +2,7 @@ package conformity
 
 import (
 	"context"
+
 	"github.com/trendmicro/terraform-provider-conformity/pkg/cloudconformity"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
@@ -26,7 +27,7 @@ func Provider() *schema.Provider {
 				Default:  "us-west-2",
 				ValidateFunc: validation.StringInSlice([]string{"eu-west-1", "us-west-2", "ap-southeast-2", "us-1",
 					"in-1", "gb-1", "jp-1", "de-1", "au-1", "ca-1",
-					"sg-1"}, true),
+					"sg-1", "trend-us-1"}, true),
 			},
 		},
 		ResourcesMap: map[string]*schema.Resource{
