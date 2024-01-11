@@ -146,7 +146,7 @@ func resourceConformityCustomRule() *schema.Resource {
 									},
 									"value": {
 										Type:     schema.TypeString,
-										Optional: true,
+										Required: true,
 									},
 								},
 							},
@@ -358,6 +358,13 @@ func processInputCustomRuleConditions(conditionsIn []interface{}) []cloudconform
 		obj := cloudconformity.CustomRuleCondition{}
 		obj.Fact = m["fact"].(string)
 		obj.Path = m["path"].(string)
+		/*
+			Custom Rule Conditions has an attribute of `value` that can accept a
+			string, boolean, integer, or an object. Anything other than string needs
+			to be encoded using the built-in Terraform function `jsonencode()`.
+			Below we are assigning objValue with an instance of the ObjectValue struct
+			that defines the variables that the Custom Rules API will accept.
+		*/
 		objValue := ObjectValue{}
 		if strings.ToLower(m["value"].(string)) == "true" || strings.ToLower(m["value"].(string)) == "false" {
 			obj.Value, _ = strconv.ParseBool(m["value"].(string))
