@@ -643,7 +643,7 @@ type CustomRuleCondition struct {
 	Fact     string      `json:"fact"`
 	Operator string      `json:"operator"`
 	Path     string      `json:"path,omitempty"`
-	Value    interface{} `json:"value,omitempty"`
+	Value    interface{} `json:"value"`
 }
 
 type CustomRuleCreateResponse struct {
