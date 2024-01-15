@@ -10,10 +10,10 @@ Allows you to create Custom Rules on Trend Cloud One<sup>TM</sup> - Conformity.
 
 ## Example Usage
 
-### Name for AWS S3 Bucket must be less than 32 characters
+### Using a string value for a custom rule creation
 
 ```hcl
-resource "conformity_custom_rule" "aws_example" {
+resource "conformity_custom_rule" "s3_example" {
   name              = "S3 Bucket Name Character Limit"
   description       = "Limit number of characters used to name a S3 Bucket"
   remediation_notes = "Reduce the number of characters for S3 Bucket name"
@@ -37,6 +37,36 @@ resource "conformity_custom_rule" "aws_example" {
     }
   }
 }
+```
+
+### Using a date comparison for a custom rule condition
+
+```hcl
+resource "conformity_custom_rule" "kms_example" {
+  name              = "KMS Key Creation Date within 90 days"
+  description       = "Check KMS Key was created less than 90 days ago"
+  remediation_notes = "Recreate the KMS Key"
+  service           = "KMS"
+  resource_type     = "kms-key"
+  categories        = ["security"]
+  severity          = "HIGH"
+  cloud_provider    = "aws"
+  enabled           = true
+  attributes {
+    name     = "creationDate"
+    path     = "data.CreationDate"
+    required = true
+  }
+  rules {
+    operation  = "all"
+    conditions {
+      fact     = "creationDate"
+      operator = "dateComparison"
+      value    = jsonencode({"days"=90,"operator"="within"})
+    }
+  }
+}
+
 ```
 
 ## Argument Reference
