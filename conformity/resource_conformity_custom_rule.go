@@ -3,6 +3,7 @@ package conformity
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"strconv"
 	"strings"
 
@@ -218,41 +219,53 @@ func resourceConformityCustomRuleRead(ctx context.Context, d *schema.ResourceDat
 	d.SetId(rule.ID)
 
 	if err := d.Set("type", rule.Type); err != nil {
+		fmt.Println("########## 1")
 		return diag.FromErr(err)
 	}
 	if err := d.Set("name", rule.Attributes.Name); err != nil {
+		fmt.Println("########## 2")
 		return diag.FromErr(err)
 	}
 	if err := d.Set("cloud_provider", rule.Attributes.Provider); err != nil {
+		fmt.Println("########## 3")
 		return diag.FromErr(err)
 	}
 	if err := d.Set("description", rule.Attributes.Description); err != nil {
+		fmt.Println("########## 4")
 		return diag.FromErr(err)
 	}
 	if err := d.Set("remediation_notes", rule.Attributes.RemediationNotes); err != nil {
+		fmt.Println("########## 5")
 		return diag.FromErr(err)
 	}
 	if err := d.Set("service", rule.Attributes.Service); err != nil {
+		fmt.Println("########## 6")
 		return diag.FromErr(err)
 	}
 	if err := d.Set("resource_type", rule.Attributes.ResourceType); err != nil {
+		fmt.Println("########## 7")
 		return diag.FromErr(err)
 	}
 	if err := d.Set("severity", rule.Attributes.Severity); err != nil {
+		fmt.Println("########## 8")
 		return diag.FromErr(err)
 	}
 	if err := d.Set("enabled", rule.Attributes.Enabled); err != nil {
+		fmt.Println("########## 9")
 		return diag.FromErr(err)
 	}
 	if err := d.Set("categories", rule.Attributes.Categories); err != nil {
+		fmt.Println("########## 10")
 		return diag.FromErr(err)
 	}
 	attributes := flattenAttributes(rule)
 	if err := d.Set("attributes", attributes); err != nil {
+		fmt.Println("########## 11")
 		return diag.FromErr(err)
 	}
 	rules := flattenRules(rule)
 	if err := d.Set("rules", rules); err != nil {
+		fmt.Println("########## 12")
 		return diag.FromErr(err)
 	}
 	if err != nil {
@@ -423,7 +436,9 @@ func flattenConditions(conditionsIn []cloudconformity.CustomRuleCondition) []int
 		m["fact"] = conditions.Fact
 		m["operator"] = conditions.Operator
 		m["path"] = conditions.Path
-		m["value"] = conditions.Value
+		conditionsValueByte, _ := json.Marshal(conditions.Value)
+		fmt.Println("@@@@@@@@@@@@@@@@@@@@@@@" + string(conditionsValueByte))
+		m["value"] = string(conditionsValueByte)
 		conditionsOut[i] = m
 	}
 	return conditionsOut
