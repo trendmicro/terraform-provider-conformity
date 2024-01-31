@@ -2,6 +2,7 @@ package conformity
 
 import (
 	"context"
+
 	"github.com/trendmicro/terraform-provider-conformity/pkg/cloudconformity"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"

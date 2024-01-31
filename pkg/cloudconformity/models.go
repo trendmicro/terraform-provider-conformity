@@ -640,10 +640,10 @@ type CustomRuleEvent struct {
 }
 
 type CustomRuleCondition struct {
-	Fact     string `json:"fact"`
-	Operator string `json:"operator"`
-	Path     string `json:"path,omitempty"`
-	Value    string `json:"value"`
+	Fact     string      `json:"fact"`
+	Operator string      `json:"operator"`
+	Path     string      `json:"path,omitempty"`
+	Value    interface{} `json:"value"`
 }
 
 type CustomRuleCreateResponse struct {

@@ -2,11 +2,20 @@ package conformity
 
 import (
 	"context"
+	"encoding/json"
+	"strconv"
+	"strings"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
 	"github.com/trendmicro/terraform-provider-conformity/pkg/cloudconformity"
 )
+
+type ObjectValue struct {
+	Days     int    `json:"days"`
+	Operator string `json:"operator"`
+}
 
 func resourceConformityCustomRule() *schema.Resource {
 	return &schema.Resource{
@@ -349,7 +358,24 @@ func processInputCustomRuleConditions(conditionsIn []interface{}) []cloudconform
 		obj := cloudconformity.CustomRuleCondition{}
 		obj.Fact = m["fact"].(string)
 		obj.Path = m["path"].(string)
-		obj.Value = m["value"].(string)
+		/*
+			Custom Rule Conditions has an attribute of `value` that can accept a
+			string, boolean, integer, or an object. Anything other than string needs
+			to be encoded using the built-in Terraform function `jsonencode()`.
+			Below we are assigning objValue with an instance of the ObjectValue struct
+			that defines the variables that the Custom Rules API will accept.
+		*/
+		objValue := ObjectValue{}
+		if strings.ToLower(m["value"].(string)) == "true" || strings.ToLower(m["value"].(string)) == "false" {
+			obj.Value, _ = strconv.ParseBool(m["value"].(string))
+		} else if numValue, err := strconv.Atoi(m["value"].(string)); err == nil {
+			obj.Value = numValue
+		} else if err := json.Unmarshal([]byte(m["value"].(string)), &objValue); err == nil {
+			obj.Value = objValue
+		} else {
+			obj.Value = m["value"]
+		}
+
 		if operator, ok := m["operator"]; ok {
 			obj.Operator = operator.(string)
 		}
@@ -397,7 +423,8 @@ func flattenConditions(conditionsIn []cloudconformity.CustomRuleCondition) []int
 		m["fact"] = conditions.Fact
 		m["operator"] = conditions.Operator
 		m["path"] = conditions.Path
-		m["value"] = conditions.Value
+		conditionsValueByte, _ := json.Marshal(conditions.Value)
+		m["value"] = string(conditionsValueByte)
 		conditionsOut[i] = m
 	}
 	return conditionsOut

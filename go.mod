@@ -1,6 +1,6 @@
 module github.com/trendmicro/terraform-provider-conformity
 
-go 1.17
+go 1.18
 
 require (
 	github.com/hashicorp/terraform-plugin-sdk/v2 v2.16.0
@@ -8,6 +8,8 @@ require (
 	github.com/robfig/cron v1.2.0
 	github.com/stretchr/testify v1.7.2
 )
+
+require github.com/hashicorp/terraform-plugin-log v0.4.0 // indirect
 
 require (
 	github.com/agext/levenshtein v1.2.2 // indirect
@@ -31,7 +33,6 @@ require (
 	github.com/hashicorp/terraform-exec v0.16.1 // indirect
 	github.com/hashicorp/terraform-json v0.13.0 // indirect
 	github.com/hashicorp/terraform-plugin-go v0.9.0 // indirect
-	github.com/hashicorp/terraform-plugin-log v0.4.1 // indirect
 	github.com/hashicorp/terraform-registry-address v0.0.0-20210412075316-9b2996cce896 // indirect
 	github.com/hashicorp/terraform-svchost v0.0.0-20200729002733-f050f53b9734 // indirect
 	github.com/hashicorp/yamux v0.0.0-20181012175058-2f1d1f20f75d // indirect
