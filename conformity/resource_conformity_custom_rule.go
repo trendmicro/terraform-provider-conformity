@@ -423,8 +423,13 @@ func flattenConditions(conditionsIn []cloudconformity.CustomRuleCondition) []int
 		m["fact"] = conditions.Fact
 		m["operator"] = conditions.Operator
 		m["path"] = conditions.Path
-		conditionsValueByte, _ := json.Marshal(conditions.Value)
-		m["value"] = string(conditionsValueByte)
+
+		value := conditions.Value
+		if _, ok := value.(string); !ok {
+			conditionsValueByte, _ := json.Marshal(conditions.Value)
+			value = string(conditionsValueByte)
+		}
+		m["value"] = value
 		conditionsOut[i] = m
 	}
 	return conditionsOut
