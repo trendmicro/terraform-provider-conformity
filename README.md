@@ -1,3 +1,5 @@
+# Terraform Provider Conformity
+
 ## How to set up local machine:
 
 #### 1. Navigate to project directory:
@@ -45,6 +47,9 @@ Ensure `terraform.tfvars` is included in `.gitignore` so these secrets are not a
 #### 2. with environment variables
 
 Terraform provides a way of reading variables from the environment: https://www.terraform.io/docs/cli/config/environment-variables.html#tf_var_name
+
+## Updating documentation
+Use the [Doc Preview Tool](https://registry.terraform.io/tools/doc-preview) to understand how the markdown will look once released. The [Provider Documentation](https://developer.hashicorp.com/terraform/registry/providers/docs) can also provide further guidance.
 
 ## How to release
 ### Steps
