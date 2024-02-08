@@ -370,6 +370,8 @@ func processInputCustomRuleConditions(conditionsIn []interface{}) []cloudconform
 			obj.Value, _ = strconv.ParseBool(m["value"].(string))
 		} else if numValue, err := strconv.Atoi(m["value"].(string)); err == nil {
 			obj.Value = numValue
+		} else if m["value"].(string) == "null" {
+			obj.Value = nil
 		} else if err := json.Unmarshal([]byte(m["value"].(string)), &objValue); err == nil {
 			obj.Value = objValue
 		} else {
