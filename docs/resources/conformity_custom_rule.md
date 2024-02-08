@@ -99,10 +99,7 @@ A `condition` block supports the following
 * `path` (Optional) Secondary JSONPath query to apply to further evaluate nested data.
 * `value` (Required) The expected value from the JSONPath query. This can be a string, number, boolean, or object.
 
-    ~> **NOTE:** If the `value` is either a number, boolean, or object. It **must** be encoded using the built-in `jsonencode` function. e.g. 
-    * Number: `value = jsonencode(86400)`
-    * Boolean: `value = jsonencode(true)`
-    * Object: `value=jsonencode({"days"=20,"operator"="within"})`
+~> **NOTE:** If the `value` is either a number, boolean, or object. It **must** be encoded using the built-in `jsonencode` function. e.g. **Number**: `value = jsonencode(86400)`, **Boolean**: `value = jsonencode(true)`, **Null**: `value = jsonencode(null)`, **Object**: `value = jsonencode({"days"=20,"operator"="within"})`
 
 A `value` block can be defined using the built-in Terraform `jsonencode()` function but must follow the structure below
 * `days` (Required) The number of days to compare against.
