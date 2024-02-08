@@ -1,4 +1,4 @@
-# Terraform Provider Conformity
+# Conformity Terraform Provider
 
 ## How to set up local machine:
 
