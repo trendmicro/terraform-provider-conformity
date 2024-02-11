@@ -360,7 +360,7 @@ func processInputCustomRuleConditions(conditionsIn []interface{}) []cloudconform
 		obj.Path = m["path"].(string)
 		/*
 			Custom Rule Conditions has an attribute of `value` that can accept a
-			string, boolean, integer, or an object. Anything other than string needs
+			string, null, boolean, integer, or an object. Anything other than string needs
 			to be encoded using the built-in Terraform function `jsonencode()`.
 			Below we are assigning objValue with an instance of the ObjectValue struct
 			that defines the variables that the Custom Rules API will accept.
@@ -370,6 +370,9 @@ func processInputCustomRuleConditions(conditionsIn []interface{}) []cloudconform
 			obj.Value, _ = strconv.ParseBool(m["value"].(string))
 		} else if numValue, err := strconv.Atoi(m["value"].(string)); err == nil {
 			obj.Value = numValue
+		} else if m["value"].(string) == "null" {
+			// `nil` will be marshalled to `null` before sent to custom rules API
+			obj.Value = nil
 		} else if err := json.Unmarshal([]byte(m["value"].(string)), &objValue); err == nil {
 			obj.Value = objValue
 		} else {
