@@ -1,7 +1,6 @@
 package conformity
 
 import (
-	"fmt"
 	"reflect"
 	"strings"
 
@@ -130,6 +129,8 @@ func flattenExtraSettings(extra []*cloudconformity.RuleSettingExtra) []interface
 			case "tags":
 				e["tags"] = expandStringList(values)
 
+			case "choice-multiple-value":
+				e["values"] = flattenRuleSettingValues(values)
 			default:
 
 				e["values"] = flattenRuleValues(values)
@@ -161,14 +162,44 @@ func flattenRuleValues(values []interface{}) []interface{} {
 		if l, ok := item["label"].(string); ok && l != "" {
 			v["label"] = l
 		}
-		itemvalue := fmt.Sprintf("%s", item["value"])
-		if itemvalue != "" {
-			v["value"] = string((itemvalue))
+		if val, ok := item["value"].(string); ok && val != "" {
+			v["value"] = val
 		}
 		if enabled, ok := item["enabled"]; ok && enabled != nil {
 			v["enabled"] = item["enabled"].(bool)
-
 		}
+
+		vs = append(vs, v)
+
+	}
+	return vs
+}
+
+func flattenRuleSettingValues(values []interface{}) []interface{} {
+	if values == nil {
+		return make([]interface{}, 0)
+	}
+	vs := make([]interface{}, 0, len(values))
+
+	for _, value := range values {
+
+		v := make(map[string]interface{})
+		item := value.(map[string]interface{})
+
+		if l, ok := item["label"].(string); ok && l != "" {
+			v["label"] = l
+		}
+		if val, ok := item["value"].(string); ok && val != "" {
+			v["value"] = val
+		}
+		if enabled, ok := item["enabled"]; ok && enabled != nil {
+			v["enabled"] = item["enabled"].(bool)
+		}
+
+		if settings, ok := item["settings"].([]interface{}); ok && len(settings) > 0 {
+			v["settings"] = flattenRuleValuesSettings(settings)
+		}
+
 		vs = append(vs, v)
 
 	}
@@ -256,8 +287,47 @@ func flattenMappingValue(val []interface{}) []interface{} {
 		values = append(values, value)
 	}
 	return values
-
 }
+func flattenRuleValuesSettings(val []interface{}) []interface{} {
+	if val == nil {
+		return make([]interface{}, 0)
+	}
+	mp := make([]interface{}, 0, len(val))
+	for _, values := range val {
+		item := values.(map[string]interface{})
+		v := make(map[string]interface{})
+
+		if n, ok := item["name"].(string); ok && n != "" {
+			v["name"] = n
+		}
+		if val1, ok := item["label"].(string); ok && val1 != "" {
+			v["label"] = val1
+		}
+		if val2, ok := item["values"].([]interface{}); ok && len(val2) > 0 {
+			// fmt.Printf("VALUES %+v\n", val2)
+			data := make([]interface{}, 0, len(val2))
+			for _, v1 := range val2 {
+				value := make(map[string]interface{})
+				valueItem := v1.(map[string]interface{})
+
+				if val3, ok := valueItem["value"].(string); ok && val3 != "" {
+					value["value"] = val3
+				}
+
+				if val4, ok := valueItem["default"].(string); ok && val4 != "" {
+					value["default"] = val4
+				}
+				data = append(data, value)
+			}
+			v["values"] = data
+		}
+
+		mp = append(mp, v)
+	}
+
+	return mp
+}
+
 func updateAccountTags(payload cloudconformity.AccountPayload, accountId string, d *schema.ResourceData, client *cloudconformity.Client) error {
 
 	tags := d.Get("tags").(*schema.Set)
@@ -429,6 +499,9 @@ func processRuleExtraSettings(es []interface{}) []cloudconformity.RuleSettingExt
 
 			extraSetting[i].Mappings = processRuleMapping(item["mappings"].(*schema.Set).List())
 
+		case "choice-multiple-value":
+			extraSetting[i].Values = processRuleValuesSettings(item["values"].(*schema.Set).List())
+
 		default:
 
 			extraSetting[i].Values = processRuleValues(item["values"].(*schema.Set).List())
@@ -442,13 +515,86 @@ func processRuleValues(vs []interface{}) []*cloudconformity.RuleSettingValues {
 	values := make([]*cloudconformity.RuleSettingValues, 0, len(vs))
 	for _, v := range vs {
 
-		profileValues := &cloudconformity.RuleSettingValues{}
+		ruleSettingValues := &cloudconformity.RuleSettingValues{}
 		item := v.(map[string]interface{})
 
-		profileValues.Enabled = item["enabled"].(bool)
-		profileValues.Label = item["label"].(string)
-		profileValues.Value = item["value"].(string)
-		values = append(values, profileValues)
+		ruleSettingValues.Enabled = item["enabled"].(bool)
+		ruleSettingValues.Label = item["label"].(string)
+		ruleSettingValues.Value = item["value"].(string)
+
+		values = append(values, ruleSettingValues)
+	}
+	return values
+}
+
+func processRuleValuesSettings(vs []interface{}) []*cloudconformity.RuleSettingValues {
+	values := make([]*cloudconformity.RuleSettingValues, 0, len(vs))
+	for _, v := range vs {
+
+		ruleSettingValues := &cloudconformity.RuleSettingValues{}
+		item := v.(map[string]interface{})
+
+		if val, ok := item["enabled"]; ok && val != nil {
+			ruleSettingValues.Enabled = val.(bool)
+		}
+
+		if val, ok := item["label"].(string); ok && val != "" {
+			ruleSettingValues.Label = val
+		}
+
+		if val, ok := item["value"].(string); ok && val != "" {
+			ruleSettingValues.Value = val
+		}
+
+		if item["settings"] != nil {
+			settings := item["settings"].(*schema.Set).List()
+
+			if len(settings) > 0 {
+				ruleSettingValues.Settings = make([]cloudconformity.RuleSettingValuesSetting, 0, len(settings))
+				for _, v1 := range settings {
+					settingItem := v1.(map[string]interface{})
+					settingValue := cloudconformity.RuleSettingValuesSetting{}
+
+					if val, ok := settingItem["label"].(string); ok && val != "" {
+						settingValue.Label = val
+					}
+
+					if val, ok := settingItem["name"].(string); ok && val != "" {
+						settingValue.Name = val
+					}
+
+					if val, ok := settingItem["type"].(string); ok && val != "" {
+						settingValue.Type = val
+					}
+
+					if settingItem["values"] != nil {
+						val := settingItem["values"].(*schema.Set).List()
+						if len(val) > 0 {
+
+							settingValue.Values = make([]cloudconformity.RuleSettingValuesSettingValue, 0, len(val))
+							for _, v2 := range val {
+								settingItemV := v2.(map[string]interface{})
+								settingItemValues := cloudconformity.RuleSettingValuesSettingValue{}
+
+								if val1, ok := settingItemV["value"].(string); ok && val1 != "" {
+									settingItemValues.Value = val1
+								}
+
+								if val2, ok := settingItemV["default"].(string); ok && val2 != "" {
+									settingItemValues.Default = val2
+								}
+
+								settingValue.Values = append(settingValue.Values, settingItemValues)
+							}
+						}
+
+					}
+					ruleSettingValues.Settings = append(ruleSettingValues.Settings, settingValue)
+				}
+			}
+		}
+
+		values = append(values, ruleSettingValues)
 	}
 	return values
 }

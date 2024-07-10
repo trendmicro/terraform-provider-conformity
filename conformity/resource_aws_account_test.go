@@ -2,9 +2,10 @@ package conformity
 
 import (
 	"fmt"
-	"github.com/trendmicro/terraform-provider-conformity/pkg/cloudconformity"
 	"regexp"
 	"testing"
+
+	"github.com/trendmicro/terraform-provider-conformity/pkg/cloudconformity"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
@@ -187,6 +188,50 @@ func testAccCheckAwsAccountConfigBasic(name, environment, roleARN, externalID st
 					}
 				}
 			}
+			// implement choice-multiple-value
+			rule {
+				rule_id = "RG-001"
+				settings {
+					enabled     = true
+					risk_level  = "LOW"
+					rule_exists = true
+
+					extra_settings {
+						name = "tags"
+						type = "multiple-string-values"
+
+						values {
+							value = "Environment"
+						}
+
+						values {
+							value = "Role"
+						}
+					}	
+
+					extra_settings {
+						name = "resourceTypes"
+						type = "choice-multiple-value"
+
+						values {
+							value      = "s3-bucket"
+							enabled    = true
+
+							settings {
+								name = "tags-override"
+
+								values {
+									value = "technical:application"
+								}
+
+								values {
+									value = "awsbackup:alias"
+								}
+							}
+						}
+					}
+				}
+			}
 		}
 	}
 	output "conformity_account_name" {
@@ -260,6 +305,51 @@ func testAccCheckAwsAccountConfigUpdate(name, environment, roleARN, externalID s
 								value = "vpc-001"
 							}
 	
+						}
+					}
+				}
+			}
+
+			// implement choice-multiple-value
+			rule {
+				rule_id = "RG-001"
+				settings {
+					enabled     = true
+					risk_level  = "LOW"
+					rule_exists = true
+
+					extra_settings {
+						name = "tags"
+						type = "multiple-string-values"
+
+						values {
+							value = "Environment"
+						}
+
+						values {
+							value = "Role"
+						}
+					}	
+
+					extra_settings {
+						name = "resourceTypes"
+						type = "choice-multiple-value"
+
+						values {
+							value      = "s3-bucket"
+							enabled    = true
+
+							settings {
+								name = "tags-override"
+
+								values {
+									value = "technical:application"
+								}
+
+								values {
+									value = "awsbackup:alias"
+								}
+							}
 						}
 					}
 				}

@@ -45,6 +45,7 @@ func ExtraSettingSchema() *schema.Schema {
 	return &schema.Schema{
 		Type:     schema.TypeSet,
 		Optional: true,
+		MaxItems: 2,
 		Elem: &schema.Resource{
 			Schema: map[string]*schema.Schema{
 				"name": {
@@ -104,6 +105,7 @@ func ExtraSettingSchema() *schema.Schema {
 		},
 	}
 }
+
 func mappingSchema() *schema.Schema {
 	return &schema.Schema{
 		Type:     schema.TypeSet,
@@ -170,6 +172,45 @@ func valuesSchema() *schema.Schema {
 				"enabled": {
 					Type:     schema.TypeBool,
 					Optional: true,
+				},
+				"settings": valueSettingSchema(),
+			},
+		},
+	}
+}
+
+func valueSettingSchema() *schema.Schema {
+	return &schema.Schema{
+		Type:     schema.TypeSet,
+		Optional: true,
+		Elem: &schema.Resource{
+			Schema: map[string]*schema.Schema{
+				"name": {
+					Type:     schema.TypeString,
+					Optional: true,
+				},
+				"type": {
+					Type:     schema.TypeString,
+					Optional: true,
+					ValidateFunc: validation.StringInSlice([]string{"multiple-string-values", "multiple-number-values", "multiple-aws-account-values",
+						"choice-multiple-value", "choice-single-value", "single-number-value", "single-string-value", "ttl", "single-value-regex", "tags",
+						"countries", "multiple-ip-values", "regions", "ignored-regions", "multiple-object-values", "multiple-vpc-gateway-mappings"}, true),
+				},
+				"values": {
+					Type:     schema.TypeSet,
+					Optional: true,
+					Elem: &schema.Resource{
+						Schema: map[string]*schema.Schema{
+							"value": {
+								Type:     schema.TypeString,
+								Required: true,
+							},
+							"default": {
+								Type:     schema.TypeString,
+								Optional: true,
+							},
+						},
+					},
 				},
 			},
 		},

@@ -71,10 +71,24 @@ type RuleSettingMapping struct {
 	Values []*MappingValues `json:"values"`
 }
 type RuleSettingValues struct {
-	Label   string `json:"label,omitempty"`
-	Value   string `json:"value,omitempty"`
-	Enabled bool   `json:"enabled,omitempty"`
+	Label    string                     `json:"label,omitempty"`
+	Value    string                     `json:"value,omitempty"`
+	Enabled  bool                       `json:"enabled,omitempty"`
+	Settings []RuleSettingValuesSetting `json:"settings,omitempty"`
 }
+
+type RuleSettingValuesSetting struct {
+	Name   string                          `json:"name,omitempty"`
+	Label  string                          `json:"label,omitempty"`
+	Type   string                          `json:"type,omitempty"`
+	Values []RuleSettingValuesSettingValue `json:"values,omitempty"`
+}
+
+type RuleSettingValuesSettingValue struct {
+	Value   string `json:"value,omitempty"`
+	Default string `json:"default,omitempty"`
+}
+
 type RuleSettingMultipleObject struct {
 	Value struct {
 		EventName        string `json:"eventName,omitempty"`
