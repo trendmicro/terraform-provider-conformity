@@ -9,7 +9,6 @@ import (
 )
 
 func flattenAccountSettings(settings *cloudconformity.AccountSettings, rule []cloudconformity.GetRuleSettings) []interface{} {
-
 	c := make(map[string]interface{})
 
 	if settings == nil || (settings.Bot == nil && rule == nil) {
@@ -142,7 +141,6 @@ func flattenExtraSettings(extra []*cloudconformity.RuleSettingExtra) []interface
 			mappings := v.Mappings.([]interface{})
 			e["mappings"] = flattenRuleMappings(mappings)
 		}
-
 		ex[i] = e
 	}
 	return ex
