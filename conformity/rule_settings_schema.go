@@ -172,6 +172,12 @@ func valuesSchema() *schema.Schema {
 				"enabled": {
 					Type:     schema.TypeBool,
 					Optional: true,
+					Default:  true,
+				},
+				"customised": {
+					Type:     schema.TypeBool,
+					Optional: true,
+					Default:  true,
 				},
 				"settings": valueSettingSchema(),
 			},

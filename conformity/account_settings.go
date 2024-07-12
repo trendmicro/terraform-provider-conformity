@@ -193,7 +193,9 @@ func flattenRuleSettingValues(values []interface{}) []interface{} {
 		if enabled, ok := item["enabled"]; ok && enabled != nil {
 			v["enabled"] = item["enabled"].(bool)
 		}
-
+		if customised, ok := item["customised"]; ok && customised != nil {
+			v["customised"] = item["customised"].(bool)
+		}
 		if settings, ok := item["settings"].([]interface{}); ok && len(settings) > 0 {
 			v["settings"] = flattenRuleValuesSettings(settings)
 		}
@@ -534,6 +536,10 @@ func processRuleValuesSettings(vs []interface{}) []*cloudconformity.RuleSettingV
 
 		if val, ok := item["enabled"]; ok && val != nil {
 			ruleSettingValues.Enabled = val.(bool)
+		}
+
+		if val, ok := item["customised"]; ok && val != nil {
+			ruleSettingValues.Customised = val.(bool)
 		}
 
 		if val, ok := item["label"].(string); ok && val != "" {

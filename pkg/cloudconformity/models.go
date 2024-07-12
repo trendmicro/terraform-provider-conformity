@@ -71,10 +71,11 @@ type RuleSettingMapping struct {
 	Values []*MappingValues `json:"values"`
 }
 type RuleSettingValues struct {
-	Label    string                     `json:"label,omitempty"`
-	Value    string                     `json:"value,omitempty"`
-	Enabled  bool                       `json:"enabled,omitempty"`
-	Settings []RuleSettingValuesSetting `json:"settings,omitempty"`
+	Label      string                     `json:"label,omitempty"`
+	Value      string                     `json:"value,omitempty"`
+	Enabled    bool                       `json:"enabled,omitempty"`
+	Customised bool                       `json:"customised,omitempty"`
+	Settings   []RuleSettingValuesSetting `json:"settings,omitempty"`
 }
 
 type RuleSettingValuesSetting struct {

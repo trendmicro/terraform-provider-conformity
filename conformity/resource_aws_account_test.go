@@ -110,6 +110,7 @@ func TestAccResourceAwsAccount(t *testing.T) {
 					resource.TestCheckResourceAttr("conformity_aws_account.aws", "settings.0.rule.2.settings.0.extra_settings.0.name", "resourceTypes"),
 					resource.TestCheckResourceAttr("conformity_aws_account.aws", "settings.0.rule.2.settings.0.extra_settings.0.type", "choice-multiple-value"),
 					resource.TestCheckResourceAttr("conformity_aws_account.aws", "settings.0.rule.2.settings.0.extra_settings.0.values.0.value", "s3-bucket"),
+
 					resource.TestCheckResourceAttr("conformity_aws_account.aws", "settings.0.rule.2.settings.0.extra_settings.0.values.0.settings.0.name", "tags-override"),
 					// resource.TestCheckResourceAttr("conformity_aws_account.aws", "settings.0.rule.2.settings.0.extra_settings.0.values.0.settings.0.type", "multiple-string-values"),
 					resource.TestCheckResourceAttr("conformity_aws_account.aws", "settings.0.rule.2.settings.0.extra_settings.0.values.0.settings.0.values.0.value", "tags_new:alias"),
@@ -245,7 +246,6 @@ func testAccCheckAwsAccountConfigBasic(name, environment, roleARN, externalID st
 
 						values {
 							value      = "s3-bucket"
-							enabled    = true
 
 							settings {
 								name = "tags-override"
@@ -368,7 +368,6 @@ func testAccCheckAwsAccountConfigUpdate(name, environment, roleARN, externalID s
 
 						values {
 							value      = "s3-bucket"
-							enabled    = true
 
 							settings {
 								name = "tags-override"
