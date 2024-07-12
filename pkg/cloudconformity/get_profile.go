@@ -5,7 +5,7 @@ import (
 	"net/url"
 )
 
-//   allows you to get the details of the specified profile
+// allows you to get the details of the specified profile
 func (c *Client) GetProfile(profileId string) (*ProfileSettings, error) {
 
 	profileSettings := ProfileSettings{}

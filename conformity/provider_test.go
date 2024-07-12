@@ -378,6 +378,57 @@ func createConformityMock() (*cloudconformity.Client, *httptest.Server) {
 				"included": [
 				  {
 					"type": "rules",
+					"id": "RG-001",
+					"attributes": {
+						"enabled": true,
+						"provider": "aws",
+						"extraSettings": [
+							{
+								"type": "multiple-string-values",
+								"name": "tags",
+								"label": "Default tags",
+								"values": [
+									{
+										"value": "Environment",
+										"default": "Environment"
+									},
+									{
+										"value": "Role",
+										"default": "Role"
+									}
+								]
+							},
+							{
+								"type": "choice-multiple-value",
+								"name": "resourceTypes",
+								"label": "Enable resource types",
+								"values": [
+									{
+										"value": "s3-bucket",
+										"enabled": true,
+										"settings": [
+											{
+												"name": "tags-override",
+												"label": null,
+												"type": "multiple-string-values",
+												"values": [
+													{
+														"value": "technical:application"
+													},
+													{
+														"value": "awsbackup:alias"
+													}
+												]
+											}
+										]
+									}
+								]
+							}
+						]
+					}
+				  },
+				  {
+					"type": "rules",
 					"id": "RTM-002",
 					"attributes": {
 					  "enabled": true,
@@ -389,7 +440,7 @@ func createConformityMock() (*cloudconformity.Client, *httptest.Server) {
 						{
 						  "name": "ttl",
 						  "type": "ttl",
-						  "value": ` + fmt.Sprintf("%v", profileSetting.Included[0].Attributes.ExtraSettings[0].Value) + `,
+						  "value": ` + fmt.Sprintf("%v", profileSetting.Included[1].Attributes.ExtraSettings[0].Value) + `,
 						  "ttl": true
 						}
 					  ]
@@ -430,7 +481,15 @@ func createConformityMock() (*cloudconformity.Client, *httptest.Server) {
 					  "data": [
 						{
 						  "type": "rules",
+						  "id": "RG-001"
+						},
+						{
+						  "type": "rules",
 						  "id": "RTM-002"
+						},
+						{
+						  "type": "rules",
+						  "id": "SNS-002"
 						}
 					  ]
 					}
