@@ -300,24 +300,23 @@ func flattenRuleValuesSettings(val []interface{}) []interface{} {
 		if n, ok := item["name"].(string); ok && n != "" {
 			v["name"] = n
 		}
-		if val1, ok := item["label"].(string); ok && val1 != "" {
-			v["label"] = val1
+		if label, ok := item["label"].(string); ok && label != "" {
+			v["label"] = label
 		}
-		if val2, ok := item["values"].([]interface{}); ok && len(val2) > 0 {
-			// fmt.Printf("VALUES %+v\n", val2)
-			data := make([]interface{}, 0, len(val2))
-			for _, v1 := range val2 {
-				value := make(map[string]interface{})
+		if values, ok := item["values"].([]interface{}); ok && len(values) > 0 {
+			data := make([]interface{}, 0, len(values))
+			for _, v1 := range values {
+				valueItemNew := make(map[string]interface{})
 				valueItem := v1.(map[string]interface{})
 
-				if val3, ok := valueItem["value"].(string); ok && val3 != "" {
-					value["value"] = val3
+				if value, ok := valueItem["value"].(string); ok && value != "" {
+					valueItemNew["value"] = value
 				}
 
-				if val4, ok := valueItem["default"].(string); ok && val4 != "" {
-					value["default"] = val4
+				if defaultVal, ok := valueItem["default"].(string); ok && defaultVal != "" {
+					valueItemNew["default"] = defaultVal
 				}
-				data = append(data, value)
+				data = append(data, valueItemNew)
 			}
 			v["values"] = data
 		}
@@ -534,20 +533,20 @@ func processRuleValuesSettings(vs []interface{}) []*cloudconformity.RuleSettingV
 		ruleSettingValues := &cloudconformity.RuleSettingValues{}
 		item := v.(map[string]interface{})
 
-		if val, ok := item["enabled"]; ok && val != nil {
-			ruleSettingValues.Enabled = val.(bool)
+		if enabled, ok := item["enabled"]; ok && enabled != nil {
+			ruleSettingValues.Enabled = enabled.(bool)
 		}
 
-		if val, ok := item["customised"]; ok && val != nil {
-			ruleSettingValues.Customised = val.(bool)
+		if customised, ok := item["customised"]; ok && customised != nil {
+			ruleSettingValues.Customised = customised.(bool)
 		}
 
-		if val, ok := item["label"].(string); ok && val != "" {
-			ruleSettingValues.Label = val
+		if label, ok := item["label"].(string); ok && label != "" {
+			ruleSettingValues.Label = label
 		}
 
-		if val, ok := item["value"].(string); ok && val != "" {
-			ruleSettingValues.Value = val
+		if value, ok := item["value"].(string); ok && value != "" {
+			ruleSettingValues.Value = value
 		}
 
 		if item["settings"] != nil {
@@ -559,12 +558,12 @@ func processRuleValuesSettings(vs []interface{}) []*cloudconformity.RuleSettingV
 					settingItem := v1.(map[string]interface{})
 					settingValue := cloudconformity.RuleSettingValuesSetting{}
 
-					if val, ok := settingItem["label"].(string); ok && val != "" {
-						settingValue.Label = val
+					if label, ok := settingItem["label"].(string); ok && label != "" {
+						settingValue.Label = label
 					}
 
-					if val, ok := settingItem["name"].(string); ok && val != "" {
-						settingValue.Name = val
+					if name, ok := settingItem["name"].(string); ok && name != "" {
+						settingValue.Name = name
 					}
 
 					if val, ok := settingItem["type"].(string); ok && val != "" {
@@ -580,12 +579,12 @@ func processRuleValuesSettings(vs []interface{}) []*cloudconformity.RuleSettingV
 								settingItemV := v2.(map[string]interface{})
 								settingItemValues := cloudconformity.RuleSettingValuesSettingValue{}
 
-								if val1, ok := settingItemV["value"].(string); ok && val1 != "" {
-									settingItemValues.Value = val1
+								if value, ok := settingItemV["value"].(string); ok && value != "" {
+									settingItemValues.Value = value
 								}
 
-								if val2, ok := settingItemV["default"].(string); ok && val2 != "" {
-									settingItemValues.Default = val2
+								if defaultVal, ok := settingItemV["default"].(string); ok && defaultVal != "" {
+									settingItemValues.Default = defaultVal
 								}
 
 								settingValue.Values = append(settingValue.Values, settingItemValues)

@@ -112,7 +112,7 @@ func TestAccResourceAwsAccount(t *testing.T) {
 					resource.TestCheckResourceAttr("conformity_aws_account.aws", "settings.0.rule.2.settings.0.extra_settings.0.values.0.value", "s3-bucket"),
 
 					resource.TestCheckResourceAttr("conformity_aws_account.aws", "settings.0.rule.2.settings.0.extra_settings.0.values.0.settings.0.name", "tags-override"),
-					// resource.TestCheckResourceAttr("conformity_aws_account.aws", "settings.0.rule.2.settings.0.extra_settings.0.values.0.settings.0.type", "multiple-string-values"),
+					resource.TestCheckResourceAttr("conformity_aws_account.aws", "settings.0.rule.2.settings.0.extra_settings.0.values.0.settings.0.type", "multiple-string-values"),
 					resource.TestCheckResourceAttr("conformity_aws_account.aws", "settings.0.rule.2.settings.0.extra_settings.0.values.0.settings.0.values.0.value", "tags_new:alias"),
 					resource.TestCheckResourceAttr("conformity_aws_account.aws", "settings.0.rule.2.settings.0.extra_settings.0.values.0.settings.0.values.1.value", "technical:test"),
 

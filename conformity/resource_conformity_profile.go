@@ -171,7 +171,6 @@ func resourceConformityProfile() *schema.Resource {
 }
 
 func resourceConformityProfileCreate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
-	// fmt.Printf("1\n")
 	client := m.(*cloudconformity.Client)
 
 	// Warning or errors can be collected in a slice type
@@ -198,7 +197,6 @@ func resourceConformityProfileCreate(ctx context.Context, d *schema.ResourceData
 }
 
 func resourceConformityProfileRead(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
-	// fmt.Printf("2\n")
 	client := m.(*cloudconformity.Client)
 	// Warning or errors can be collected in a slice type
 	var diags diag.Diagnostics
@@ -223,7 +221,6 @@ func resourceConformityProfileRead(ctx context.Context, d *schema.ResourceData, 
 }
 
 func resourceConformityProfileUpdate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
-	// fmt.Printf("3\n")
 	client := m.(*cloudconformity.Client)
 	payload := cloudconformity.ProfileSettings{}
 	profileId := d.Id()
@@ -250,7 +247,6 @@ func resourceConformityProfileUpdate(ctx context.Context, d *schema.ResourceData
 }
 
 func resourceConformityProfileDelete(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
-	// fmt.Printf("4\n")
 	client := m.(*cloudconformity.Client)
 
 	// Warning or errors can be collected in a slice type
@@ -393,7 +389,6 @@ func flattenProfileIncluded(included []cloudconformity.ProfileIncluded) []interf
 	pis := make([]interface{}, len(included))
 	for i, includedItem := range included {
 
-		// fmt.Printf("Included \n %+v\n", includedItem)
 		pi := make(map[string]interface{})
 		pi["id"] = includedItem.ID
 		pi["enabled"] = includedItem.Attributes.Enabled
@@ -430,7 +425,6 @@ func flattenProfileExtraSettings(extra []cloudconformity.IncludedExtraSettings) 
 
 	for i, extraSettings := range extra {
 		es := make(map[string]interface{})
-		// fmt.Printf("EX \n %+v\n", extraSettings)
 
 		es["countries"] = extraSettings.Countries
 		es["multiple"] = extraSettings.Multiple

@@ -45,7 +45,6 @@ func ExtraSettingSchema() *schema.Schema {
 	return &schema.Schema{
 		Type:     schema.TypeSet,
 		Optional: true,
-		MaxItems: 2,
 		Elem: &schema.Resource{
 			Schema: map[string]*schema.Schema{
 				"name": {

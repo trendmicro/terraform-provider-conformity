@@ -12,7 +12,7 @@ import (
 
 func TestAccResourceconformityProfile(t *testing.T) {
 	ttl := "72"
-	// ttlUpdate := "71"
+	ttlUpdate := "71"
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccConformityPreCheck(t) },
 		CheckDestroy: testAccConformityProfileDestroy,
@@ -23,6 +23,19 @@ func TestAccResourceconformityProfile(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr("conformity_profile.rtm002", "name", "test-with-rules"),
 					resource.TestCheckResourceAttr("conformity_profile.rtm002", "included.0.id", "RG-001"),
+					resource.TestCheckResourceAttr("conformity_profile.rtm002", "included.0.extra_settings.0.name", "resourceTypes"),
+					resource.TestCheckResourceAttr("conformity_profile.rtm002", "included.0.extra_settings.0.type", "choice-multiple-value"),
+					resource.TestCheckResourceAttr("conformity_profile.rtm002", "included.0.extra_settings.0.values.0.value", "s3-bucket"),
+
+					resource.TestCheckResourceAttr("conformity_profile.rtm002", "included.0.extra_settings.0.values.0.settings.0.name", "tags-override"),
+					resource.TestCheckResourceAttr("conformity_profile.rtm002", "included.0.extra_settings.0.values.0.settings.0.type", "multiple-string-values"),
+					resource.TestCheckResourceAttr("conformity_profile.rtm002", "included.0.extra_settings.0.values.0.settings.0.values.0.value", "awsbackup:alias"),
+					resource.TestCheckResourceAttr("conformity_profile.rtm002", "included.0.extra_settings.0.values.0.settings.0.values.1.value", "technical:application"),
+
+					resource.TestCheckResourceAttr("conformity_profile.rtm002", "included.0.extra_settings.1.name", "tags"),
+					resource.TestCheckResourceAttr("conformity_profile.rtm002", "included.0.extra_settings.1.type", "multiple-string-values"),
+					resource.TestCheckResourceAttr("conformity_profile.rtm002", "included.0.extra_settings.1.values.0.value", "Environment"),
+					resource.TestCheckResourceAttr("conformity_profile.rtm002", "included.0.extra_settings.1.values.1.value", "Role"),
 
 					resource.TestCheckResourceAttr("conformity_profile.rtm002", "included.1.id", "RTM-002"),
 					resource.TestCheckResourceAttr("conformity_profile.rtm002", "included.1.exceptions.0.tags.0", "some_tag"),
@@ -32,12 +45,12 @@ func TestAccResourceconformityProfile(t *testing.T) {
 					resource.TestCheckResourceAttr("conformity_profile.rtm002", "included.2.extra_settings.0.values.0.value", "includeConformityOrganization"),
 				), ExpectNonEmptyPlan: true,
 			},
-			// {
-			// 	Config: testAccCheckConformityProfileBasic(ttlUpdate),
-			// 	Check: resource.ComposeTestCheckFunc(
-			// 		resource.TestCheckResourceAttr("conformity_profile.rtm002", "included.1.extra_settings.0.value", ttlUpdate),
-			// 	), ExpectNonEmptyPlan: true,
-			// },
+			{
+				Config: testAccCheckConformityProfileBasic(ttlUpdate),
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttr("conformity_profile.rtm002", "included.1.extra_settings.0.value", ttlUpdate),
+				), ExpectNonEmptyPlan: true,
+			},
 		},
 	})
 }
