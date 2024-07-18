@@ -219,6 +219,11 @@ resource "conformity_aws_account" "aws" {
                             }
                         }
                     }
+
+                    values {
+                        value      = "ec2-instance"
+                        enabled    = false
+                    }
                 }
             }
         } 	
@@ -268,6 +273,7 @@ resource "conformity_aws_account" "aws" {
      * `value` (String) - (Optional) Customisable value for rules that take on single name/value pairs.
      * `regions` (Array of Strings) - (Optional) Rule specific property.
      * `multiple-object-values` (Array of Strings) - (Optional) Rule specific property.
+     * `tags` (Array of Strings) - (Optional) Rule specific property.
 
   Inside `extra_settings` under `settings` of `rule` set, there can be multiple declaration of `multiple-object-values` set.
   
@@ -290,7 +296,25 @@ resource "conformity_aws_account" "aws" {
      *  `value` (String) - (Required) Description of the checkbox.
     Note: If inside the `values` under the `mappings` has set `values` declared, you cannot use `value` anymore. Inside mappings, its either `values` with `values` set inside it or `values` with declared `value` inside it.
 
-        Note: There is a condition for `type` attribute. If the specified is attribute is `value`, the possible values are "single-number-value", "single-string-value", "single-value-regex" and "ttl". If the specified is attribute is `values`, the declaration of it is inside the extra settings which can be a list and the possible values are "choice-multiple-value", "choice-single-value", "multiple-string-values", "multiple-number-values", "countries", "multiple-ip-values", "multiple-aws-account-values" and "tags". You cannot declare both `values` and `value` at the same time.See the table below:
+  Inside `extra_settings` under `settings` of `rule` set, there can be multiple declaration of `values` set.
+
+- `values` - (Required) List: (Can be multiple declaration). An array (sometimes of objects) rules that take on a set of of values
+     * `label` (String) - (Optional) (Keyword) Name of the values.
+     * `enabled` (Bool) - (Optional) Defines if the checkbox is enabled or not.
+     * `value` (String) - (Required) Description of the checkbox.
+    Note: `values` is required when you use `mappings`.
+
+  Inside `values` set, here can be multiple declaration of `settings` set.
+  
+ - `settings` - (Optional) Set: `extra_setting` has type "choice-multiple-value" may use this argument (i.e. RG-001)
+     *  `name` (String) - (Optional) Internal key.
+     *  `type` (String) - (Required).
+     *  `values` (Optional) List: (Can be multiple declaration). An array (sometimes of objects) settings that take on a set of of values
+        - `value` (String) - (Required) Settings item value.
+        - `default` (String) - (Optional) Settings item default value.
+        
+
+        Note: There is a condition for `extra_settings.type` attribute. If the specified is attribute is `value`, the possible values are "single-number-value", "single-string-value", "single-value-regex" and "ttl". If the specified is attribute is `values`, the declaration of it is inside the extra settings which can be a list and the possible values are "choice-multiple-value", "choice-single-value", "multiple-string-values", "multiple-number-values", "countries", "multiple-ip-values", "multiple-aws-account-values" and "tags". You cannot declare both `values` and `value` at the same time.See the table below:
 
 | type     | possible value                                                                                                                | Sample declaration                                                                                                                                                                                                                    |
 |----------|-------------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
