@@ -2,9 +2,10 @@ package conformity
 
 import (
 	"fmt"
-	"github.com/trendmicro/terraform-provider-conformity/pkg/cloudconformity"
 	"regexp"
 	"testing"
+
+	"github.com/trendmicro/terraform-provider-conformity/pkg/cloudconformity"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
@@ -19,6 +20,7 @@ func TestAccResourceAwsAccount(t *testing.T) {
 	ruleSetting1 = nil
 	ruleSetting2 = nil
 	ruleSetting3 = nil
+	ruleSetting4 = nil
 
 	name := "test-name"
 	environment := "test-env"
@@ -64,6 +66,20 @@ func TestAccResourceAwsAccount(t *testing.T) {
 					resource.TestCheckResourceAttr("conformity_aws_account.aws", "settings.0.rule.2.settings.0.extra_settings.0.mappings.0.values.0.values.0.value", "nat-001"),
 					resource.TestCheckResourceAttr("conformity_aws_account.aws", "settings.0.rule.2.settings.0.extra_settings.0.mappings.0.values.0.values.1.value", "nat-002"),
 					resource.TestCheckResourceAttr("conformity_aws_account.aws", "settings.0.rule.2.settings.0.extra_settings.0.mappings.0.values.1.value", "vpc-001"),
+					// RG-001
+					resource.TestCheckResourceAttr("conformity_aws_account.aws", "settings.0.rule.3.rule_id", "RG-001"),
+					resource.TestCheckResourceAttr("conformity_aws_account.aws", "settings.0.rule.3.settings.0.extra_settings.0.name", "resourceTypes"),
+					resource.TestCheckResourceAttr("conformity_aws_account.aws", "settings.0.rule.3.settings.0.extra_settings.0.type", "choice-multiple-value"),
+					resource.TestCheckResourceAttr("conformity_aws_account.aws", "settings.0.rule.3.settings.0.extra_settings.0.values.0.value", "s3-bucket"),
+					resource.TestCheckResourceAttr("conformity_aws_account.aws", "settings.0.rule.3.settings.0.extra_settings.0.values.0.settings.0.name", "tags-override"),
+					resource.TestCheckResourceAttr("conformity_aws_account.aws", "settings.0.rule.3.settings.0.extra_settings.0.values.0.settings.0.type", "multiple-string-values"),
+					resource.TestCheckResourceAttr("conformity_aws_account.aws", "settings.0.rule.3.settings.0.extra_settings.0.values.0.settings.0.values.0.value", "awsbackup:alias"),
+					resource.TestCheckResourceAttr("conformity_aws_account.aws", "settings.0.rule.3.settings.0.extra_settings.0.values.0.settings.0.values.1.value", "technical:application"),
+
+					resource.TestCheckResourceAttr("conformity_aws_account.aws", "settings.0.rule.3.settings.0.extra_settings.1.name", "tags"),
+					resource.TestCheckResourceAttr("conformity_aws_account.aws", "settings.0.rule.3.settings.0.extra_settings.1.type", "multiple-string-values"),
+					resource.TestCheckResourceAttr("conformity_aws_account.aws", "settings.0.rule.3.settings.0.extra_settings.1.values.0.value", "Environment"),
+					resource.TestCheckResourceAttr("conformity_aws_account.aws", "settings.0.rule.3.settings.0.extra_settings.1.values.1.value", "Role"),
 				), ExpectNonEmptyPlan: true,
 			},
 			{
@@ -88,6 +104,22 @@ func TestAccResourceAwsAccount(t *testing.T) {
 					resource.TestCheckResourceAttr("conformity_aws_account.aws", "settings.0.rule.0.settings.0.extra_settings.0.values.1.value", "US"),
 					resource.TestCheckResourceAttr("conformity_aws_account.aws", "settings.0.rule.0.settings.0.extra_settings.0.values.1.label", "United States"),
 					resource.TestCheckResourceAttr("conformity_aws_account.aws", "settings.0.rule.1.settings.0.extra_settings.0.mappings.0.values.0.values.0.value", "nat-001"),
+
+					// RG-001
+					resource.TestCheckResourceAttr("conformity_aws_account.aws", "settings.0.rule.2.rule_id", "RG-001"),
+					resource.TestCheckResourceAttr("conformity_aws_account.aws", "settings.0.rule.2.settings.0.extra_settings.0.name", "resourceTypes"),
+					resource.TestCheckResourceAttr("conformity_aws_account.aws", "settings.0.rule.2.settings.0.extra_settings.0.type", "choice-multiple-value"),
+					resource.TestCheckResourceAttr("conformity_aws_account.aws", "settings.0.rule.2.settings.0.extra_settings.0.values.0.value", "s3-bucket"),
+
+					resource.TestCheckResourceAttr("conformity_aws_account.aws", "settings.0.rule.2.settings.0.extra_settings.0.values.0.settings.0.name", "tags-override"),
+					resource.TestCheckResourceAttr("conformity_aws_account.aws", "settings.0.rule.2.settings.0.extra_settings.0.values.0.settings.0.type", "multiple-string-values"),
+					resource.TestCheckResourceAttr("conformity_aws_account.aws", "settings.0.rule.2.settings.0.extra_settings.0.values.0.settings.0.values.0.value", "tags_new:alias"),
+					resource.TestCheckResourceAttr("conformity_aws_account.aws", "settings.0.rule.2.settings.0.extra_settings.0.values.0.settings.0.values.1.value", "technical:test"),
+
+					resource.TestCheckResourceAttr("conformity_aws_account.aws", "settings.0.rule.2.settings.0.extra_settings.1.name", "tags"),
+					resource.TestCheckResourceAttr("conformity_aws_account.aws", "settings.0.rule.2.settings.0.extra_settings.1.type", "multiple-string-values"),
+					resource.TestCheckResourceAttr("conformity_aws_account.aws", "settings.0.rule.2.settings.0.extra_settings.1.values.0.value", "Environment"),
+					resource.TestCheckResourceAttr("conformity_aws_account.aws", "settings.0.rule.2.settings.0.extra_settings.1.values.1.value", "Role"),
 				), ExpectNonEmptyPlan: true,
 			},
 			{
@@ -187,6 +219,50 @@ func testAccCheckAwsAccountConfigBasic(name, environment, roleARN, externalID st
 					}
 				}
 			}
+			// implement choice-multiple-value
+			rule {
+				rule_id = "RG-001"
+				settings {
+					enabled     = true
+					risk_level  = "LOW"
+					rule_exists = true
+
+					extra_settings {
+						name = "tags"
+						type = "multiple-string-values"
+
+						values {
+							value = "Environment"
+						}
+
+						values {
+							value = "Role"
+						}
+					}	
+
+					extra_settings {
+						name = "resourceTypes"
+						type = "choice-multiple-value"
+
+						values {
+							value      = "s3-bucket"
+
+							settings {
+								name = "tags-override"
+								type = "multiple-string-values"
+
+								values {
+									value = "technical:application"
+								}
+
+								values {
+									value = "awsbackup:alias"
+								}
+							}
+						}
+					}
+				}
+			}
 		}
 	}
 	output "conformity_account_name" {
@@ -260,6 +336,51 @@ func testAccCheckAwsAccountConfigUpdate(name, environment, roleARN, externalID s
 								value = "vpc-001"
 							}
 	
+						}
+					}
+				}
+			}
+
+			// implement choice-multiple-value
+			rule {
+				rule_id = "RG-001"
+				settings {
+					enabled     = true
+					risk_level  = "LOW"
+					rule_exists = true
+
+					extra_settings {
+						name = "tags"
+						type = "multiple-string-values"
+
+						values {
+							value = "Environment"
+						}
+
+						values {
+							value = "Role"
+						}
+					}	
+
+					extra_settings {
+						name = "resourceTypes"
+						type = "choice-multiple-value"
+
+						values {
+							value      = "s3-bucket"
+
+							settings {
+								name = "tags-override"
+								type = "multiple-string-values"
+
+								values {
+									value = "technical:test"
+								}
+
+								values {
+									value = "tags_new:alias"
+								}
+							}
 						}
 					}
 				}

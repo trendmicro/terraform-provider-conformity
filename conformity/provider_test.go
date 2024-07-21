@@ -31,7 +31,7 @@ var reportConfigDetails cloudconformity.ReportConfigDetails
 var communicationSetting cloudconformity.CommunicationSettings
 var profileSetting cloudconformity.ProfileSettings
 var botSetting cloudconformity.AccountBotSettingsRequest
-var ruleSetting1, ruleSetting2, ruleSetting3 *cloudconformity.AccountRuleSettings
+var ruleSetting1, ruleSetting2, ruleSetting3, ruleSetting4 *cloudconformity.AccountRuleSettings
 var testServer *httptest.Server
 var checkDetails *cloudconformity.CheckDetails
 var customRule *cloudconformity.CustomRule
@@ -378,6 +378,57 @@ func createConformityMock() (*cloudconformity.Client, *httptest.Server) {
 				"included": [
 				  {
 					"type": "rules",
+					"id": "RG-001",
+					"attributes": {
+						"enabled": true,
+						"provider": "aws",
+						"extraSettings": [
+							{
+								"type": "multiple-string-values",
+								"name": "tags",
+								"label": "Default tags",
+								"values": [
+									{
+										"value": "Environment",
+										"default": "Environment"
+									},
+									{
+										"value": "Role",
+										"default": "Role"
+									}
+								]
+							},
+							{
+								"type": "choice-multiple-value",
+								"name": "resourceTypes",
+								"label": "Enable resource types",
+								"values": [
+									{
+										"value": "s3-bucket",
+										"enabled": true,
+										"settings": [
+											{
+												"name": "tags-override",
+												"label": null,
+												"type": "multiple-string-values",
+												"values": [
+													{
+														"value": "technical:application"
+													},
+													{
+														"value": "awsbackup:alias"
+													}
+												]
+											}
+										]
+									}
+								]
+							}
+						]
+					}
+				  },
+				  {
+					"type": "rules",
 					"id": "RTM-002",
 					"attributes": {
 					  "enabled": true,
@@ -389,7 +440,7 @@ func createConformityMock() (*cloudconformity.Client, *httptest.Server) {
 						{
 						  "name": "ttl",
 						  "type": "ttl",
-						  "value": ` + fmt.Sprintf("%v", profileSetting.Included[0].Attributes.ExtraSettings[0].Value) + `,
+						  "value": ` + fmt.Sprintf("%v", profileSetting.Included[1].Attributes.ExtraSettings[0].Value) + `,
 						  "ttl": true
 						}
 					  ]
@@ -430,7 +481,15 @@ func createConformityMock() (*cloudconformity.Client, *httptest.Server) {
 					  "data": [
 						{
 						  "type": "rules",
+						  "id": "RG-001"
+						},
+						{
+						  "type": "rules",
 						  "id": "RTM-002"
+						},
+						{
+						  "type": "rules",
+						  "id": "SNS-002"
 						}
 					  ]
 					}
@@ -459,8 +518,10 @@ func createConformityMock() (*cloudconformity.Client, *httptest.Server) {
 				_ = readRequestBody(r, &ruleSetting1)
 			} else if ruleSetting2 == nil {
 				_ = readRequestBody(r, &ruleSetting2)
-			} else {
+			} else if ruleSetting3 == nil {
 				_ = readRequestBody(r, &ruleSetting3)
+			} else {
+				_ = readRequestBody(r, &ruleSetting4)
 			}
 
 			w.Write([]byte(`{"data": {"type": "accounts","id": "AgA12vIwb"}}`))
@@ -468,6 +529,7 @@ func createConformityMock() (*cloudconformity.Client, *httptest.Server) {
 			rule1 := `null`
 			rule2 := `null`
 			rule3 := `null`
+			rule4 := `null`
 
 			if ruleSetting1 != nil {
 				values := ruleSetting1.Data.Attributes.RuleSetting.ExtraSettings[0].Values.([]interface{})
@@ -561,13 +623,69 @@ func createConformityMock() (*cloudconformity.Client, *httptest.Server) {
 				`
 
 			}
+			if ruleSetting4 != nil {
+
+				rule4 = `
+				{
+					"riskLevel": "LOW",
+					"id": "RG-001",
+					"extraSettings": [
+						{
+							"type": "multiple-string-values",
+							"name": "tags",
+							"label": "Default tags",
+							"values": [
+								{
+									"value": "Environment",
+									"default": "Environment"
+								},
+								{
+									"value": "Role",
+									"default": "Role"
+								}
+							]
+						},
+						{
+							"type": "choice-multiple-value",
+							"name": "resourceTypes",
+							"label": "Enable resource types",
+							"values": [
+								{
+									"value": "s3-bucket",
+									"enabled": true,
+									"settings": [
+										{
+											"name": "tags-override",
+											"label": null,
+											"type": "multiple-string-values",
+											"values": [
+												{
+													"value": "technical:application"
+												},
+												{
+													"value": "awsbackup:alias"
+												}
+											]
+										}
+									]
+								}
+							]
+						}
+					],
+					"provider": "aws",
+					"enabled": true,
+					"exceptions": null
+				}
+				`
+
+			}
 			w.Write([]byte(`
 					{"data": 
 						{"type": 
 							"accounts","id": "H19NxMi5-",
 							"attributes": 
 							{"settings": 
-								{"rules": [` + rule1 + `,` + rule2 + `,` + rule3 + `]}
+								{"rules": [` + rule1 + `,` + rule2 + `,` + rule3 + `,` + rule4 + `]}
 							}		
 						}
 					}`))

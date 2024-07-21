@@ -3,6 +3,46 @@ resource "conformity_profile" "profile_settings" {
     description = "conformity development - rules included"
     name        = "conformity-with-rules"
 
+    # RG-001 with "choice-multiple-value" field
+    included {
+	    id = "RG-001"
+      enabled     = true
+      risk_level  = "LOW"
+      extra_settings {
+        name = "tags"
+        type = "multiple-string-values"
+        values {
+          value = "Environment"
+        }
+
+        values {
+          value = "Role"
+        }
+      }	
+
+      extra_settings {
+        name = "resourceTypes"
+        type = "choice-multiple-value"
+
+        values {
+          value      = "s3-bucket"
+
+          settings {
+            name = "tags-override"
+            type = "multiple-string-values"
+
+            values {
+              value = "technical:application"
+            }
+
+            values {
+              value = "awsbackup:alias"
+            }
+          }
+        }
+      }
+    }
+
     # without extra settings 
     included {
         enabled    = false

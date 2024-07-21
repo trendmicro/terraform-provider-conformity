@@ -30,6 +30,52 @@ resource "conformity_profile" "profile_settings" {
             ]
         }
     }
+
+    # RG-001 with "choice-multiple-value" field
+    included {
+	    id = "RG-001"
+      enabled     = true
+      risk_level  = "LOW"
+      extra_settings {
+        name = "tags"
+        type = "multiple-string-values"
+        values {
+          value = "Environment"
+        }
+
+        values {
+          value = "Role"
+        }
+      }	
+
+      extra_settings {
+        name = "resourceTypes"
+        type = "choice-multiple-value"
+
+        values {
+          value      = "s3-bucket"
+
+          settings {
+            name = "tags-override"
+            type = "multiple-string-values"
+
+            values {
+              value = "technical:application"
+            }
+
+            values {
+              value = "awsbackup:alias"
+            }
+          }
+        }
+
+        values {
+          value      = "ec2-instance"
+          enabled    = false
+        }
+      }
+    }
+
     # type ttl
     # integer converted to string
     included {
@@ -123,7 +169,17 @@ output "profile" {
      *  `label` (String) - (Optional) Internal key.
      *  `value` (String) - (Required) Description of the checkbox.
 
-        Note: There is a condition for `type` attribute. If the specified is attribute is `value`, the possible values are "single-number-value", "single-string-value", "single-value-regex" and "ttl". If the specified is attribute is `values`, the declaration of it is inside the extra settings which can be a list and the possible values are "choice-multiple-value", "choice-single-value", "multiple-string-values", "multiple-number-values", "countries", "multiple-ip-values", "multiple-aws-account-values" and "tags". You cannot declare both `values` and `value` at the same time.See the table below:
+  Inside `values` there can be a declaration of `settings` set.
+  
+ - `settings` - (Optional) Set: `extra_setting` has type "choice-multiple-value" may use this argument (i.e. RG-001) 
+     *  `name` (String) - (Optional) Internal key.
+     *  `type` (String) - (Required).
+     *  `values` (Optional) List: (Can be multiple declaration). An array (sometimes of objects) settings that take on a set of of values
+        - `value` (String) - (Required) Settings item value.
+        - `default` (String) - (Optional) Settings item default value.
+        
+        
+Note: There is a condition for `extra_settings.type` attribute. If the specified is attribute is `value`, the possible values are "single-number-value", "single-string-value", "single-value-regex" and "ttl". If the specified is attribute is `values`, the declaration of it is inside the extra settings which can be a list and the possible values are "choice-multiple-value", "choice-single-value", "multiple-string-values", "multiple-number-values", "countries", "multiple-ip-values", "multiple-aws-account-values" and "tags". You cannot declare both `values` and `value` at the same time.See the table below:
 
 | type     | possible value                                                                                                                | Sample declaration                                                                                                                                                                                                                    |
 |----------|-------------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|

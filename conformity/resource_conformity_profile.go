@@ -133,7 +133,14 @@ func resourceConformityProfile() *schema.Resource {
 												"enabled": {
 													Type:     schema.TypeBool,
 													Optional: true,
+													Default:  true,
 												},
+												"customised": {
+													Type:     schema.TypeBool,
+													Optional: true,
+													Default:  true,
+												},
+												"settings": valueSettingSchema(),
 											},
 										},
 									},
@@ -190,13 +197,11 @@ func resourceConformityProfileCreate(ctx context.Context, d *schema.ResourceData
 }
 
 func resourceConformityProfileRead(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
-
 	client := m.(*cloudconformity.Client)
 	// Warning or errors can be collected in a slice type
 	var diags diag.Diagnostics
 
 	profileId := d.Id()
-
 	profileSettings, err := client.GetProfile(profileId)
 	if err != nil {
 		return diag.FromErr(err)
@@ -242,7 +247,6 @@ func resourceConformityProfileUpdate(ctx context.Context, d *schema.ResourceData
 }
 
 func resourceConformityProfileDelete(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
-
 	client := m.(*cloudconformity.Client)
 
 	// Warning or errors can be collected in a slice type
@@ -323,12 +327,23 @@ func proccessExtraSettings(v []interface{}, a *cloudconformity.IncludedAttribute
 			c[i].Value = item["value"].(string)
 		} else if c[i].Type == "regions" {
 			processProfileValuesStringsSlices(item["values_array"].(*schema.Set).List(), &c[i])
+		} else if c[i].Type == "choice-multiple-value" {
+			c[i].Values = processIncludedRuleValuesSettings(item["values"].(*schema.Set).List())
 		} else {
 			processProfileValues(item["values"].(*schema.Set).List(), &c[i])
 		}
 
 	}
 	a.ExtraSettings = c
+}
+
+func processIncludedRuleValuesSettings(v []interface{}) []interface{} {
+	values := processRuleValuesSettings(v)
+	result := make([]interface{}, len(values))
+	for i := range values {
+		result[i] = &values[i]
+	}
+	return result
 }
 
 func processProfileValues(v []interface{}, ies *cloudconformity.IncludedExtraSettings) {
@@ -387,11 +402,11 @@ func flattenProfileIncluded(included []cloudconformity.ProfileIncluded) []interf
 		pi["extra_settings"] = flattenProfileExtraSettings(includedItem.Attributes.ExtraSettings)
 		pis[i] = pi
 	}
+
 	return pis
-
 }
-func flattenProfileExceptions(exceptions *cloudconformity.IncludedExceptions) []interface{} {
 
+func flattenProfileExceptions(exceptions *cloudconformity.IncludedExceptions) []interface{} {
 	c := make(map[string]interface{})
 
 	c["filter_tags"] = exceptions.FilterTags
@@ -426,6 +441,8 @@ func flattenProfileExtraSettings(extra []cloudconformity.IncludedExtraSettings) 
 			es["value"] = fmt.Sprintf("%s", extraSettings.Value)
 		} else if extraSettings.Type == "regions" {
 			es["values_array"] = extraSettings.Values
+		} else if extraSettings.Type == "choice-multiple-value" {
+			es["values"] = flattenRuleSettingValues(extraSettings.Values)
 		} else {
 			es["values"] = flattenProfileValues(extraSettings.Values)
 		}

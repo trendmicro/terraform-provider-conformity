@@ -175,5 +175,50 @@ resource "conformity_aws_account" "aws" {
         }
       }
     }
+
+    // implement choice-multiple-value
+		rule {
+			rule_id = "RG-001"
+			settings {
+				enabled     = true
+				risk_level  = "LOW"
+				rule_exists = true
+
+				extra_settings {
+					name = "tags"
+					type = "multiple-string-values"
+
+					values {
+						value = "Environment"
+					}
+
+					values {
+						value = "Role"
+					}
+				}	
+
+				extra_settings {
+					name = "resourceTypes"
+					type = "choice-multiple-value"
+
+					values {
+						value      = "s3-bucket"
+
+						settings {
+							name = "tags-override"
+							type = "multiple-string-values"
+
+							values {
+								value = "technical:test"
+							}
+
+							values {
+								value = "tags_new:alias"
+							}
+						}
+					}
+				}
+			}
+    }
   }
 }
