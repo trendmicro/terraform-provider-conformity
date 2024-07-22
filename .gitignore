@@ -36,6 +36,7 @@ note.txt
 *.hcl
 *.tfvars
 sample/
+runner/
 
 # Keep windows files with windows line endings
 *.winfile eol=crlf
