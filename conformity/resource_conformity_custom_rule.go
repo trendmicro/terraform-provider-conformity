@@ -36,6 +36,10 @@ func resourceConformityCustomRule() *schema.Resource {
 				Type:     schema.TypeString,
 				Required: true,
 			},
+			"slug": {
+				Type:     schema.TypeString,
+				Optional: true,
+			},
 			"cloud_provider": {
 				Type:     schema.TypeString,
 				Required: true,
@@ -168,8 +172,7 @@ func resourceConformityCustomRule() *schema.Resource {
 func resourceConformityCustomRuleCreate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 
 	client := m.(*cloudconformity.Client)
-	// Warning or errors can be collected in a slice type
-	var diags diag.Diagnostics
+
 	payload := cloudconformity.CustomRuleRequest{}
 
 	// Required fields
@@ -188,8 +191,11 @@ func resourceConformityCustomRuleCreate(ctx context.Context, d *schema.ResourceD
 		processInputCustomRuleRules(&payload, d)
 	}
 	// Optional fields
-	if d.Get("remediation_notes") != "" {
-		payload.RemediationNotes = d.Get("remediation_notes").(string)
+	if v, ok := d.GetOk("remediation_notes"); ok{
+		payload.RemediationNotes = v.(string)
+	}
+	if v, ok := d.GetOk("slug"); ok{
+		payload.Slug = v.(string)
 	}
 
 	customRule, err := client.CreateConformityCustomRule(payload)
@@ -198,8 +204,7 @@ func resourceConformityCustomRuleCreate(ctx context.Context, d *schema.ResourceD
 	}
 	d.SetId(customRule.ID)
 
-	resourceConformityCustomRuleRead(ctx, d, m)
-	return diags
+	return resourceConformityCustomRuleRead(ctx, d, m)
 }
 
 func resourceConformityCustomRuleRead(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
@@ -221,6 +226,9 @@ func resourceConformityCustomRuleRead(ctx context.Context, d *schema.ResourceDat
 		return diag.FromErr(err)
 	}
 	if err := d.Set("name", rule.Attributes.Name); err != nil {
+		return diag.FromErr(err)
+	}
+	if err := d.Set("slug", rule.Attributes.Slug); err != nil {
 		return diag.FromErr(err)
 	}
 	if err := d.Set("cloud_provider", rule.Attributes.Provider); err != nil {
@@ -283,8 +291,11 @@ func resourceConformityCustomRuleUpdate(ctx context.Context, d *schema.ResourceD
 		processInputCustomRuleRules(&payload, d)
 	}
 	// Optional fields
-	if d.Get("remediation_notes") != "" {
-		payload.RemediationNotes = d.Get("remediation_notes").(string)
+	if value, exist := d.GetOk("remediation_notes"); exist{
+		payload.RemediationNotes = value.(string)
+	}
+	if value, exist := d.GetOk("slug"); exist{
+		payload.Slug = value.(string)
 	}
 	id := d.Id()
 	_, err := client.UpdateCustomRule(id, payload)
