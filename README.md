@@ -11,11 +11,31 @@ cd /path/terraform-provider-conformity
 go mod tidy
 go mod vendor
 ```
-#### 3. Create the Artifact:
+#### 3. Update Makefile with your own values:
+```makefile
+# ...
+VERSION=0.6 # Set a new version
+OS_ARCH=darwin_amd64 # Update to value that matches with your OS
+# ...
+```
+#### 4. Create the Artifact:
 ```sh
 make install
 ```
-#### 4. Now, you can test terraform code:
+#### 5. Go to your terraform project, and update `source` set in your terraform provider block:
+```hcl
+terraform {
+  required_providers {
+    conformity = {
+      version = "YOUR_VERSION"
+
+      # Set path to match with values in HOSTNAME/NAMESPACE/NAME defined in the Makefile
+      source  = "trendmicro.com/cloudone/conformity" 
+    }
+  }
+}
+```
+#### 6. Now, you can test terraform code:
 ```sh
 cd example/path-to-main/
 terraform init
