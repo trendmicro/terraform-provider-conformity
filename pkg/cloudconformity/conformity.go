@@ -52,6 +52,8 @@ func (c *Client) headers(request *http.Request) {
 		"Authorization": {fmt.Sprintf("ApiKey %s", c.Apikey)},
 		"Content-Type":  {"application/vnd.api+json"},
 	}
+
+	request.Header["Request-Source"] = []string{"Terraform"}
 }
 
 func newRequest(c *Client, methodType string, url_path string, payload io.Reader, rawQuery string, result interface{}) ([]byte, error) {
