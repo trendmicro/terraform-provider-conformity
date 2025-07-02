@@ -56,6 +56,8 @@ export TF_LOG_CORE=TRACE
 export TF_LOG_PROVIDER=TRACE
 ```
 
+* when you are testing, you can set environment variable `CONFORMITY_API_URL` to match your testing API url; otherwise it will use default official API url.
+
 ## How to protect API keys
 
 #### 1. with file
@@ -67,6 +69,7 @@ Ensure `terraform.tfvars` is included in `.gitignore` so these secrets are not a
 #### 2. with environment variables
 
 Terraform provides a way of reading variables from the environment: https://www.terraform.io/docs/cli/config/environment-variables.html#tf_var_name
+
 
 ## Updating documentation
 Use the [Doc Preview Tool](https://registry.terraform.io/tools/doc-preview) to understand how the markdown will look once released. The [Provider Documentation](https://developer.hashicorp.com/terraform/registry/providers/docs) can also provide further guidance.
