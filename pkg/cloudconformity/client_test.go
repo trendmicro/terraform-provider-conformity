@@ -47,6 +47,15 @@ func TestValidateApiKeyFail(t *testing.T) {
 	assert.Nil(t, result)
 }
 
+func TestGetUrlSuccess(t *testing.T) {
+	assert.Equal(t, "https://us-west-2-api.cloudconformity.com/v1/", getUrl("us-west-2"))
+	assert.Equal(t, "https://ap-southeast-2-api.cloudconformity.com/v1/", getUrl("ap-southeast-2"))
+	assert.Equal(t, "https://eu-west-1-api.cloudconformity.com/v1/", getUrl("eu-west-1"))
+
+	assert.Equal(t, "https://conformity.us-1.cloudone.trendmicro.com/api/", getUrl("us-1"))
+	assert.Equal(t, "https://conformity.jp-1.cloudone.trendmicro.com/api/", getUrl("jp-1"))
+}
+
 func createHttpTestClient(t *testing.T, statusCode int, response string) (*Client, *httptest.Server) {
 	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(statusCode)

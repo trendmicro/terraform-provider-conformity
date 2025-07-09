@@ -49,7 +49,7 @@ func stringInSlice(str string, list []string) bool {
 // generate Valid conformity URI
 func getUrl(region string) string {
 	// cloud one conformity API URL format
-	urlFormat := "https://conformity.%s.cloudconformity.com/api/"
+	urlFormat := "https://conformity.%s.cloudone.trendmicro.com/api/"
 	if stringInSlice(region, []string{"eu-west-1", "us-west-2", "ap-southeast-2"}) {
 		// standalone conformity API URL format
 		urlFormat = "https://%s-api.cloudconformity.com/v1/"
