@@ -17,10 +17,10 @@ func TestCreateCommunicationSettingSuccess(t *testing.T) {
 	response, err := client.CreateCommunicationSetting(CommunicationSettings{})
 	// check the results
 	assert.Nil(t, err)
-	assert.Equal(t, response.Data[0].Attributes.Configuration.ChannelName, expectedChannelName)
+	assert.Equal(t, expectedChannelName, response.Data[0].Attributes.Configuration.ChannelName)
 
-	assert.Equal(t, response.Data[1].Attributes.Configuration.ChannelName, "testSNSChannel")
-	assert.Equal(t, response.Data[1].Attributes.Filter.Statuses[0], "SUCCESS")
+	assert.Equal(t, "testSNSChannel", response.Data[1].Attributes.Configuration.ChannelName)
+	assert.Equal(t, "SUCCESS", response.Data[1].Attributes.Filter.Statuses[0])
 }
 
 func TestCreateCommunicationSettingFail(t *testing.T) {
@@ -88,7 +88,7 @@ var testCreateCommunicationSettingSuccessResponse = `
           "statuses": ["SUCCESS"]
         },
         "configuration": {
-          "channel_name": "testSNSChannel",
+          "channelName": "testSNSChannel",
           "arn": "sns-t-UoU9CsK"
         }
       },
