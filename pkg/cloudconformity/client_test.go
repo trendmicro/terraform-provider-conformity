@@ -14,7 +14,7 @@ const errResponseUnprocessableEntity = `{"errors": [{"status": 422,"source": {"p
 
 func TestConformityNewClientFail(t *testing.T) {
 
-	client, err := NewClient("TEST-REGION", "TEST-APIKEY")
+	client, err := NewClient("TEST-REGION", "TEST-APIKEY", false)
 	assert.Contains(t, err.Error(), "no such host")
 	assert.Nil(t, client)
 }
@@ -48,19 +48,32 @@ func TestValidateApiKeyFail(t *testing.T) {
 }
 
 func TestGetUrlSuccess(t *testing.T) {
-	assert.Equal(t, "https://us-west-2-api.cloudconformity.com/v1/", getUrl("us-west-2"))
-	assert.Equal(t, "https://ap-southeast-2-api.cloudconformity.com/v1/", getUrl("ap-southeast-2"))
-	assert.Equal(t, "https://eu-west-1-api.cloudconformity.com/v1/", getUrl("eu-west-1"))
+	url, err := getUrl("us-west-2", false)
+	assert.Nil(t, err)
+	assert.Equal(t, "https://us-west-2-api.cloudconformity.com/v1/", url)
 
-	assert.Equal(t, "https://conformity.us-1.cloudone.trendmicro.com/api/", getUrl("us-1"))
-	assert.Equal(t, "https://conformity.jp-1.cloudone.trendmicro.com/api/", getUrl("jp-1"))
+	url, err = getUrl("ap-southeast-2", false)
+	assert.Nil(t, err)
+	assert.Equal(t, "https://ap-southeast-2-api.cloudconformity.com/v1/", url)
+
+	url, err = getUrl("eu-west-1", false)
+	assert.Nil(t, err)
+	assert.Equal(t, "https://eu-west-1-api.cloudconformity.com/v1/", url)
+
+	url, err = getUrl("us-1", false)
+	assert.Nil(t, err)
+	assert.Equal(t, "https://conformity.us-1.cloudone.trendmicro.com/api/", url)
+
+	url, err = getUrl("jp-1", false)
+	assert.Nil(t, err)
+	assert.Equal(t, "https://conformity.jp-1.cloudone.trendmicro.com/api/", url)
 }
 
-func createHttpTestClient(t *testing.T, statusCode int, response string) (*Client, *httptest.Server) {
+func createHttpTestClient(_ *testing.T, statusCode int, response string) (*Client, *httptest.Server) {
 	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(statusCode)
 		w.Write([]byte(response))
 	}))
-	client := Client{Region: "TEST-REGION", Apikey: "TEST-APIKEY", Url: ts.URL, HttpClient: ts.Client()}
+	client := Client{Region: "TEST-REGION", Apikey: "TEST-APIKEY", UseV1Feature: false, Url: ts.URL, HttpClient: ts.Client()}
 	return &client, ts
 }

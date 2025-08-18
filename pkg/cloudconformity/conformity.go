@@ -47,9 +47,13 @@ func (Delete) genericRequest(Client *Client, url_path string, payload io.Reader,
 }
 
 func (c *Client) headers(request *http.Request) {
+	AuthorizationType := "ApiKey"
+	if c.UseV1Feature {
+		AuthorizationType = "Bearer"
+	}
 
 	request.Header = map[string][]string{
-		"Authorization": {fmt.Sprintf("ApiKey %s", c.Apikey)},
+		"Authorization": {fmt.Sprintf("%s %s", AuthorizationType, c.Apikey)},
 		"Content-Type":  {"application/vnd.api+json"},
 	}
 

@@ -13,7 +13,13 @@ import (
 func Provider() *schema.Provider {
 	return &schema.Provider{
 		Schema: map[string]*schema.Schema{
-
+			// add v1_feature flag to indicate if the v1 API should be used
+			"v1_feature": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Default:     schema.EnvDefaultFunc("V1_FEATURE", false),
+				Description: "Enable v1 API features",
+			},
 			"apikey": {
 				Type:        schema.TypeString,
 				Sensitive:   true,
@@ -59,11 +65,11 @@ func Provider() *schema.Provider {
 func providerConfigure(ctx context.Context, d *schema.ResourceData) (interface{}, diag.Diagnostics) {
 	region := d.Get("region").(string)
 	apiKey := d.Get("apikey").(string)
-
+	useV1Feature := d.Get("v1_feature").(bool)
 	// Warning or errors can be collected in a slice type
 	var diags diag.Diagnostics
 
-	c, err := cloudconformity.NewClient(region, apiKey)
+	c, err := cloudconformity.NewClient(region, apiKey, useV1Feature)
 	if err != nil {
 		diags = append(diags, diag.Diagnostic{
 			Severity: diag.Error,
