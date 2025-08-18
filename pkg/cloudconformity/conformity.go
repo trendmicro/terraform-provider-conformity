@@ -119,14 +119,12 @@ func (client *Client) ClientRequest(m method, url_params []interface{}, payload 
 	var found bool
 	if client.UseV1Feature {
 		url_path, found = V1Functions[functionName]
+		if !found {
+			return nil, fmt.Errorf("some resources are not supported when using VisionOne. Please check the documentation %s", apiDocumentationURL)
+		}
 	} else {
 		url_path = LegacyFunctions[functionName]
 	}
-
-	if !found {
-		return nil, fmt.Errorf("feature %s is not supported in VisionOne API. Please check the API documentation %s", functionName, apiDocumentationURL)
-	}
-
 	url_path = fmt.Sprintf(url_path, params...)
 	return m.genericRequest(client, url_path, payload, rawQuery, result)
 }
@@ -159,13 +157,12 @@ var (
 		"get_checks":                      "/checks/%s",
 		"get_communication_settings":      "/settings/%s",
 		"get_custom_rules":                "/custom-rules/%s",
-		"get_current_user":                "/users/whoami/",
+		"get_current_user":                "/users/whoami",
 		"get_group":                       "/groups/%s",
 		"get_profile":                     "/profiles/%s",
 		"get_report_config":               "/report-configs/%s",
 		"get_user":                        "/users/%s",
 		"invite_user":                     "/users/",
-		"get_organization_external_id":    "/organizations/external-id/",
 		"revoke_user":                     "/users/%s",
 		"update_account_bot":              "/accounts/%s/settings/bot",
 		"update_account_rule_settings":    "/accounts/%s/settings/rules/%s",
@@ -182,5 +179,33 @@ var (
 		"get_gcp_projects":                "/gcp/organisations/%s/projects",
 	}
 
-	V1Functions = map[string]string{}
+	V1Functions = map[string]string{
+		"create_communication_settings": "/settings/communication/",
+		"create_custom_rules":           "/custom-rules/",
+		"create_gcp_organisations":      "/gcp/organisations/",
+		"create_group":                  "/groups/",
+		"create_profile":                "/profiles/",
+		"create_report_config":          "/report-configs/",
+		"create_sso_user":               "/users/sso/",
+		"delete_communication_setting":  "/settings/%s",
+		"delete_custom_rules":           "/custom-rules/%s",
+		"delete_group":                  "/groups/%s",
+		"delete_profile":                "/profiles/%s",
+		"delete_report_config":          "/report-configs/%s",
+		"get_checks":                    "/checks/%s",
+		"get_communication_settings":    "/settings/%s",
+		"get_custom_rules":              "/custom-rules/%s",
+		"get_group":                     "/groups/%s",
+		"get_profile":                   "/profiles/%s",
+		"get_report_config":             "/report-configs/%s",
+		"update_account_bot":            "/accounts/%s/settings/bot",
+		"update_account_rule_settings":  "/accounts/%s/settings/rules/%s",
+		"update_check":                  "/checks/%s",
+		"update_communication_setting":  "/settings/communication/%s",
+		"update_custom_rules":           "/custom-rules/%s",
+		"update_group":                  "/groups/%s",
+		"update_profile":                "/profiles/%s",
+		"update_report_config":          "/report-configs/%s",
+		"apply_profile":                 "/profiles/%s/apply",
+	}
 )

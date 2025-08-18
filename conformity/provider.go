@@ -17,7 +17,7 @@ func Provider() *schema.Provider {
 			"v1_feature": {
 				Type:        schema.TypeBool,
 				Optional:    true,
-				Default:     schema.EnvDefaultFunc("V1_FEATURE", false),
+				DefaultFunc: schema.EnvDefaultFunc("V1_FEATURE", false),
 				Description: "Enable v1 API features",
 			},
 			"apikey": {
