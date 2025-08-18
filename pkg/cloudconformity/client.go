@@ -54,7 +54,7 @@ func NewClient(region string, apikey string, useV1Feature bool) (*Client, error)
 func (c *Client) validateApiKey() (*apiKeyList, error) {
 
 	apiKeyListResult := apiKeyList{}
-	_, err := c.ClientRequest(Get{}, "/api-keys/", nil, "", &apiKeyListResult)
+	_, err := c.ClientRequest(Get{}, []interface{}{"get_api_keys"}, nil, "", &apiKeyListResult)
 	if err != nil {
 		return nil, err
 	}

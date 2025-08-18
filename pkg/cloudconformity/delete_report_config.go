@@ -1,15 +1,11 @@
 package cloudconformity
 
-import (
-	"fmt"
-)
-
-//	allows a user to delete a report config
+// allows a user to delete a report config
 func (c *Client) DeleteReportConfig(reportId string) (*deleteResponse, error) {
 
 	deleteReportResponse := deleteResponse{}
 
-	_, err := c.ClientRequest(Delete{}, fmt.Sprintf("/report-configs/%s", reportId), nil, "", &deleteReportResponse)
+	_, err := c.ClientRequest(Delete{}, []interface{}{"delete_report_config", reportId}, nil, "", &deleteReportResponse)
 	if err != nil {
 		return nil, err
 	}

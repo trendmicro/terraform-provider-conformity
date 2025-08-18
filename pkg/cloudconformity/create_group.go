@@ -6,7 +6,7 @@ import (
 	"strings"
 )
 
-//  allows an ADMIN user to create a new group
+// allows an ADMIN user to create a new group
 func (c *Client) CreateGroup(groupPayload GroupDetails) (string, error) {
 
 	groupDetails := GroupDetails{}
@@ -18,7 +18,7 @@ func (c *Client) CreateGroup(groupPayload GroupDetails) (string, error) {
 
 	log.Printf("[DEBUG] Conformity CreateGroup request payload: %v\n", string(rb))
 
-	_, err = c.ClientRequest(Post{}, "/groups/", strings.NewReader(string(rb)), "", &groupDetails)
+	_, err = c.ClientRequest(Post{}, []interface{}{"create_group"}, strings.NewReader(string(rb)), "", &groupDetails)
 	if err != nil {
 		return "", err
 	}

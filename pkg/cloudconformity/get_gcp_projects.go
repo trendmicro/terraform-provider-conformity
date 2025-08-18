@@ -1,7 +1,5 @@
 package cloudconformity
 
-import "fmt"
-
 // GetGcpProjects allows you to get the projects by organisationId
 func (c *Client) GetGcpProjects(organizationId string) (*GcpProjectsResponse, error) {
 
@@ -9,7 +7,7 @@ func (c *Client) GetGcpProjects(organizationId string) (*GcpProjectsResponse, er
 
 	_, err := c.ClientRequest(
 		Get{},
-		fmt.Sprintf("/gcp/organisations/%s/projects", organizationId),
+		[]interface{}{"get_gcp_projects", organizationId},
 		nil,
 		"",
 		&response,

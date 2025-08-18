@@ -1,7 +1,6 @@
 package cloudconformity
 
 import (
-	"fmt"
 	"net/url"
 )
 
@@ -13,7 +12,7 @@ func (c *Client) GetProfile(profileId string) (*ProfileSettings, error) {
 	q := url.Values{}
 	q.Add("includes", "ruleSettings")
 
-	_, err := c.ClientRequest(Get{}, fmt.Sprintf("/profiles/%s", profileId), nil, q.Encode(), &profileSettings)
+	_, err := c.ClientRequest(Get{}, []interface{}{"get_profile", profileId}, nil, q.Encode(), &profileSettings)
 	if err != nil {
 		return nil, err
 	}

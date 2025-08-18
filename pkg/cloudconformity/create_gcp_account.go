@@ -6,7 +6,7 @@ import (
 	"strings"
 )
 
-//  register a new AWS account with Conformity
+// register a new AWS account with Conformity
 func (c *Client) CreateGCPAccount(AccountPayload AccountPayload) (string, error) {
 
 	accountResponse := AccountResponse{}
@@ -18,7 +18,7 @@ func (c *Client) CreateGCPAccount(AccountPayload AccountPayload) (string, error)
 
 	log.Printf("[DEBUG] Conformity CreateGCPAccount request payload: %v\n", string(rb))
 
-	_, err = c.ClientRequest(Post{}, "/accounts/gcp/", strings.NewReader(string(rb)), "", &accountResponse)
+	_, err = c.ClientRequest(Post{}, []interface{}{"create_gcp_account"}, strings.NewReader(string(rb)), "", &accountResponse)
 	if err != nil {
 		return "", err
 	}

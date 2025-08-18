@@ -6,7 +6,7 @@ import (
 	"strings"
 )
 
-//  used to create a new report config
+// used to create a new report config
 func (c *Client) CreateReportConfig(reportConfigPayload ReportConfigDetails) (string, error) {
 
 	reportConfigDetails := ReportConfigDetails{}
@@ -18,7 +18,7 @@ func (c *Client) CreateReportConfig(reportConfigPayload ReportConfigDetails) (st
 
 	log.Printf("[DEBUG] Conformity CreateReportConfig request payload: %v\n", string(rb))
 
-	_, err = c.ClientRequest(Post{}, "/report-configs/", strings.NewReader(string(rb)), "", &reportConfigDetails)
+	_, err = c.ClientRequest(Post{}, []interface{}{"create_report_config"}, strings.NewReader(string(rb)), "", &reportConfigDetails)
 	if err != nil {
 		return "", err
 	}

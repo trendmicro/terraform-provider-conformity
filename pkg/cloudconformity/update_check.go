@@ -29,7 +29,7 @@ func (c *Client) UpdateCheck(checkId string, checkPayload CheckDetails) (*CheckD
 
 	log.Printf("[DEBUG] Conformity UpdateCheck request payload: %v\n", string(rb))
 
-	_, err = c.ClientRequest(Patch{}, fmt.Sprintf("/checks/%s", formattedCheckId), strings.NewReader(string(rb)), "", &checkDetails)
+	_, err = c.ClientRequest(Patch{}, []interface{}{"update_check", formattedCheckId}, strings.NewReader(string(rb)), "", &checkDetails)
 
 	return &checkDetails, err
 }

@@ -2,7 +2,6 @@ package cloudconformity
 
 import (
 	"encoding/json"
-	"fmt"
 	"log"
 	"strings"
 )
@@ -20,7 +19,7 @@ func (c *Client) UpdateReportConfig(reportId string, reportConfigPayload ReportC
 
 	log.Printf("[DEBUG] Conformity UpdateReportConfig request payload: %v\n", string(rb))
 
-	_, err = c.ClientRequest(Patch{}, fmt.Sprintf("/report-configs/%s", reportId), strings.NewReader(string(rb)), "", &reportConfigDetails)
+	_, err = c.ClientRequest(Patch{}, []interface{}{"update_report_config", reportId}, strings.NewReader(string(rb)), "", &reportConfigDetails)
 	if err != nil {
 		return "", err
 	}

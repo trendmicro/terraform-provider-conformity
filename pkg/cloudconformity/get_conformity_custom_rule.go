@@ -2,7 +2,6 @@ package cloudconformity
 
 import (
 	"errors"
-	"fmt"
 )
 
 // GetCustomRule allows you to get the custom rule
@@ -10,7 +9,7 @@ func (c *Client) GetCustomRule(id string) (*CustomRuleResponse, error) {
 
 	response := CustomRuleGetResponse{}
 
-	_, err := c.ClientRequest(Get{}, fmt.Sprintf("/custom-rules/%s", id), nil, "", &response)
+	_, err := c.ClientRequest(Get{}, []interface{}{"get_custom_rules", id}, nil, "", &response)
 	if err != nil {
 		return nil, err
 	}

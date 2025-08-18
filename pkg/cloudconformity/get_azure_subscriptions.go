@@ -1,7 +1,5 @@
 package cloudconformity
 
-import "fmt"
-
 // GetAzureSubscriptions allows you to get the subscriptions by directoryId
 func (c *Client) GetAzureSubscriptions(directoryId string) (*AzureSubscriptionsResponse, error) {
 
@@ -9,7 +7,7 @@ func (c *Client) GetAzureSubscriptions(directoryId string) (*AzureSubscriptionsR
 
 	_, err := c.ClientRequest(
 		Get{},
-		fmt.Sprintf("/azure/active-directories/%s/subscriptions", directoryId),
+		[]interface{}{"get_azure_subscriptions", directoryId},
 		nil,
 		"",
 		&azureSubscriptionsResponse,

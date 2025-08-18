@@ -3,7 +3,6 @@ package cloudconformity
 import (
 	"encoding/json"
 	"errors"
-	"fmt"
 	"log"
 	"strings"
 )
@@ -20,7 +19,7 @@ func (c *Client) UpdateCustomRule(id string, payload CustomRuleRequest) (*Custom
 
 	log.Printf("[DEBUG] Conformity updateCustomRule request payload: %v\n", string(rb))
 
-	_, err = c.ClientRequest(Put{}, fmt.Sprintf("/custom-rules/%s", id), strings.NewReader(string(rb)), "", &response)
+	_, err = c.ClientRequest(Put{}, []interface{}{"update_custom_rules", id}, strings.NewReader(string(rb)), "", &response)
 	if err != nil {
 		return nil, err
 	}

@@ -2,13 +2,12 @@ package cloudconformity
 
 import (
 	"encoding/json"
-	"fmt"
 )
 
 func (c *Client) GetCurrentUser() (*UserDetails, error) {
 
 	userDetails := UserDetails{}
-	value, err := c.ClientRequest(Get{}, fmt.Sprintf("/users/whoami"), nil, "", &userDetails)
+	value, err := c.ClientRequest(Get{}, []interface{}{"get_current_user"}, nil, "", &userDetails)
 	if err != nil {
 		return nil, err
 	}

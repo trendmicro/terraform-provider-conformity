@@ -2,7 +2,6 @@ package cloudconformity
 
 import (
 	"encoding/json"
-	"fmt"
 	"log"
 	"strings"
 )
@@ -21,7 +20,7 @@ func (c *Client) UpdateAccountRuleSettings(accountId string, ruleId string, acco
 	log.Printf("[DEBUG] Conformity UpdateAccountRuleSettings accountId: %s", accountId)
 	log.Printf("[DEBUG] Conformity UpdateAccountRuleSettings ruleId: %s", ruleId)
 
-	_, err = c.ClientRequest(Patch{}, fmt.Sprintf("/accounts/%s/settings/rules/%s", accountId, ruleId), strings.NewReader(string(rb)), "", &accountResponse)
+	_, err = c.ClientRequest(Patch{}, []interface{}{"update_account_rule_settings", accountId, ruleId}, strings.NewReader(string(rb)), "", &accountResponse)
 	if err != nil {
 		return "", err
 	}

@@ -20,7 +20,7 @@ func (c *Client) GetCheck(checkId string) (*CheckDetails, error) {
 
 	formattedCheckId := strings.Replace(checkId, split[5], url.QueryEscape(split[5]), 1)
 
-	_, err := c.ClientRequest(Get{}, fmt.Sprintf("/checks/%s", formattedCheckId), nil, "", &checkDetails)
+	_, err := c.ClientRequest(Get{}, []interface{}{"get_checks", formattedCheckId}, nil, "", &checkDetails)
 
 	return &checkDetails, err
 

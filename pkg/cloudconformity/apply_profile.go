@@ -2,12 +2,11 @@ package cloudconformity
 
 import (
 	"encoding/json"
-	"fmt"
 	"log"
 	"strings"
 )
 
-//  endpoint allows you to apply profile and rule settings to a set of accounts under your organisation
+// endpoint allows you to apply profile and rule settings to a set of accounts under your organisation
 func (c *Client) CreateApplyProfile(profileId string, profilePayload ApplyProfileSettings) (*ApplyProfileResponse, error) {
 
 	applyProfileResponse := &ApplyProfileResponse{}
@@ -19,7 +18,7 @@ func (c *Client) CreateApplyProfile(profileId string, profilePayload ApplyProfil
 
 	log.Printf("[DEBUG] Conformity CreateApplyProfile request payload: %v\n", string(rb))
 
-	_, err = c.ClientRequest(Post{}, fmt.Sprintf("/profiles/%s/apply", profileId), strings.NewReader(string(rb)), "", applyProfileResponse)
+	_, err = c.ClientRequest(Post{}, []interface{}{"apply_profile", profileId}, strings.NewReader(string(rb)), "", applyProfileResponse)
 	if err != nil {
 		return nil, err
 	}
