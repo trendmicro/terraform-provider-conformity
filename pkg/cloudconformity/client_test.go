@@ -47,7 +47,19 @@ func TestValidateApiKeyFail(t *testing.T) {
 	assert.Nil(t, result)
 }
 
+func TestCreateNewClientWithV1Feature(t *testing.T) {
+	// Create client with useV1Feature = true
+	client, err := NewClient("us-1", "TEST-APIKEY", true)
+	assert.Nil(t, err)
+	assert.NotNil(t, client)
+	assert.Equal(t, client.Region, "us-1")
+	assert.Equal(t, client.Apikey, "TEST-APIKEY")
+	assert.Equal(t, client.UseV1Feature, true)
+	assert.Equal(t, client.Url, "https://api.xdr.trendmicro.com/beta/c1/conformity/")
+}
+
 func TestGetUrlSuccess(t *testing.T) {
+	// Test standalone conformity regions with useV1Feature = false
 	url, err := getUrl("us-west-2", false)
 	assert.Nil(t, err)
 	assert.Equal(t, "https://us-west-2-api.cloudconformity.com/v1/", url)
@@ -60,6 +72,7 @@ func TestGetUrlSuccess(t *testing.T) {
 	assert.Nil(t, err)
 	assert.Equal(t, "https://eu-west-1-api.cloudconformity.com/v1/", url)
 
+	// Test CloudOne regions with useV1Feature = false
 	url, err = getUrl("us-1", false)
 	assert.Nil(t, err)
 	assert.Equal(t, "https://conformity.us-1.cloudone.trendmicro.com/api/", url)
@@ -67,6 +80,38 @@ func TestGetUrlSuccess(t *testing.T) {
 	url, err = getUrl("jp-1", false)
 	assert.Nil(t, err)
 	assert.Equal(t, "https://conformity.jp-1.cloudone.trendmicro.com/api/", url)
+
+	// Test with useV1Feature = true (should use XDR API format)
+	url, err = getUrl("jp-1", true)
+	assert.Nil(t, err)
+	assert.Equal(t, "https://api.xdr.trendmicro.co.jp/beta/c1/conformity/", url)
+
+	url, err = getUrl("gb-1", true)
+	assert.Nil(t, err)
+	assert.Equal(t, "https://api.eu.xdr.trendmicro.com/beta/c1/conformity/", url)
+
+	url, err = getUrl("de-1", true)
+	assert.Nil(t, err)
+	assert.Equal(t, "https://api.eu.xdr.trendmicro.com/beta/c1/conformity/", url)
+
+	url, err = getUrl("au-1", true)
+	assert.Nil(t, err)
+	assert.Equal(t, "https://api.au.xdr.trendmicro.com/beta/c1/conformity/", url)
+
+	url, err = getUrl("us-1", true)
+	assert.Nil(t, err)
+	assert.Equal(t, "https://api.xdr.trendmicro.com/beta/c1/conformity/", url)
+
+	url, err = getUrl("sg-1", true)
+	assert.Nil(t, err)
+	assert.Equal(t, "https://api.sg.xdr.trendmicro.com/beta/c1/conformity/", url)
+}
+
+func TestGetUrlFail(t *testing.T) {
+	// Test with an unsupported region for v1 API
+	_, err := getUrl("unsupported-region", true)
+	assert.NotNil(t, err)
+	assert.Equal(t, "region unsupported-region is not supported by v1 API", err.Error())
 }
 
 func createHttpTestClient(_ *testing.T, statusCode int, response string) (*Client, *httptest.Server) {
