@@ -88,7 +88,7 @@ var testCreateCommunicationSettingSuccessResponse = `
           "statuses": ["SUCCESS"]
         },
         "configuration": {
-          "channel_name": "testSNSChannel",
+          "channelName": "testSNSChannel",
           "arn": "sns-t-UoU9CsK"
         }
       },
