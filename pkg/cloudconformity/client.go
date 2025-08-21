@@ -71,6 +71,13 @@ func stringInSlice(str string, list []string) bool {
 
 // generate Valid conformity URI
 func getUrl(region string, useV1Feature bool) (string, error) {
+	// check if CONFORMITY_API_URL is set in environment variables
+	// if set, use it instead of the default format
+	apiURL, ok := os.LookupEnv("CONFORMITY_API_URL")
+	if ok {
+		return apiURL, nil
+	}
+
 	// if useV1Feature is true, use the v1 API URL format
 	if useV1Feature {
 		regionMap := map[string]string{
@@ -103,13 +110,6 @@ func getUrl(region string, useV1Feature bool) (string, error) {
 	if stringInSlice(region, []string{"eu-west-1", "us-west-2", "ap-southeast-2"}) {
 		// standalone conformity API URL format
 		urlFormat = "https://%s-api.cloudconformity.com/v1/"
-	}
-
-	// check if CONFORMITY_API_URL is set in environment variables
-	// if set, use it instead of the default format
-	apiURL, ok := os.LookupEnv("CONFORMITY_API_URL")
-	if ok {
-		urlFormat = apiURL
 	}
 
 	return fmt.Sprintf(urlFormat, region), nil

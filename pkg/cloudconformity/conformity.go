@@ -179,13 +179,11 @@ var (
 	}
 
 	V1Functions = map[string]string{
-		"create_communication_settings": "/settings/communication/",
-		"create_custom_rules":           "/custom-rules/",
-		"create_gcp_organisations":      "/gcp/organisations/",
-		"create_group":                  "/groups/",
-		"create_profile":                "/profiles/",
-		"create_report_config":          "/report-configs/",
-		"create_sso_user":               "/users/sso/",
+		"create_communication_settings": "/settings/communication",
+		"create_custom_rules":           "/custom-rules",
+		"create_group":                  "/groups",
+		"create_profile":                "/profiles",
+		"create_report_config":          "/report-configs",
 		"delete_communication_setting":  "/settings/%s",
 		"delete_custom_rules":           "/custom-rules/%s",
 		"delete_group":                  "/groups/%s",
