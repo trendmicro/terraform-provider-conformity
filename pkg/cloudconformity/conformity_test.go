@@ -50,6 +50,13 @@ func TestV1ClientRequestSuccess(t *testing.T) {
 	assert.NotNil(t, body)
 	assert.Equal(t, response.Data["url"], "/accounts/account-12345/settings/rules/rule-settings-123")
 	assert.Equal(t, response.Data["apiToken"], "Bearer TEST-APIKEY")
+
+	response = MockServerResponse{}
+	body, err = client.ClientRequest(Post{}, []interface{}{"create_group"}, nil, "", &response)
+	assert.Nil(t, err)
+	assert.NotNil(t, body)
+	assert.Equal(t, response.Data["url"], "/groups")
+	assert.Equal(t, response.Data["apiToken"], "Bearer TEST-APIKEY")
 }
 
 func TestV1ClientRequestFail(t *testing.T) {

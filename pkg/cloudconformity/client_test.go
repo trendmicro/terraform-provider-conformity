@@ -72,7 +72,6 @@ func TestGetUrlSuccess(t *testing.T) {
 	assert.Nil(t, err)
 	assert.Equal(t, "https://eu-west-1-api.cloudconformity.com/v1/", url)
 
-	// Test CloudOne regions with useV1Feature = false
 	url, err = getUrl("us-1", false)
 	assert.Nil(t, err)
 	assert.Equal(t, "https://conformity.us-1.cloudone.trendmicro.com/api/", url)
@@ -80,6 +79,12 @@ func TestGetUrlSuccess(t *testing.T) {
 	url, err = getUrl("jp-1", false)
 	assert.Nil(t, err)
 	assert.Equal(t, "https://conformity.jp-1.cloudone.trendmicro.com/api/", url)
+
+	// any region will be mapped to a url for standalone conformity
+	// but only some are supported, it is described with the schema in the provider.go
+	url, err = getUrl("eu-west-4", false)
+	assert.Nil(t, err)
+	assert.Equal(t, "https://conformity.eu-west-4.cloudone.trendmicro.com/api/", url)
 
 	// Test with useV1Feature = true (should use XDR API format)
 	url, err = getUrl("jp-1", true)
@@ -105,13 +110,26 @@ func TestGetUrlSuccess(t *testing.T) {
 	url, err = getUrl("sg-1", true)
 	assert.Nil(t, err)
 	assert.Equal(t, "https://api.sg.xdr.trendmicro.com/beta/c1/conformity/", url)
+
 }
 
 func TestGetUrlFail(t *testing.T) {
 	// Test with an unsupported region for v1 API
-	_, err := getUrl("unsupported-region", true)
+	_, err := getUrl("ap-south-1", true)
 	assert.NotNil(t, err)
-	assert.Equal(t, "region unsupported-region is not supported by v1 API", err.Error())
+	assert.Equal(t, "region ap-south-1 is not supported by v1 API", err.Error())
+}
+
+func TestGetUrlWhenAPIEnvIsSet(t *testing.T) {
+	t.Setenv("CONFORMITY_API_URL", "https://test-%s.cloudconformity.com/api/")
+	url, err := getUrl("us-west-2", false)
+	assert.Nil(t, err)
+	assert.Equal(t, "https://test-us-west-2.cloudconformity.com/api/", url)
+
+	t.Setenv("CONFORMITY_API_URL", "https://test-ap-southeast-2.cloudconformity.com/api/")
+	url, err = getUrl("us-west-2", true)
+	assert.Nil(t, err)
+	assert.Equal(t, "https://test-ap-southeast-2.cloudconformity.com/api/", url)
 }
 
 func createHttpTestClient(_ *testing.T, statusCode int, response string) (*Client, *httptest.Server) {

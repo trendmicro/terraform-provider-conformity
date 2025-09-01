@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net/http"
 	"os"
+	"strings"
 	"time"
 )
 
@@ -72,9 +73,12 @@ func stringInSlice(str string, list []string) bool {
 // generate Valid conformity URI
 func getUrl(region string, useV1Feature bool) (string, error) {
 	// check if CONFORMITY_API_URL is set in environment variables
-	// if set, use it instead of the default format
+	// if set, use it as main API URL
 	apiURL, ok := os.LookupEnv("CONFORMITY_API_URL")
 	if ok {
+		if strings.Contains(apiURL, "%s") {
+			return fmt.Sprintf(apiURL, region), nil
+		}
 		return apiURL, nil
 	}
 
