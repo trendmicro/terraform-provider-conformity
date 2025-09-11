@@ -129,7 +129,7 @@ func (client *Client) ClientRequest(m method, url_params []interface{}, payload 
 }
 
 var (
-	apiDocumentationURL = "https://docs.conformity.com/api/"
+	apiDocumentationURL = "https://registry.terraform.io/providers/trendmicro/conformity/latest/docs"
 	LegacyFunctions     = map[string]string{
 		"get_api_keys":                    "/api-keys/",
 		"create_aws_account":              "/accounts/",
