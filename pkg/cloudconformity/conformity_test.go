@@ -68,7 +68,7 @@ func TestV1ClientRequestFail(t *testing.T) {
 	// do patch request
 	response := MockServerResponse{}
 	body, err := client.ClientRequest(Patch{}, []interface{}{"create_gcp_account"}, nil, "", &response)
-	assert.EqualError(t, err, "some resources are not supported when using VisionOne. Please check the documentation https://registry.terraform.io/providers/trendmicro/conformity/latest/docs")
+	assert.EqualError(t, err, "some resources are not supported when using VisionOne. Please contact the support team at https://success.trendmicro.com/en-US/")
 	assert.Nil(t, body)
 }
 

@@ -119,7 +119,7 @@ func (client *Client) ClientRequest(m method, url_params []interface{}, payload 
 	if client.UseV1Feature {
 		url_path, found = V1Functions[functionName]
 		if !found {
-			return nil, fmt.Errorf("some resources are not supported when using VisionOne. Please check the documentation %s", apiDocumentationURL)
+			return nil, fmt.Errorf("some resources are not supported when using VisionOne. Please contact the support team at %s", apiDocumentationURL)
 		}
 	} else {
 		url_path = LegacyFunctions[functionName]
@@ -129,7 +129,7 @@ func (client *Client) ClientRequest(m method, url_params []interface{}, payload 
 }
 
 var (
-	apiDocumentationURL = "https://registry.terraform.io/providers/trendmicro/conformity/latest/docs"
+	apiDocumentationURL = "https://success.trendmicro.com/en-US/"
 	LegacyFunctions     = map[string]string{
 		"get_api_keys":                    "/api-keys/",
 		"create_aws_account":              "/accounts/",
