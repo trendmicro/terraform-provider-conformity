@@ -93,7 +93,7 @@ func TestGetUrlSuccess(t *testing.T) {
 
 	url, err = getUrl("gb-1", true)
 	assert.Nil(t, err)
-	assert.Equal(t, "https://api.eu.xdr.trendmicro.com/beta/c1/conformity/", url)
+	assert.Equal(t, "https://api.uk.xdr.trendmicro.com/beta/c1/conformity/", url)
 
 	url, err = getUrl("de-1", true)
 	assert.Nil(t, err)

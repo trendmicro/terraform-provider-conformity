@@ -16,6 +16,7 @@ var (
 		"jp":    "api.xdr.trendmicro.co.jp",     // Japan
 		"sg":    "api.sg.xdr.trendmicro.com",    // Singapore
 		"mea":   "api.mea.xdr.trendmicro.com",   // United Arab Emirates
+		"uk":    "api.uk.xdr.trendmicro.com",    // United Kingdom
 		"us":    "api.xdr.trendmicro.com",       // US
 		"usgov": "api.usgov.xdr.trendmicro.com", // US Gov
 	}
@@ -90,7 +91,7 @@ func getUrl(region string, useV1Feature bool) (string, error) {
 			"ap-southeast-2": "au",
 			"us-1":           "us",
 			"in-1":           "in",
-			"gb-1":           "eu",
+			"gb-1":           "uk",
 			"jp-1":           "jp",
 			"de-1":           "eu",
 			"au-1":           "au",
