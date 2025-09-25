@@ -2,7 +2,6 @@ package cloudconformity
 
 import (
 	"encoding/json"
-	"fmt"
 	"log"
 	"strings"
 )
@@ -17,11 +16,9 @@ func (c *Client) UpdateAccountBotSettings(accountId string, accountBotSettings A
 		return "", err
 	}
 
-	url := fmt.Sprintf("/accounts/%s/settings/bot", accountId)
-	log.Printf("[DEBUG] Conformity UpdateAccountBotSettings request url: %s\n", url)
 	log.Printf("[DEBUG] Conformity UpdateAccountBotSettings request payload: %v\n", string(rb))
 
-	_, err = c.ClientRequest(Patch{}, url, strings.NewReader(string(rb)), "", &accountResponse)
+	_, err = c.ClientRequest(Patch{}, []interface{}{"update_account_bot", accountId}, strings.NewReader(string(rb)), "", &accountResponse)
 	if err != nil {
 		return "", err
 	}

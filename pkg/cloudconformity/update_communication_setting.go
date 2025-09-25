@@ -2,7 +2,6 @@ package cloudconformity
 
 import (
 	"encoding/json"
-	"fmt"
 	"log"
 	"strings"
 )
@@ -19,7 +18,7 @@ func (c *Client) UpdateCommunicationSetting(commSettingId string, commPayload Co
 
 	log.Printf("[DEBUG] Conformity UpdateCommunicationSetting request payload: %v\n", string(rb))
 
-	_, err = c.ClientRequest(Patch{}, fmt.Sprintf("/settings/communication/%s", commSettingId), strings.NewReader(string(rb)), "", &commResponse)
+	_, err = c.ClientRequest(Patch{}, []interface{}{"update_communication_setting", commSettingId}, strings.NewReader(string(rb)), "", &commResponse)
 	if err != nil {
 		return "", err
 	}

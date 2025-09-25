@@ -2,7 +2,6 @@ package cloudconformity
 
 import (
 	"encoding/json"
-	"fmt"
 	"log"
 	"strings"
 )
@@ -19,7 +18,7 @@ func (c *Client) UpdateGroup(groupId string, groupPayload GroupDetails) (string,
 
 	log.Printf("[DEBUG] Conformity UpdateGroup request payload: %v\n", string(rb))
 
-	_, err = c.ClientRequest(Patch{}, fmt.Sprintf("/groups/%s", groupId), strings.NewReader(string(rb)), "", &groupDetails)
+	_, err = c.ClientRequest(Patch{}, []interface{}{"update_group", groupId}, strings.NewReader(string(rb)), "", &groupDetails)
 	if err != nil {
 		return "", err
 	}

@@ -6,7 +6,7 @@ import (
 	"strings"
 )
 
-//  used to create a new one-way communication channel setting
+// used to create a new one-way communication channel setting
 func (c *Client) CreateCommunicationSetting(commPayload CommunicationSettings) (*CommunicationResponse, error) {
 
 	commResponse := CommunicationResponse{}
@@ -18,7 +18,7 @@ func (c *Client) CreateCommunicationSetting(commPayload CommunicationSettings) (
 
 	log.Printf("[DEBUG] Conformity CreateCommunicationSetting request payload: %v\n", string(rb))
 
-	_, err = c.ClientRequest(Post{}, "/settings/communication/", strings.NewReader(string(rb)), "", &commResponse)
+	_, err = c.ClientRequest(Post{}, []interface{}{"create_communication_settings"}, strings.NewReader(string(rb)), "", &commResponse)
 	if err != nil {
 		return nil, err
 	}

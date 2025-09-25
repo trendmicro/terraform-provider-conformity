@@ -1,11 +1,10 @@
 package cloudconformity
 
 import (
-	"fmt"
 	"strings"
 )
 
-//get both Account access settings and details
+// get both Account access settings and details
 func (c *Client) GetAccount(accountId string) (*accountAccessAndDetails, error) {
 	accountAccessAndDetails := &accountAccessAndDetails{}
 	accountDetails, err := c.GetAccountDetails(accountId)
@@ -31,7 +30,7 @@ func (c *Client) GetAccount(accountId string) (*accountAccessAndDetails, error) 
 
 }
 
-//get GCP Account settings and details
+// get GCP Account settings and details
 func (c *Client) GetGCPAccount(accountId string) (*accountAccessAndDetails, error) {
 	accountAccessAndDetails := &accountAccessAndDetails{}
 	accountDetails, err := c.GetAccountDetails(accountId)
@@ -58,7 +57,7 @@ func (c *Client) GetGCPAccount(accountId string) (*accountAccessAndDetails, erro
 // return the role arn and externalId
 func (c *Client) GetAccountAccessSettings(accountId string) (*accountData, error) {
 	accountData := &accountData{}
-	_, err := c.ClientRequest(Get{}, fmt.Sprintf("/accounts/%s/access", accountId), nil, "", accountData)
+	_, err := c.ClientRequest(Get{}, []interface{}{"get_account_access", accountId}, nil, "", accountData)
 	if err != nil {
 		return nil, err
 	}
@@ -70,7 +69,7 @@ func (c *Client) GetAccountAccessSettings(accountId string) (*accountData, error
 func (c *Client) GetAccountDetails(accountId string) (*accountDetails, error) {
 
 	accountDetails := &accountDetails{}
-	_, err := c.ClientRequest(Get{}, fmt.Sprintf("/accounts/%s", accountId), nil, "", accountDetails)
+	_, err := c.ClientRequest(Get{}, []interface{}{"get_account", accountId}, nil, "", accountDetails)
 	if err != nil {
 		return nil, err
 	}
@@ -81,7 +80,7 @@ func (c *Client) GetAccountDetails(accountId string) (*accountDetails, error) {
 // allows you to get rule settings for all configured rules of the specified account
 func (c *Client) GetAccountRuleSettings(accountId string) (*GetAccountRuleSettings, error) {
 	ruleSettings := &GetAccountRuleSettings{}
-	_, err := c.ClientRequest(Get{}, fmt.Sprintf("/accounts/%s/settings/rules", accountId), nil, "", ruleSettings)
+	_, err := c.ClientRequest(Get{}, []interface{}{"get_account_settings_rules", accountId}, nil, "", ruleSettings)
 	if err != nil && !strings.Contains(err.Error(), "404") {
 		return nil, err
 	}

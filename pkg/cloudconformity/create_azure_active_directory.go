@@ -13,7 +13,7 @@ func (c *Client) CreateAzureActiveDirectory(AzureActiveDirectory ActiveAzureDire
 	if err != nil {
 		return "", err
 	}
-	_, err = c.ClientRequest(Post{}, "/azure/active-directories", strings.NewReader(string(rb)), "", &azureActiveDirectoryDetails)
+	_, err = c.ClientRequest(Post{}, []interface{}{"create_azure_active_directories"}, strings.NewReader(string(rb)), "", &azureActiveDirectoryDetails)
 	if err != nil {
 
 		return "", err

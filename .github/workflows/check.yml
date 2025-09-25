@@ -43,7 +43,9 @@ jobs:
         run: |
           cd main/conformity
           TF_ACC=1 go test -v
-          cd ../../
+          cd ../pkg/cloudconformity
+          TF_ACC=1 go test -v
+          cd ../../../
       # CPS-659 - Comment out tests until integrations tests are fixed
       # -
       #   name: Clone the provider pipeline

@@ -19,7 +19,7 @@ func (c *Client) CreateSsoLegacyUser(userPayload UserDetails) (string, error) {
 
 	log.Printf("[DEBUG] Conformity CreateSsoLegacyUser request payload: %v\n", string(rb))
 
-	_, err = c.ClientRequest(Post{}, "/users/sso/", strings.NewReader(string(rb)), "", &userDetails)
+	_, err = c.ClientRequest(Post{}, []interface{}{"create_sso_user"}, strings.NewReader(string(rb)), "", &userDetails)
 	if err != nil {
 		return "", err
 	}

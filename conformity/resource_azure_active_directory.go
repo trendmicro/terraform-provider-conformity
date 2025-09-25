@@ -2,10 +2,11 @@ package conformity
 
 import (
 	"context"
+	"log"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/trendmicro/terraform-provider-conformity/pkg/cloudconformity"
-	"log"
 )
 
 func resourceConformityAzureActiveDirectory() *schema.Resource {
@@ -41,7 +42,7 @@ func resourceConformityAzureActiveDirectory() *schema.Resource {
 }
 func resourceConformityAzureActiveDirectoryCreate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	client := m.(*cloudconformity.Client)
-	var diag diag.Diagnostics
+	var diags diag.Diagnostics
 	active_directory_details := cloudconformity.ActiveAzureDirectory{}
 
 	active_directory_details.Data.Attributes.Name = d.Get("name").(string)
@@ -51,28 +52,28 @@ func resourceConformityAzureActiveDirectoryCreate(ctx context.Context, d *schema
 
 	id, err := client.CreateAzureActiveDirectory(active_directory_details)
 	if err != nil {
-		return diag
+		return diag.FromErr(err)
 	}
 	d.SetId(id)
 	resourceConformityAzureActiveDirectoryRead(ctx, d, m)
-	return diag
+	return diags
 }
 func resourceConformityAzureActiveDirectoryRead(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 
-	var diag diag.Diagnostics
+	var diags diag.Diagnostics
 	Id := d.Id()
 	log.Println("[DEBUG]", "id is  ", Id)
-	return diag
+	return diags
 }
 func resourceConformityAzureActiveDirectoryDelete(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 
-	var diag diag.Diagnostics
+	var diags diag.Diagnostics
 
-	return diag
+	return diags
 }
 func resourceConformityAzureActiveDirectoryUpdate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 
-	var diag diag.Diagnostics
+	var diags diag.Diagnostics
 
-	return diag
+	return diags
 }

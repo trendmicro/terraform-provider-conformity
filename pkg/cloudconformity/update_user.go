@@ -2,7 +2,6 @@ package cloudconformity
 
 import (
 	"encoding/json"
-	"fmt"
 	"log"
 	"strings"
 )
@@ -20,7 +19,7 @@ func (c *Client) UpdateLegacyUser(userId string, userPayload UserAccessDetails) 
 
 	log.Printf("[DEBUG] Conformity UpdateUser request payload: %v\n", string(rb))
 
-	_, err = c.ClientRequest(Patch{}, fmt.Sprintf("/users/%s", userId), strings.NewReader(string(rb)), "", &userDetails)
+	_, err = c.ClientRequest(Patch{}, []interface{}{"update_user", userId}, strings.NewReader(string(rb)), "", &userDetails)
 	if err != nil {
 		return "", err
 	}
