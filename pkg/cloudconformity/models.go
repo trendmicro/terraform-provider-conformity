@@ -380,18 +380,28 @@ type ReportConfigDetails struct {
 }
 
 type CommunicationConfiguration struct {
-	Channel             string   `json:"channel,omitempty"`
-	ChannelName         string   `json:"channelName,omitempty"`
-	Users               []string `json:"users,omitempty"`
-	DisplayExtraData    bool     `json:"displayExtraData,omitempty"`
-	DisplayResource     bool     `json:"displayResource,omitempty"`
-	DisplayTags         bool     `json:"displayTags,omitempty"`
-	Url                 string   `json:"url,omitempty"`
-	DisplayIntroducedBy bool     `json:"displayIntroducedBy,omitempty"`
-	Arn                 string   `json:"arn,omitempty"`
-	ServiceKey          string   `json:"serviceKey,omitempty"`
-	ServiceName         string   `json:"serviceName,omitempty"`
-	SecurityToken       string   `json:"securityToken,omitempty"`
+	Channel             string      `json:"channel,omitempty"`
+	ChannelName         string      `json:"channelName,omitempty"`
+	Users               []string    `json:"users,omitempty"`
+	DisplayExtraData    bool        `json:"displayExtraData,omitempty"`
+	DisplayResource     bool        `json:"displayResource,omitempty"`
+	DisplayTags         bool        `json:"displayTags,omitempty"`
+	Url                 string      `json:"url,omitempty"`
+	DisplayIntroducedBy bool        `json:"displayIntroducedBy,omitempty"`
+	Arn                 string      `json:"arn,omitempty"`
+	ServiceKey          string      `json:"serviceKey,omitempty"`
+	ServiceName         string      `json:"serviceName,omitempty"`
+	SecurityToken       string      `json:"securityToken,omitempty"`
+	Type                string      `json:"type,omitempty"`
+	Impact              string      `json:"impact,omitempty"`
+	Urgency             string      `json:"urgency,omitempty"`
+	CloseCode           string      `json:"closeCode,omitempty"`
+	CloseNotes          string      `json:"closeNotes,omitempty"`
+	UserName            string      `json:"username,omitempty"`
+	Password            string      `json:"password,omitempty"`
+	Assignee            string      `json:"assignee,omitempty"`
+	CreationOverride    interface{} `json:"creationOverride,omitempty"`
+	ResolutionOverride  interface{} `json:"resolutionOverride,omitempty"`
 }
 
 type CommunicationFilter struct {

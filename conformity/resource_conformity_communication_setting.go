@@ -199,6 +199,65 @@ func resourceConformityCommSetting() *schema.Resource {
 					},
 				},
 			},
+			"service_now": {
+				Type:     schema.TypeSet,
+				Optional: true,
+				MinItems: 0,
+				MaxItems: 1,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"channel_name": {
+							Type:     schema.TypeString,
+							Required: true,
+						},
+						"type": {
+							Type:     schema.TypeString,
+							Required: true,
+						},
+						"url": {
+							Type:     schema.TypeString,
+							Required: true,
+						},
+						"username": {
+							Type:     schema.TypeString,
+							Required: true,
+						},
+						"password": {
+							Type:      schema.TypeString,
+							Required:  true,
+							Sensitive: true,
+						},
+						"impact": {
+							Type:     schema.TypeString,
+							Optional: true,
+						},
+						"urgency": {
+							Type:     schema.TypeString,
+							Optional: true,
+						},
+						"assignee": {
+							Type:     schema.TypeString,
+							Optional: true,
+						},
+						"close_code": {
+							Type:     schema.TypeString,
+							Optional: true,
+						},
+						"close_notes": {
+							Type:     schema.TypeString,
+							Optional: true,
+						},
+						"creation_override": {
+							Type:     schema.TypeMap,
+							Optional: true,
+						},
+						"resolution_override": {
+							Type:     schema.TypeMap,
+							Optional: true,
+						},
+					},
+				},
+			},
 			"filter": {
 				Type:     schema.TypeList,
 				Optional: true,
@@ -412,10 +471,6 @@ func resourceConformityCommSettingRead(ctx context.Context, d *schema.ResourceDa
 		return diag.FromErr(err)
 	}
 
-	if err != nil {
-		return diag.FromErr(err)
-	}
-
 	return diags
 }
 
@@ -534,6 +589,32 @@ func proccessInputCommSettingConfiguration(payload *cloudconformity.Communicatio
 			log.Printf("[DEBUG] Conformity Communication setting channel: webhook")
 			configuration.SecurityToken = c["security_token"].(string)
 			configuration.Url = c["url"].(string)
+		case "service_now":
+			// do service-now here
+			log.Printf("[DEBUG] Conformity Communication setting channel: service-now")
+			configuration.ChannelName = c["channel_name"].(string)
+			configuration.Type = c["type"].(string)
+			configuration.Url = c["url"].(string)
+			configuration.UserName = c["username"].(string)
+			configuration.Password = c["password"].(string)
+			configuration.Impact = c["impact"].(string)
+			configuration.Urgency = c["urgency"].(string)
+			configuration.Assignee = c["assignee"].(string)
+			configuration.CloseCode = c["close_code"].(string)
+			configuration.CloseNotes = c["close_notes"].(string)
+			if v, ok := c["creation_override"]; ok && len(v.(map[string]interface{})) > 0 {
+				configuration.CreationOverride = make(map[string]interface{})
+				for key, value := range v.(map[string]interface{}) {
+					configuration.CreationOverride.(map[string]interface{})[key] = value
+				}
+			}
+			if v, ok := c["resolution_override"]; ok && len(v.(map[string]interface{})) > 0 {
+				configuration.ResolutionOverride = make(map[string]interface{})
+				for key, value := range v.(map[string]interface{}) {
+					configuration.ResolutionOverride.(map[string]interface{})[key] = value
+				}
+			}
+
 		}
 
 		payload.Data.Attributes.Configuration = &configuration
@@ -605,6 +686,19 @@ func flattenCommSettingConfiguration(config *cloudconformity.CommunicationConfig
 	case "webhook":
 		c["security_token"] = config.SecurityToken
 		c["url"] = config.Url
+	case "service-now":
+		c["channel_name"] = config.ChannelName
+		c["type"] = config.Type
+		c["url"] = config.Url
+		c["username"] = config.UserName
+		c["password"] = config.Password
+		c["impact"] = config.Impact
+		c["urgency"] = config.Urgency
+		c["assignee"] = config.Assignee
+		c["close_code"] = config.CloseCode
+		c["close_notes"] = config.CloseNotes
+		c["creation_override"] = config.CreationOverride
+		c["resolution_override"] = config.ResolutionOverride
 	}
 	return []interface{}{c}
 }
@@ -624,7 +718,7 @@ func flattenData(data cloudconformity.CommunicaitonRelationshipsData) []interfac
 }
 func getChannel(d *schema.ResourceData) (string, error) {
 
-	list := []string{"email", "sms", "ms_teams", "slack", "sns", "pager_duty", "webhook"}
+	list := []string{"email", "sms", "ms_teams", "slack", "sns", "pager_duty", "webhook", "service_now"}
 
 	for _, ch := range list {
 		if _, ok := d.GetOk(ch); ok {

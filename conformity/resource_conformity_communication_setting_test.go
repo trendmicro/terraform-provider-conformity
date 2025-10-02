@@ -76,6 +76,29 @@ func TestAccResourceConformityCommSetting(t *testing.T) {
 				),
 			},
 			{
+				Config: testAccCheckCommunicationSettingServiceNow(),
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttr("conformity_communication_setting.service_now", "service_now.0.channel_name", "service-now-channel"),
+					resource.TestCheckResourceAttr("conformity_communication_setting.service_now", "service_now.0.type", "incident"),
+					resource.TestCheckResourceAttr("conformity_communication_setting.service_now", "service_now.0.username", "service-now-user"),
+					resource.TestCheckResourceAttr("conformity_communication_setting.service_now", "service_now.0.password", "service-now-password"),
+					resource.TestCheckResourceAttr("conformity_communication_setting.service_now", "service_now.0.impact", "3"),
+					resource.TestCheckResourceAttr("conformity_communication_setting.service_now", "service_now.0.urgency", "1"),
+					resource.TestCheckResourceAttr("conformity_communication_setting.service_now", "service_now.0.close_code", "Closed/Resolved by Caller"),
+					resource.TestCheckResourceAttr("conformity_communication_setting.service_now", "service_now.0.close_notes", "Issue resolved"),
+					resource.TestCheckResourceAttr("conformity_communication_setting.service_now", "service_now.0.creation_override.urgency", "2"),
+					resource.TestCheckResourceAttr("conformity_communication_setting.service_now", "service_now.0.creation_override.priority", "3"),
+					resource.TestCheckResourceAttr("conformity_communication_setting.service_now", "service_now.0.resolution_override.close_code", "Closed by Caller"),
+					resource.TestCheckResourceAttr("conformity_communication_setting.service_now", "service_now.0.resolution_override.close_notes", "Issue closed"),
+					resource.TestCheckResourceAttr("conformity_communication_setting.service_now", "service_now.0.url", "https://instance.service-now.com/api/now/table/incident"),
+					resource.TestCheckResourceAttr("conformity_communication_setting.service_now", "filter.0.statuses.0", "FAILURE"),
+					resource.TestCheckResourceAttr("conformity_communication_setting.service_now", "filter.0.categories.0", "security"),
+					resource.TestCheckResourceAttr("conformity_communication_setting.service_now", "relationships.0.account.0.id", "awesome-account-id"),
+					resource.TestCheckResourceAttr("conformity_communication_setting.service_now", "relationships.0.organisation.0.id", "awesome-org-id"),
+				),
+				ExpectNonEmptyPlan: true,
+			},
+			{
 				Config:      testAccCheckCommunicationSettingFail(),
 				ExpectError: regexp.MustCompile("found multiple channel configuration set, please provide only one"),
 			},
@@ -191,6 +214,50 @@ func testAccCheckCommunicationSettingSns(arn, channelName string) string {
 	}
 	`, arn, channelName)
 }
+
+func testAccCheckCommunicationSettingServiceNow() string {
+	return `
+	resource "conformity_communication_setting" "service_now" {
+		service_now {
+			channel_name = "service-now-channel"
+			type = "incident"
+
+			username = "service-now-user"
+			password = "service-now-password"
+
+			impact = "3" # Low
+			urgency = "1" # High
+
+			close_code = "Closed/Resolved by Caller"
+			close_notes = "Issue resolved"
+
+			creation_override = {
+				"urgency" = "2" # Medium
+				"priority" = "3" # Low
+			}
+
+			resolution_override = {
+				"close_code" = "Closed by Caller"
+				"close_notes" = "Issue closed"
+			}
+			url = "https://instance.service-now.com/api/now/table/incident"
+		}
+		filter {
+			categories  = [ "security" ]
+			statuses = ["FAILURE"]
+		}
+		relationships {
+			account {
+				id = "awesome-account-id"
+			}
+			organisation {
+				id = "awesome-org-id"
+			}
+		}
+	}
+	`
+}
+
 func testAccCheckCommunicationSettingWebhook(webhookToken, webhookURL string) string {
 	return fmt.Sprintf(`
 	resource "conformity_communication_setting" "webhook" {
