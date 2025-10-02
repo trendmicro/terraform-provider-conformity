@@ -592,13 +592,19 @@ func proccessInputCommSettingConfiguration(payload *cloudconformity.Communicatio
 		case "service_now":
 			// do service-now here
 			log.Printf("[DEBUG] Conformity Communication setting channel: service-now")
+			priorityMap := map[string]string{
+				"default": "",
+				"high":    "1",
+				"medium":  "2",
+				"low":     "3",
+			}
 			configuration.ChannelName = c["channel_name"].(string)
 			configuration.Type = c["type"].(string)
 			configuration.Url = c["url"].(string)
 			configuration.UserName = c["username"].(string)
 			configuration.Password = c["password"].(string)
-			configuration.Impact = c["impact"].(string)
-			configuration.Urgency = c["urgency"].(string)
+			configuration.Impact = priorityMap[c["impact"].(string)]
+			configuration.Urgency = priorityMap[c["urgency"].(string)]
 			configuration.Assignee = c["assignee"].(string)
 			configuration.CloseCode = c["close_code"].(string)
 			configuration.CloseNotes = c["close_notes"].(string)
@@ -687,13 +693,20 @@ func flattenCommSettingConfiguration(config *cloudconformity.CommunicationConfig
 		c["security_token"] = config.SecurityToken
 		c["url"] = config.Url
 	case "service-now":
+		priorityMap := map[string]string{
+			"":  "default",
+			"1": "high",
+			"2": "medium",
+			"3": "low",
+		}
+		c["channel"] = config.Channel
 		c["channel_name"] = config.ChannelName
 		c["type"] = config.Type
 		c["url"] = config.Url
 		c["username"] = config.UserName
 		c["password"] = config.Password
-		c["impact"] = config.Impact
-		c["urgency"] = config.Urgency
+		c["impact"] = priorityMap[config.Impact]
+		c["urgency"] = priorityMap[config.Urgency]
 		c["assignee"] = config.Assignee
 		c["close_code"] = config.CloseCode
 		c["close_notes"] = config.CloseNotes

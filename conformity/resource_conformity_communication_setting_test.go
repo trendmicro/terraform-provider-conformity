@@ -5,6 +5,7 @@ import (
 	"regexp"
 	"testing"
 
+	"github.com/stretchr/testify/assert"
 	"github.com/trendmicro/terraform-provider-conformity/pkg/cloudconformity"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
@@ -82,12 +83,12 @@ func TestAccResourceConformityCommSetting(t *testing.T) {
 					resource.TestCheckResourceAttr("conformity_communication_setting.service_now", "service_now.0.type", "incident"),
 					resource.TestCheckResourceAttr("conformity_communication_setting.service_now", "service_now.0.username", "service-now-user"),
 					resource.TestCheckResourceAttr("conformity_communication_setting.service_now", "service_now.0.password", "service-now-password"),
-					resource.TestCheckResourceAttr("conformity_communication_setting.service_now", "service_now.0.impact", "3"),
-					resource.TestCheckResourceAttr("conformity_communication_setting.service_now", "service_now.0.urgency", "1"),
+					resource.TestCheckResourceAttr("conformity_communication_setting.service_now", "service_now.0.impact", "low"),
+					resource.TestCheckResourceAttr("conformity_communication_setting.service_now", "service_now.0.urgency", "high"),
 					resource.TestCheckResourceAttr("conformity_communication_setting.service_now", "service_now.0.close_code", "Closed/Resolved by Caller"),
 					resource.TestCheckResourceAttr("conformity_communication_setting.service_now", "service_now.0.close_notes", "Issue resolved"),
-					resource.TestCheckResourceAttr("conformity_communication_setting.service_now", "service_now.0.creation_override.urgency", "2"),
-					resource.TestCheckResourceAttr("conformity_communication_setting.service_now", "service_now.0.creation_override.priority", "3"),
+					resource.TestCheckResourceAttr("conformity_communication_setting.service_now", "service_now.0.creation_override.urgency", "medium"),
+					resource.TestCheckResourceAttr("conformity_communication_setting.service_now", "service_now.0.creation_override.priority", "low"),
 					resource.TestCheckResourceAttr("conformity_communication_setting.service_now", "service_now.0.resolution_override.close_code", "Closed by Caller"),
 					resource.TestCheckResourceAttr("conformity_communication_setting.service_now", "service_now.0.resolution_override.close_notes", "Issue closed"),
 					resource.TestCheckResourceAttr("conformity_communication_setting.service_now", "service_now.0.url", "https://instance.service-now.com/api/now/table/incident"),
@@ -225,20 +226,20 @@ func testAccCheckCommunicationSettingServiceNow() string {
 			username = "service-now-user"
 			password = "service-now-password"
 
-			impact = "3" # Low
-			urgency = "1" # High
+			impact = "low" # 1
+			urgency = "high" # 3
 
 			close_code = "Closed/Resolved by Caller"
 			close_notes = "Issue resolved"
 
 			creation_override = {
-				"urgency" = "2" # Medium
-				"priority" = "3" # Low
+				urgency = "medium" # 2
+				priority = "low" # 1
 			}
 
 			resolution_override = {
-				"close_code" = "Closed by Caller"
-				"close_notes" = "Issue closed"
+				close_code = "Closed by Caller"
+				close_notes = "Issue closed"
 			}
 			url = "https://instance.service-now.com/api/now/table/incident"
 		}
@@ -324,4 +325,49 @@ func testAccCheckCommunicationSettingDestroy(s *terraform.State) error {
 	testServer.Close()
 
 	return nil
+}
+
+func TestFlattenCommSettingConfiguration(t *testing.T) {
+	commSetting := cloudconformity.CommunicationConfiguration{
+		ChannelName: "my-test-channel",
+		Type:        "problem",
+		Url:         "https://mytest001.service-now.com",
+		UserName:    "admin",
+		Password:    "******",
+		Assignee:    "admin",
+		Impact:      "3",
+		Urgency:     "1",
+		CloseCode:   "Closed/Resolved by Caller",
+		CloseNotes:  "Issue resolved",
+		ResolutionOverride: map[string]interface{}{
+			"closeCode":  "Closed by Caller",
+			"closeNotes": "Issue closed",
+		},
+		CreationOverride: map[string]interface{}{
+			"urgency":  "2",
+			"priority": "3",
+		},
+	}
+
+	flatConfig := flattenCommSettingConfiguration(&commSetting, "service-now")
+	assert.Equal(t, 1, len(flatConfig))
+	c0 := flatConfig[0].(map[string]interface{})
+	assert.Equal(t, "my-test-channel", c0["channel_name"])
+	assert.Equal(t, "problem", c0["type"])
+	assert.Equal(t, "https://mytest001.service-now.com", c0["url"])
+	assert.Equal(t, "admin", c0["username"])
+	assert.Equal(t, "******", c0["password"])
+	assert.Equal(t, "admin", c0["assignee"])
+	assert.Equal(t, "low", c0["impact"])
+	assert.Equal(t, "high", c0["urgency"])
+	assert.Equal(t, "Closed/Resolved by Caller", c0["close_code"])
+	assert.Equal(t, "Issue resolved", c0["close_notes"])
+
+	resolutionOverride := c0["resolution_override"].(map[string]interface{})
+	assert.Equal(t, "Closed by Caller", resolutionOverride["closeCode"])
+	assert.Equal(t, "Issue closed", resolutionOverride["closeNotes"])
+
+	creationOverride := c0["creation_override"].(map[string]interface{})
+	assert.Equal(t, "2", creationOverride["urgency"])
+	assert.Equal(t, "3", creationOverride["priority"])
 }
