@@ -10,7 +10,7 @@ import (
 
 func CustomizeDiffValidateConfiguration(_ context.Context, diff *schema.ResourceDiff, v interface{}) error {
 
-	list := []string{"email", "sms", "ms_teams", "slack", "sns", "pager_duty", "webhook"}
+	list := []string{"email", "sms", "ms_teams", "slack", "sns", "pager_duty", "webhook", "service_now"}
 
 	channels := []string{}
 
