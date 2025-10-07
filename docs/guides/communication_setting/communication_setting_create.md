@@ -144,9 +144,65 @@ resource "conformity_communication_setting" "comm_setting" {
     url = ""
   }
 
+  service_now {
+    // required | type: string
+    // Service Now channel name
+    channel_name = "servicenow-001"
+
+    // required | type: string
+    // Service Now channel type 
+    type         = "incident"
+
+    // required | type: string
+    // Service Now instance url
+    url          = "https://myservicenowinstance.service-now.com"
+
+    // required | type: string
+    // Service Now instance user name
+    username = "admin"
+
+    // required | type: string
+    // Service Now instance password
+    password = "123456"
+
+    // required | type: string
+    // Service Now instance assignee user name
+    assignee = "admin"
+
+    // required | type: string
+    // Service Now impact level #1 high #2 medium #3 low 
+    impact  = "1" 
+
+    // required | type: string
+    // Service Now urgency level #1 high #2 medium #3 low
+    urgency = "3" 
+
+    // required | type: string
+    // Service Now close code 
+    close_code  = "Closed/Resolved by Caller"
+
+    // required | type: string
+    // Service Now close notes 
+    close_notes = "Issue resolved by"
+
+    // required | type: object 
+    // Service Now creation override options 
+    creation_override = {
+      urgency  = "2"
+      priority = "1"
+    }
+
+    // required | type: object
+    // Service Now resolution override options 
+    resolution_override = {
+      close_code  = "Closed by Caller"
+      lose_notes = "Issue closed"
+    }
+  }
+
 
   // required | type: string
-  // value can be: "email", "sms", "ms-teams", "slack", "sns", "pager-duty", "webhook"
+  // value can be: "email", "sms", "ms-teams", "slack", "sns", "pager-duty", "webhook", "service-now"
   channel = ""
 
   // required | type: bool | default: true
