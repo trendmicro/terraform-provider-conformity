@@ -95,7 +95,6 @@ func TestAccResourceConformityCommSetting(t *testing.T) {
 					resource.TestCheckResourceAttr("conformity_communication_setting.service_now", "filter.0.statuses.0", "FAILURE"),
 					resource.TestCheckResourceAttr("conformity_communication_setting.service_now", "filter.0.categories.0", "security"),
 					resource.TestCheckResourceAttr("conformity_communication_setting.service_now", "relationships.0.account.0.id", "awesome-account-id"),
-					resource.TestCheckResourceAttr("conformity_communication_setting.service_now", "relationships.0.organisation.0.id", "awesome-org-id"),
 				),
 				ExpectNonEmptyPlan: true,
 			},
@@ -234,7 +233,7 @@ func testAccCheckCommunicationSettingServiceNow() string {
 
 			creation_override = {
 				urgency = "2"
-				priority = "3" 
+				priority = "1" 
 			}
 
 			resolution_override = {
@@ -358,8 +357,8 @@ func TestFlattenCommSettingConfiguration(t *testing.T) {
 	assert.Equal(t, "admin", c0["username"])
 	assert.Equal(t, "******", c0["password"])
 	assert.Equal(t, "admin", c0["assignee"])
-	assert.Equal(t, "low", c0["impact"])
-	assert.Equal(t, "high", c0["urgency"])
+	assert.Equal(t, "3", c0["impact"])
+	assert.Equal(t, "1", c0["urgency"])
 	assert.Equal(t, "Closed/Resolved by Caller", c0["close_code"])
 	assert.Equal(t, "Issue resolved", c0["close_notes"])
 

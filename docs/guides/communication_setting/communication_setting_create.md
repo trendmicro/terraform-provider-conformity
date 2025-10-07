@@ -214,60 +214,6 @@ resource "conformity_communication_setting" "comm_setting" {
 
   // Optional 
   // max number 1
-  configuration {
-
-    // optional | type: string
-    // Channel name
-    channel = ""
-
-    // optional | type: string
-    // Label to display in the application (to distinguish between multiple instances of the same channel type).
-    channel_name = ""
-    
-    // optional | type: array of user
-    //Array of users with at least readOnly access to the account.
-    users = []
-
-    // optional | type: bool
-    // True for adding associated extra data to message.
-    display_extra_data = bool
-
-    // optional | type: bool
-    // True for adding user to message.
-    display_introduced_by = bool
-
-    // optional | type: bool
-    // True for adding resource to message.
-    display_resource = bool
-
-    // optional | type: bool
-    // True for adding associated tags to message.
-    display_tags = bool
-
-    // optional | type: string
-    // Webhook url.
-    url = ""
-
-    // optional | type: string
-    // Amazon Resource Name of SNS
-    arn = ""
-
-    // optional | type: string
-    // Page-duty | Your service key.
-    service_key = ""
-
-    // optional | type: string
-    // Page-duty | Your service name.
-    service_name = ""
-
-    // optional | type: string
-    // webhook security token
-    security_token = ""
-
-  }
-
-  // Optional 
-  // max number 1
   filter {
     //optional | type: array of string
     // value can be: "security" "cost-optimisation" "reliability" "performance-efficiency" "operational-excellence"

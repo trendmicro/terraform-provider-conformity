@@ -58,6 +58,55 @@ export TF_LOG_PROVIDER=TRACE
 
 * when you are testing, you can set environment variable `CONFORMITY_API_URL` to match your testing API url; otherwise it will use default official API url.
 
+#### Debugging in vscode
+1. Make sure you installed the "Go for Visual Studio Code" extension which will install the golang debug tool `dlv` for you
+2. Make sure you created the correct section in `.vscodelaunch.json`
+```json
+{
+  "name": "Debug - Attach External CLI",
+  "type": "go",
+  "request": "launch",
+  "mode": "debug",
+  // this assumes your workspace is the root of the repo
+  "program": "${workspaceFolder}",
+  "internalConsoleOptions": "openOnSessionStart",
+  "env": {},
+  "args": [
+      // pass the debug flag for reattaching
+      "-debug",
+  ],
+}
+```
+3. Before you start debugging you need update some files:
+  - Update the getUrl function in pkg/cloudconformity/client.go to make it return the API endpoint you want to test with
+  for example:
+  ```go
+  return "https://ap-southeast-2-development.cloudconformity.com/api/", nil
+  ``` 
+  - Make sure your test template uses provider config
+  ```terraform
+  terraform {
+    required_providers {
+      conformity = {
+        source = "trendmicro/conformity"
+        ...
+      }
+    }
+  }
+  ```  
+4. Start debugging in vscode
+  - Look at the vscode "DEBUG CONSOLE", the dlv will output the TF_REATTACH_PROVIDERS environment variable
+  <img src="vscode-debug.png">
+  The format looks like 
+  ```
+  TF_REATTACH_PROVIDERS='{"registry.terraform.io/trendmicro/conformity":{"Protocol":"grpc","ProtocolVersion":5,"Pid":36770,"Test":true,"Addr":{"Network":"unix","String":"/var/folders/s4/31x6myx5607cb09lm9mbq5240000gp/T/plugin1768054218"}}}'
+  ```
+  You must `export` it in the terminal which you will test with
+  - Remember! Each time when you restart debugging the `TF_REATTACH_PROVIDERS` value will refresh, and you need export it again
+
+5. Set the breakpoints and run `terrafrom` commands in the terminal
+
+
 ## How to protect API keys
 
 #### 1. with file
