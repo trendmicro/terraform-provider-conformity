@@ -425,7 +425,7 @@ func resourceConformityCommSettingCreate(ctx context.Context, d *schema.Resource
 		proccessInputCommSettingFilter(&payload, d)
 	}
 	if v, ok := d.GetOk(channel); ok && len(v.(*schema.Set).List()) > 0 {
-		proccessInputCommSettingConfiguration(&payload, v, channel)
+		proccessInputCommSettingConfiguration(&payload, v.(*schema.Set).List()[0], channel)
 	}
 
 	if v, ok := d.GetOk("relationships"); ok && len(v.([]interface{})) > 0 {

@@ -83,12 +83,12 @@ func TestAccResourceConformityCommSetting(t *testing.T) {
 					resource.TestCheckResourceAttr("conformity_communication_setting.service_now", "service_now.0.type", "incident"),
 					resource.TestCheckResourceAttr("conformity_communication_setting.service_now", "service_now.0.username", "service-now-user"),
 					resource.TestCheckResourceAttr("conformity_communication_setting.service_now", "service_now.0.password", "service-now-password"),
-					resource.TestCheckResourceAttr("conformity_communication_setting.service_now", "service_now.0.impact", "low"),
-					resource.TestCheckResourceAttr("conformity_communication_setting.service_now", "service_now.0.urgency", "high"),
+					resource.TestCheckResourceAttr("conformity_communication_setting.service_now", "service_now.0.impact", "1"),
+					resource.TestCheckResourceAttr("conformity_communication_setting.service_now", "service_now.0.urgency", "3"),
 					resource.TestCheckResourceAttr("conformity_communication_setting.service_now", "service_now.0.close_code", "Closed/Resolved by Caller"),
 					resource.TestCheckResourceAttr("conformity_communication_setting.service_now", "service_now.0.close_notes", "Issue resolved"),
-					resource.TestCheckResourceAttr("conformity_communication_setting.service_now", "service_now.0.creation_override.urgency", "medium"),
-					resource.TestCheckResourceAttr("conformity_communication_setting.service_now", "service_now.0.creation_override.priority", "low"),
+					resource.TestCheckResourceAttr("conformity_communication_setting.service_now", "service_now.0.creation_override.urgency", "2"),
+					resource.TestCheckResourceAttr("conformity_communication_setting.service_now", "service_now.0.creation_override.priority", "1"),
 					resource.TestCheckResourceAttr("conformity_communication_setting.service_now", "service_now.0.resolution_override.close_code", "Closed by Caller"),
 					resource.TestCheckResourceAttr("conformity_communication_setting.service_now", "service_now.0.resolution_override.close_notes", "Issue closed"),
 					resource.TestCheckResourceAttr("conformity_communication_setting.service_now", "service_now.0.url", "https://instance.service-now.com/api/now/table/incident"),
@@ -226,15 +226,15 @@ func testAccCheckCommunicationSettingServiceNow() string {
 			username = "service-now-user"
 			password = "service-now-password"
 
-			impact = "low" # 1
-			urgency = "high" # 3
+			impact = "1" 
+			urgency = "3"
 
 			close_code = "Closed/Resolved by Caller"
 			close_notes = "Issue resolved"
 
 			creation_override = {
-				urgency = "medium" # 2
-				priority = "low" # 1
+				urgency = "2"
+				priority = "3" 
 			}
 
 			resolution_override = {
