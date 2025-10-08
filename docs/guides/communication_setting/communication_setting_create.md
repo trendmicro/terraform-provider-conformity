@@ -145,7 +145,7 @@ resource "conformity_communication_setting" "comm_setting" {
   }
 
   service_now {
-    // required | type: string
+    // optional | type: string
     // Service Now channel name
     channel_name = "servicenow-001"
 
@@ -165,52 +165,43 @@ resource "conformity_communication_setting" "comm_setting" {
     // Service Now instance password
     password = "123456"
 
-    // required | type: string
+    // optional | type: string
     // Service Now instance assignee user name
     assignee = "admin"
 
-    // required | type: string
+    // optional | type: string
     // Service Now impact level #1 high #2 medium #3 low 
     impact  = "1" 
 
-    // required | type: string
+    // optional | type: string
     // Service Now urgency level #1 high #2 medium #3 low
     urgency = "3" 
 
-    // required | type: string
+    // optional | type: string
     // Service Now close code 
     close_code  = "Closed/Resolved by Caller"
 
-    // required | type: string
+    // optional | type: string
     // Service Now close notes 
     close_notes = "Issue resolved by"
 
-    // required | type: object 
+    // optional | type: object 
     // Service Now creation override options 
     creation_override = {
       urgency  = "2"
       priority = "1"
     }
 
-    // required | type: object
+    // optional | type: object
     // Service Now resolution override options 
     resolution_override = {
-      close_code  = "Closed by Caller"
-      lose_notes = "Issue closed"
+      close_code  = "Solved (Permenantly)"
+      close_notes = "Issue closed"
     }
   }
 
-
-  // required | type: string
-  // value can be: "email", "sms", "ms-teams", "slack", "sns", "pager-duty", "webhook", "service-now"
-  channel = ""
-
-  // required | type: bool | default: true
+  // optional | type: bool | default: true
   enabled = bool
-
-  // optional | type string
-  //default : settings 
-  type = ""
 
   // Optional 
   // max number 1

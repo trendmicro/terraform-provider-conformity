@@ -1,7 +1,7 @@
 resource "conformity_communication_setting" "service_now_setting" {
 
     service_now {
-        channel_name = "servicenow-001"
+        channel_name = "servicenow-002"
         type         = "incident"
         url          = "https://myservicenowinstance.service-now.com"
 

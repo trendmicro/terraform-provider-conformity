@@ -210,7 +210,7 @@ func resourceConformityCommSetting() *schema.Resource {
 						"channel_name": {
 							Type:         schema.TypeString,
 							ValidateFunc: validation.StringLenBetween(0, 20),
-							Required:     true,
+							Optional:     true,
 						},
 						"type": {
 							Type:     schema.TypeString,
@@ -226,7 +226,7 @@ func resourceConformityCommSetting() *schema.Resource {
 						},
 						"password": {
 							Type:     schema.TypeString,
-							Optional: true,
+							Required: true,
 						},
 						"impact": {
 							Type:     schema.TypeString,
