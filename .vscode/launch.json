@@ -23,6 +23,7 @@
             "mode": "debug",
             // this assumes your workspace is the root of the repo
             "program": "${workspaceFolder}",
+            "internalConsoleOptions": "openOnSessionStart",
             "env": {},
             "args": [
                 // pass the debug flag for reattaching

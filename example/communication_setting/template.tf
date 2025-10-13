@@ -106,71 +106,64 @@ resource "conformity_communication_setting" "comm_setting" {
     url = ""
   }
 
+  service_now {
+    // optional | type: string
+    // Service Now channel name
+    channel_name = "servicenow-001"
 
-  // required | type: string
-  // value can be: "email", "sms", "ms-teams", "slack", "sns", "pager-duty", "webhook"
-  channel = ""
+    // required | type: string
+    // Service Now channel type 
+    type         = "incident"
 
-  // required | type: bool | default: true
-  enabled = bool
+    // required | type: string
+    // Service Now instance url
+    url          = "https://myservicenowinstance.service-now.com"
 
-  // optional | type string
-  //default : settings 
-  type = ""
+    // required | type: string
+    // Service Now instance user name
+    username = "admin"
 
-  // Optional 
-  // max number 1
-  configuration {
+    // required | type: string
+    // Service Now instance password
+    password = "123456"
 
     // optional | type: string
-    // Channel name
-    channel = ""
+    // Service Now instance assignee user name
+    assignee = "admin"
 
     // optional | type: string
-    // Label to display in the application (to distinguish between multiple instances of the same channel type).
-    channel_name = ""
-    
-    // optional | type: array of user
-    //Array of users with at least readOnly access to the account.
-    users = []
-
-    // optional | type: bool
-    // True for adding associated extra data to message.
-    display_extra_data = bool
-
-    // optional | type: bool
-    // True for adding user to message.
-    display_introduced_by = bool
-
-    // optional | type: bool
-    // True for adding resource to message.
-    display_resource = bool
-
-    // optional | type: bool
-    // True for adding associated tags to message.
-    display_tags = bool
+    // Service Now impact level #1 high #2 medium #3 low 
+    impact  = "1" 
 
     // optional | type: string
-    // Webhook url.
-    url = ""
+    // Service Now urgency level #1 high #2 medium #3 low
+    urgency = "3" 
 
     // optional | type: string
-    // Amazon Resource Name of SNS
-    arn = ""
+    // Service Now close code 
+    close_code  = "Closed/Resolved by Caller"
 
     // optional | type: string
-    // Page-duty | Your service key.
-    service_key = ""
+    // Service Now close notes 
+    close_notes = "Issue resolved by"
 
-    // optional | type: string
-    // Page-duty | Your service name.
-    service_name = ""
+    // optional | type: object
+    // Service Now creation override options
+    creation_override = {
+      urgency  = "2"
+      priority = "1"
+    }
 
-    // optional | type: string
-    // webhook security token
-    security_token = ""
-
+    // optional | type: object
+    // Service Now resolution override options 
+    resolution_override = {
+      close_code  = "Closed by Caller"
+      close_notes = "Issue closed"
+    }
   }
+
+  // optional | type: bool | default: true
+  enabled = bool
 
   // Optional 
   // max number 1

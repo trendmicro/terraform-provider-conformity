@@ -93,6 +93,19 @@ output "email_setting" {
 - `webhook` - (Optional) Max number 1. List of possible values:
      * `security_token` (String) - (Optional) webhook security token.
      * `url` (String) - (Required) Webhook url.
+- `service_now` - (Optional) Max number 1. List of possible values:
+     * `channel_name` (String) - (Optional) Service Now channel name (label to display in the application to distinguish between multiple instances).
+     * `type` (String) - (Required) Service Now channel type (e.g., "incident").
+     * `url` (String) - (Required) Service Now instance URL.
+     * `username` (String) - (Required) Service Now instance username.
+     * `password` (String) - (Required) Service Now instance password.
+     * `assignee` (String) - (Optional) Service Now instance assignee username.
+     * `impact` (String) - (Optional) Service Now impact level: "1" (high), "2" (medium), "3" (low).
+     * `urgency` (String) - (Optional) Service Now urgency level: "1" (high), "2" (medium), "3" (low).
+     * `close_code` (String) - (Optional) Service Now close code.
+     * `close_notes` (String) - (Optional) Service Now close notes.
+     * `creation_override` (Object) - (Optional) Service Now creation override options with properties like `urgency` and `priority`.
+     * `resolution_override` (Object) - (Optional) Service Now resolution override options with properties like `close_code` and `close_notes`.
 
 Other arguments:
  - `filter` - (Optional) Max number 1. List:

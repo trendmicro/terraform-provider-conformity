@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"reflect"
 	"regexp"
 	"strings"
 
@@ -199,6 +200,65 @@ func resourceConformityCommSetting() *schema.Resource {
 					},
 				},
 			},
+			"service_now": {
+				Type:     schema.TypeSet,
+				Optional: true,
+				MinItems: 0,
+				MaxItems: 1,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"channel_name": {
+							Type:         schema.TypeString,
+							ValidateFunc: validation.StringLenBetween(0, 20),
+							Optional:     true,
+						},
+						"type": {
+							Type:     schema.TypeString,
+							Required: true,
+						},
+						"url": {
+							Type:     schema.TypeString,
+							Required: true,
+						},
+						"username": {
+							Type:     schema.TypeString,
+							Required: true,
+						},
+						"password": {
+							Type:     schema.TypeString,
+							Required: true,
+						},
+						"impact": {
+							Type:     schema.TypeString,
+							Optional: true,
+						},
+						"urgency": {
+							Type:     schema.TypeString,
+							Optional: true,
+						},
+						"assignee": {
+							Type:     schema.TypeString,
+							Optional: true,
+						},
+						"close_code": {
+							Type:     schema.TypeString,
+							Optional: true,
+						},
+						"close_notes": {
+							Type:     schema.TypeString,
+							Optional: true,
+						},
+						"creation_override": {
+							Type:     schema.TypeMap,
+							Optional: true,
+						},
+						"resolution_override": {
+							Type:     schema.TypeMap,
+							Optional: true,
+						},
+					},
+				},
+			},
 			"filter": {
 				Type:     schema.TypeList,
 				Optional: true,
@@ -365,7 +425,7 @@ func resourceConformityCommSettingCreate(ctx context.Context, d *schema.Resource
 		proccessInputCommSettingFilter(&payload, d)
 	}
 	if v, ok := d.GetOk(channel); ok && len(v.(*schema.Set).List()) > 0 {
-		proccessInputCommSettingConfiguration(&payload, d, channel)
+		proccessInputCommSettingConfiguration(&payload, v.(*schema.Set).List()[0], channel)
 	}
 
 	if v, ok := d.GetOk("relationships"); ok && len(v.([]interface{})) > 0 {
@@ -412,35 +472,40 @@ func resourceConformityCommSettingRead(ctx context.Context, d *schema.ResourceDa
 		return diag.FromErr(err)
 	}
 
-	if err != nil {
-		return diag.FromErr(err)
-	}
-
 	return diags
 }
 
 func resourceConformityCommSettingUpdate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
-	client := m.(*cloudconformity.Client)
-	// Warning or errors can be collected in a slice type
-
-	payload := cloudconformity.CommunicationSettings{}
-
 	// enabled,channel,type are required during update
 	channel, err := getChannel(d)
 	if err != nil {
 		return diag.FromErr(err)
 	}
-	payload.Data.Attributes.Type = "communication"
-	payload.Data.Attributes.Enabled = d.Get("enabled").(bool)
-	payload.Data.Attributes.Channel = strings.ReplaceAll(channel, "_", "-")
 
-	if d.HasChange("filter") || d.HasChange("configuration") || d.HasChange("relationships") {
+	if d.HasChange("filter") || d.HasChange("configuration") || d.HasChange("relationships") || d.HasChange("enabled") || d.HasChange(channel) {
+		client := m.(*cloudconformity.Client)
+		// Warning or errors can be collected in a slice type
+
+		payload := cloudconformity.CommunicationSettings{}
+
+		payload.Data.Attributes.Type = "communication"
+		payload.Data.Attributes.Enabled = d.Get("enabled").(bool)
+		payload.Data.Attributes.Channel = strings.ReplaceAll(channel, "_", "-")
+
+		log.Printf("[DEBUG] Conformity Communication setting update channel: %s", channel)
 
 		if v, ok := d.GetOk("filter"); ok && len(v.([]interface{})) > 0 {
 			proccessInputCommSettingFilter(&payload, d)
 		}
 		if v, ok := d.GetOk(channel); ok && len(v.(*schema.Set).List()) > 0 {
-			proccessInputCommSettingConfiguration(&payload, d, channel)
+			for _, value := range v.(*schema.Set).List() {
+				proccessInputCommSettingConfiguration(&payload, value, channel)
+
+				// to avoid sending empty configuration which will cause error
+				if !reflect.DeepEqual(payload.Data.Attributes.Configuration, &cloudconformity.CommunicationConfiguration{}) {
+					break
+				}
+			}
 		}
 
 		if v, ok := d.GetOk("relationships"); ok && len(v.([]interface{})) > 0 {
@@ -497,47 +562,69 @@ func proccessInputCommSettingFilter(payload *cloudconformity.CommunicationSettin
 
 }
 
-func proccessInputCommSettingConfiguration(payload *cloudconformity.CommunicationSettings, d *schema.ResourceData, ch string) {
+func proccessInputCommSettingConfiguration(payload *cloudconformity.CommunicationSettings, v interface{}, ch string) {
+	c := v.(map[string]interface{})
+	configuration := cloudconformity.CommunicationConfiguration{}
 
-	if d.Get(ch).(*schema.Set).List() != nil {
-		c := d.Get(ch).(*schema.Set).List()[0].(map[string]interface{})
-		configuration := cloudconformity.CommunicationConfiguration{}
-
-		switch ch {
-		case "email", "sms":
-			// do email/sms here
-			log.Printf("[DEBUG] Conformity Communication setting channel: email")
-			configuration.Users = expandStringList(c["users"].(*schema.Set).List())
-		case "ms_teams", "slack":
-			// do ms-teams/slack here
-			log.Printf("[DEBUG] Conformity Communication setting channel: ms-teams and slack")
-			configuration.Channel = c["channel"].(string)
-			configuration.ChannelName = c["channel_name"].(string)
-			configuration.DisplayExtraData = c["display_extra_data"].(bool)
-			configuration.DisplayIntroducedBy = c["display_introduced_by"].(bool)
-			configuration.DisplayResource = c["display_resource"].(bool)
-			configuration.DisplayTags = c["display_tags"].(bool)
-			configuration.Url = c["url"].(string)
-		case "sns":
-			// do sns here
-			log.Printf("[DEBUG] Conformity Communication setting channel: sns")
-			configuration.Arn = c["arn"].(string)
-			configuration.ChannelName = c["channel_name"].(string)
-		case "pager_duty":
-			// do pager-duty here
-			log.Printf("[DEBUG] Conformity Communication setting channel: pager-duty")
-			configuration.ChannelName = c["channel_name"].(string)
-			configuration.ServiceKey = c["service_key"].(string)
-			configuration.ServiceName = c["service_name"].(string)
-		case "webhook":
-			// do webhook here
-			log.Printf("[DEBUG] Conformity Communication setting channel: webhook")
-			configuration.SecurityToken = c["security_token"].(string)
-			configuration.Url = c["url"].(string)
+	switch ch {
+	case "email", "sms":
+		// do email/sms here
+		log.Printf("[DEBUG] Conformity Communication setting channel: email")
+		configuration.Users = expandStringList(c["users"].(*schema.Set).List())
+	case "ms_teams", "slack":
+		// do ms-teams/slack here
+		log.Printf("[DEBUG] Conformity Communication setting channel: ms-teams and slack")
+		configuration.Channel = c["channel"].(string)
+		configuration.ChannelName = c["channel_name"].(string)
+		configuration.DisplayExtraData = c["display_extra_data"].(bool)
+		configuration.DisplayIntroducedBy = c["display_introduced_by"].(bool)
+		configuration.DisplayResource = c["display_resource"].(bool)
+		configuration.DisplayTags = c["display_tags"].(bool)
+		configuration.Url = c["url"].(string)
+	case "sns":
+		// do sns here
+		log.Printf("[DEBUG] Conformity Communication setting channel: sns")
+		configuration.Arn = c["arn"].(string)
+		configuration.ChannelName = c["channel_name"].(string)
+	case "pager_duty":
+		// do pager-duty here
+		log.Printf("[DEBUG] Conformity Communication setting channel: pager-duty")
+		configuration.ChannelName = c["channel_name"].(string)
+		configuration.ServiceKey = c["service_key"].(string)
+		configuration.ServiceName = c["service_name"].(string)
+	case "webhook":
+		// do webhook here
+		log.Printf("[DEBUG] Conformity Communication setting channel: webhook")
+		configuration.SecurityToken = c["security_token"].(string)
+		configuration.Url = c["url"].(string)
+	case "service_now":
+		// do service-now here
+		log.Printf("[DEBUG] Conformity Communication setting channel: service-now")
+		configuration.ChannelName = c["channel_name"].(string)
+		configuration.Type = c["type"].(string)
+		configuration.Url = c["url"].(string)
+		configuration.UserName = c["username"].(string)
+		configuration.Password = c["password"].(string)
+		configuration.Impact = c["impact"].(string)
+		configuration.Urgency = c["urgency"].(string)
+		configuration.Assignee = c["assignee"].(string)
+		configuration.CloseCode = c["close_code"].(string)
+		configuration.CloseNotes = c["close_notes"].(string)
+		if v, ok := c["creation_override"]; ok && len(v.(map[string]interface{})) > 0 {
+			configuration.CreationOverride = make(map[string]interface{})
+			for key, value := range v.(map[string]interface{}) {
+				configuration.CreationOverride.(map[string]interface{})[key] = value
+			}
 		}
-
-		payload.Data.Attributes.Configuration = &configuration
+		if v, ok := c["resolution_override"]; ok && len(v.(map[string]interface{})) > 0 {
+			configuration.ResolutionOverride = make(map[string]interface{})
+			for key, value := range v.(map[string]interface{}) {
+				configuration.ResolutionOverride.(map[string]interface{})[key] = value
+			}
+		}
 	}
+
+	payload.Data.Attributes.Configuration = &configuration
 
 }
 
@@ -605,6 +692,19 @@ func flattenCommSettingConfiguration(config *cloudconformity.CommunicationConfig
 	case "webhook":
 		c["security_token"] = config.SecurityToken
 		c["url"] = config.Url
+	case "service-now":
+		c["channel_name"] = config.ChannelName
+		c["type"] = config.Type
+		c["url"] = config.Url
+		c["username"] = config.UserName
+		c["password"] = config.Password
+		c["impact"] = config.Impact
+		c["urgency"] = config.Urgency
+		c["assignee"] = config.Assignee
+		c["close_code"] = config.CloseCode
+		c["close_notes"] = config.CloseNotes
+		c["creation_override"] = config.CreationOverride
+		c["resolution_override"] = config.ResolutionOverride
 	}
 	return []interface{}{c}
 }
@@ -624,7 +724,7 @@ func flattenData(data cloudconformity.CommunicaitonRelationshipsData) []interfac
 }
 func getChannel(d *schema.ResourceData) (string, error) {
 
-	list := []string{"email", "sms", "ms_teams", "slack", "sns", "pager_duty", "webhook"}
+	list := []string{"email", "sms", "ms_teams", "slack", "sns", "pager_duty", "webhook", "service_now"}
 
 	for _, ch := range list {
 		if _, ok := d.GetOk(ch); ok {
