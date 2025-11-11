@@ -173,8 +173,7 @@ resource "conformity_communication_setting" "comm_setting" {
     categories = []
 
     // optional | type: array of string
-    // value can be: "AWAF" "CISAWSF" "CISAZUREF" "CISAWSTTW" "PCI" "HIPAA" "GDPR" "APRA" "NIST4" "SOC2" "NIST-CSF" 
-    // "ISO27001" "AGISM" "ASAE-3150" "MAS" "FEDRAMP"
+    // Available values can be found from the filter.compliances parameter of https://automation.trendmicro.com/cloudone/conformity/#tag/Settings/paths/~1settings~1communication/post
     compliances = []
 
     // optional | type: array of string

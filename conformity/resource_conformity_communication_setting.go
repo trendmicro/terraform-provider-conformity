@@ -280,8 +280,6 @@ func resourceConformityCommSetting() *schema.Resource {
 							Optional: true,
 							Elem: &schema.Schema{
 								Type: schema.TypeString,
-								ValidateFunc: validation.StringInSlice([]string{"AWAF", "CISAWSF", "CISAZUREF", "CISAWSTTW", "PCI", "HIPAA", "GDPR", "APRA",
-									"NIST4", "SOC2", "NIST-CSF", "ISO27001", "AGISM", "ASAE-3150", "MAS", "FEDRAMP"}, true),
 							},
 						},
 						"statuses": {
