@@ -111,7 +111,8 @@ Other arguments:
  - `filter` - (Optional) Max number 1. List:
      * `categories` (Array of String) - (Optional) An array of category (AWS well-architected framework category) strings from the following:
           security | cost-optimisation | reliability | performance-efficiency | operational-excellence
-     * `compliances` (Array of String) - (Optional) An array of supported standard or framework ids. Possible values: ["AWAF" | "CISAWSF" | "CISAZUREF" | "CISAWSTTW" | "PCI" | "HIPAA" | "GDPR" | "APRA" | "NIST4" | "SOC2" | "NIST-CSF" | "ISO27001" | "AGISM" | "ASAE-3150" | "MAS" | "FEDRAMP"]
+     * `compliances` (Array of String) - (Optional) An array of supported standard or framework ids. Available values can be found from the filter.compliances parameter of https://automation.trendmicro.com/cloudone/conformity/#tag/Settings/paths/~1settings~1communication/post
+
      * `filter_tags` (Array of String) - (Optional) An array of any assigned metadata tags, tag keys or tag values to your AWS resources. e.g filterTags ["dev"] will match resource with tag "environment::dev" in the filter.
      * `regions` (String) - (Optional) 	An array of valid region strings.
      For AWS:
