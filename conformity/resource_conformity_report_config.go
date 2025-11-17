@@ -3,6 +3,7 @@ package conformity
 import (
 	"context"
 	"fmt"
+
 	"github.com/trendmicro/terraform-provider-conformity/pkg/cloudconformity"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
@@ -135,9 +136,6 @@ func resourceConformityReportConfig() *schema.Resource {
 							Optional: true,
 							Elem: &schema.Schema{
 								Type: schema.TypeString,
-
-								ValidateFunc: validation.StringInSlice([]string{"AWAF", "CISAWSF", "CISAWSF-1_3_0", "CISAWSF-1_4_0", "CISAZUREF", "CISGCPF", "CIS-V8", "PCI", "HIPAA", "GDPR", "APRA", "NIST4", "NIST5", "SOC2",
-									"NIST-CSF", "ISO27001", "AGISM", "ASAE-3150", "MAS", "FEDRAMP", "ENISA", "FISC-V9", "LGPD", "AZUREWAF"}, false),
 							},
 						},
 						"filter_tags": {
@@ -177,8 +175,6 @@ func resourceConformityReportConfig() *schema.Resource {
 						"report_compliance_standard_id": {
 							Type:     schema.TypeString,
 							Optional: true,
-							ValidateFunc: validation.StringInSlice([]string{"AWAF", "CISAWSF", "CISAWSF-1_3_0", "CISAWSF-1_4_0", "CISAZUREF", "CISGCPF", "CIS-V8", "PCI", "HIPAA", "GDPR", "APRA", "NIST4", "NIST5", "SOC2",
-								"NIST-CSF", "ISO27001", "AGISM", "ASAE-3150", "MAS", "FEDRAMP", "ENISA", "FISC-V9", "LGPD", "AZUREWAF"}, false),
 						},
 						"resource": {
 							Type:     schema.TypeString,

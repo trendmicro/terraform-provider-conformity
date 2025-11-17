@@ -71,7 +71,7 @@ resource "conformity_report_config" "report" {
     # if none is specified, all categories are set
     categories = []
     // optional | type: array of strings
-    # value can be: "AWAF" "CISAWSF", "CISAZUREF", "PCI", "HIPAA", "GDPR", "APRA", "NIST4", "SOC2", "NIST-CSF", "ISO27001", "AGISM", "ASAE-3150", "MAS", "FEDRAMP"
+    // Available values can be found from the filter.complianceStandards parameter of https://automation.trendmicro.com/cloudone/conformity/#tag/Report-Configs/paths/~1report-configs/post
     # if none is specified, all standards are set
     compliance_standards = []
     // optional | type: array of strings 
@@ -89,7 +89,7 @@ resource "conformity_report_config" "report" {
     // value can be: array of AWS region
     regions = []
     // optional | stype: string
-    // value can be: "AWAF", "CISAWSF", "CISAZUREF", "PCI", "HIPAA", "GDPR", "APRA", "NIST4", "SOC2", "NIST-CSF", "ISO27001", "AGISM", "ASAE-3150", "MAS", "FEDRAMP"
+    // Available values can be found from the filter.reportComplianceStandardId parameter of https://automation.trendmicro.com/cloudone/conformity/#tag/Report-Configs/paths/~1report-configs/post
     report_compliance_standard_id = ""
     // optional | type: string
     resource = ""
