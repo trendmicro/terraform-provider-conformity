@@ -203,6 +203,11 @@ resource "conformity_communication_setting" "comm_setting" {
   // optional | type: bool | default: true
   enabled = bool
 
+  // optional | type: bool | default: false
+  // Only available for sns and service_now configuration
+  // When it is `true` it enables user to manually send individual checks
+  manual = bool
+
   // Optional 
   // max number 1
   filter {

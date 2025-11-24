@@ -33,6 +33,9 @@ resource "conformity_communication_setting" "sns_setting" {
         "tagName",
         ]
     }
+
+    manual = true
+
     relationships {
         account {
             id = "80b880c9-336a-490d-b212-4e847956a62d"

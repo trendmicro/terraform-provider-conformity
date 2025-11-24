@@ -54,6 +54,7 @@ func TestAccResourceConformityCommSetting(t *testing.T) {
 					resource.TestCheckResourceAttr("conformity_communication_setting.sns", "sns.0.channel_name", snsChannelName),
 					resource.TestCheckResourceAttr("conformity_communication_setting.sns", "sns.0.arn", snsArn),
 					resource.TestCheckResourceAttr("conformity_communication_setting.sns", "filter.0.statuses.0", "SUCCESS"),
+					resource.TestCheckResourceAttr("conformity_communication_setting.sns", "manual", "false"),
 				),
 				ExpectNonEmptyPlan: true,
 			},
@@ -95,6 +96,7 @@ func TestAccResourceConformityCommSetting(t *testing.T) {
 					resource.TestCheckResourceAttr("conformity_communication_setting.service_now", "filter.0.statuses.0", "FAILURE"),
 					resource.TestCheckResourceAttr("conformity_communication_setting.service_now", "filter.0.categories.0", "security"),
 					resource.TestCheckResourceAttr("conformity_communication_setting.service_now", "relationships.0.account.0.id", "awesome-account-id"),
+					resource.TestCheckResourceAttr("conformity_communication_setting.service_now", "manual", "true"),
 				),
 				ExpectNonEmptyPlan: true,
 			},
@@ -199,6 +201,9 @@ func testAccCheckCommunicationSettingSns(arn, channelName string) string {
 			arn = "%s"
 			channel_name = "%s"
 		}
+
+		manual = false
+
 		filter {
 			categories  = [ "security" ]
 			statuses = ["SUCCESS"]
@@ -218,6 +223,7 @@ func testAccCheckCommunicationSettingSns(arn, channelName string) string {
 func testAccCheckCommunicationSettingServiceNow() string {
 	return `
 	resource "conformity_communication_setting" "service_now" {
+		manual = true
 		service_now {
 			channel_name = "service-now-channel"
 			type = "incident"

@@ -439,10 +439,12 @@ type communicationData struct {
 		Channel       string                      `json:"channel,omitempty"`
 		Enabled       bool                        `json:"enabled,omitempty"`
 		Type          string                      `json:"type,omitempty"`
+		Manual        bool                        `json:"manual"`
 		Configuration *CommunicationConfiguration `json:"configuration,omitempty"`
 		Filter        *CommunicationFilter        `json:"filter,omitempty"`
 	} `json:"attributes"`
 }
+
 type CommunicationSettings struct {
 	Data communicationData `json:"data"`
 }

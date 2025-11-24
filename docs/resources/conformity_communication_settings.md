@@ -108,6 +108,7 @@ output "email_setting" {
      * `resolution_override` (Object) - (Optional) Service Now resolution override options with properties like `close_code` and `close_notes`.
 
 Other arguments:
+ - `manual` - Bool. Only available for sns and service_now configuration, when it is `true` it enables user to manually send individual checks. Default value is `false`.
  - `filter` - (Optional) Max number 1. List:
      * `categories` (Array of String) - (Optional) An array of category (AWS well-architected framework category) strings from the following:
           security | cost-optimisation | reliability | performance-efficiency | operational-excellence
