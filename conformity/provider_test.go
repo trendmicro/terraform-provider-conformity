@@ -329,6 +329,7 @@ func createConformityMock() (*cloudconformity.Client, *httptest.Server) {
 						"attributes": {
 							"type": "communication",
 							"enabled": true,
+							"manual": ` + fmt.Sprintf("%v", communicationSetting.Data.Attributes.Manual) + `,
 							"filter": {
 								"categories": [
 									"security"

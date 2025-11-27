@@ -355,6 +355,11 @@ func resourceConformityCommSetting() *schema.Resource {
 					},
 				},
 			},
+			"manual": {
+				Type:     schema.TypeBool,
+				Optional: true,
+				Default:  false,
+			},
 			"relationships": {
 				Type:     schema.TypeList,
 				Optional: true,
@@ -419,6 +424,10 @@ func resourceConformityCommSettingCreate(ctx context.Context, d *schema.Resource
 	payload.Data.Attributes.Type = "communication"
 	payload.Data.Attributes.Enabled = d.Get("enabled").(bool)
 
+	if channel == "sns" || channel == "service_now" {
+		payload.Data.Attributes.Manual = d.Get("manual").(bool)
+	}
+
 	if v, ok := d.GetOk("filter"); ok && len(v.([]interface{})) > 0 {
 		proccessInputCommSettingFilter(&payload, d)
 	}
@@ -456,6 +465,11 @@ func resourceConformityCommSettingRead(ctx context.Context, d *schema.ResourceDa
 	if err := d.Set("enabled", communicationSettings.Data.Attributes.Enabled); err != nil {
 		return diag.FromErr(err)
 	}
+
+	if err := d.Set("manual", communicationSettings.Data.Attributes.Manual); err != nil {
+		return diag.FromErr(err)
+	}
+
 	filter := flattenCommSettingFilter(communicationSettings.Data.Attributes.Filter)
 	if err := d.Set("filter", filter); err != nil {
 		return diag.FromErr(err)
@@ -480,7 +494,7 @@ func resourceConformityCommSettingUpdate(ctx context.Context, d *schema.Resource
 		return diag.FromErr(err)
 	}
 
-	if d.HasChange("filter") || d.HasChange("configuration") || d.HasChange("relationships") || d.HasChange("enabled") || d.HasChange(channel) {
+	if d.HasChange("filter") || d.HasChange("configuration") || d.HasChange("relationships") || d.HasChange("enabled") || d.HasChange("manual") || d.HasChange(channel) {
 		client := m.(*cloudconformity.Client)
 		// Warning or errors can be collected in a slice type
 
@@ -489,6 +503,9 @@ func resourceConformityCommSettingUpdate(ctx context.Context, d *schema.Resource
 		payload.Data.Attributes.Type = "communication"
 		payload.Data.Attributes.Enabled = d.Get("enabled").(bool)
 		payload.Data.Attributes.Channel = strings.ReplaceAll(channel, "_", "-")
+		if channel == "sns" || channel == "service_now" {
+			payload.Data.Attributes.Manual = d.Get("manual").(bool)
+		}
 
 		log.Printf("[DEBUG] Conformity Communication setting update channel: %s", channel)
 
