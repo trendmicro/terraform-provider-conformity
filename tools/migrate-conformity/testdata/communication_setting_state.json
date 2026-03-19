@@ -1,0 +1,266 @@
+{
+  "version": 4,
+  "resources": [
+    {
+      "mode": "managed",
+      "type": "conformity_communication_setting",
+      "name": "email",
+      "instances": [
+        {
+          "attributes": {
+            "id": "comm-1",
+            "enabled": true,
+            "manual": false,
+            "email": [
+              {
+                "users": ["user-1", "user-2"]
+              }
+            ],
+            "filter": [
+              {
+                "categories": ["security"],
+                "compliances": ["AWAF-2025", "CIS-V8", "PCI"]
+              }
+            ],
+            "relationships": [
+              {
+                "organisation": [{ "id": "company-1" }]
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "conformity_communication_setting",
+      "name": "sms",
+      "instances": [
+        {
+          "attributes": {
+            "id": "comm-2",
+            "enabled": true,
+            "sms": [
+              {
+                "users": ["user-3"]
+              }
+            ],
+            "filter": [
+              {
+                "filter_tags": ["tagKey"],
+                "regions": ["ap-southeast-1"],
+                "risk_levels": ["MEDIUM"],
+                "rule_ids": ["S3-016"],
+                "services": ["EC2", "IAM"],
+                "tags": ["tagName"]
+              }
+            ],
+            "relationships": [
+              {
+                "account": [{ "id": "account-1" }],
+                "organisation": [{ "id": "company-1" }]
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "conformity_communication_setting",
+      "name": "slack",
+      "instances": [
+        {
+          "attributes": {
+            "id": "comm-3",
+            "enabled": true,
+            "slack": [
+              {
+                "channel": "#security",
+                "channel_name": "SlackChannel",
+                "display_extra_data": true,
+                "display_resource": true,
+                "display_tags": true,
+                "display_introduced_by": true,
+                "url": "https://hooks.slack.com/services/a/b"
+              }
+            ],
+            "relationships": [
+              {
+                "organisation": [{ "id": "company-1" }]
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "conformity_communication_setting",
+      "name": "ms_teams",
+      "instances": [
+        {
+          "attributes": {
+            "id": "comm-4",
+            "ms_teams": [
+              {
+                "url": "https://default12345.e4.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/1234/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=abcde",
+                "display_tags": false,
+                "display_introduced_by": true,
+                "display_resource": true,
+                "display_extra_data": true,
+                "channel": "test",
+                "channel_name": "msTeamsChannel"
+              }
+            ],
+            "filter": [
+              {
+                "risk_levels": ["HIGH"],
+                "filter_tags": ["test"]
+              }
+            ],
+            "relationships": [
+              {
+                "account": [{ "id": "account-1" }],
+                "organisation": [{ "id": "company-1" }]
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "conformity_communication_setting",
+      "name": "servicenow",
+      "instances": [
+        {
+          "attributes": {
+            "id": "comm-5",
+            "manual": true,
+            "service_now": [
+              {
+                "type": "problem",
+                "url": "https://ven123.service-now.com",
+                "username": "username1",
+                "password": "not_a_real_password",
+                "assignee": "admin",
+                "impact": "1",
+                "urgency": "1",
+                "channel_name": "ServiceNowChannel",
+                "close_code": "solves",
+                "close_notes": "closed ticket",
+                "creation_override": {
+                  "urgency": "2",
+                  "priority": "2"
+                },
+                "resolution_override": {
+                  "close_code": "Closed/Resolved by Caller",
+                  "close_notes": "Issue resolved"
+                }
+              }
+            ],
+            "relationships": [
+              {
+                "account": [{ "id": "account-1" }],
+                "organisation": [{ "id": "company-1" }]
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "conformity_communication_setting",
+      "name": "sns",
+      "instances": [
+        {
+          "attributes": {
+            "id": "comm-6",
+            "enabled": true,
+            "manual": false,
+            "sns": [
+              {
+                "arn": "arn:aws:sns:us-west-2:123456:CloudConformity-TestDataCreation",
+                "channel_name": "snsChannel"
+              }
+            ],
+            "filter": [
+              {
+                "statuses": ["SUCCESS", "FAILURE"]
+              }
+            ],
+            "relationships": [
+              {
+                "organisation": [{ "id": "company-1" }]
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "conformity_communication_setting",
+      "name": "pagerduty",
+      "instances": [
+        {
+          "attributes": {
+            "id": "comm-7",
+            "enabled": true,
+            "pager_duty": [
+              {
+                "service_key": "not_a_real_service_key",
+                "service_name": "API",
+                "channel_name": "pagerdutyChannel"
+              }
+            ],
+            "filter": [
+              {
+                "categories": ["security"],
+                "risk_levels": ["HIGH"]
+              }
+            ],
+            "relationships": [
+              {
+                "account": [{ "id": "account-1" }],
+                "organisation": [{ "id": "company-1" }]
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "conformity_communication_setting",
+      "name": "webhook",
+      "instances": [
+        {
+          "attributes": {
+            "id": "comm-8",
+            "enabled": true,
+            "webhook": [
+              {
+                "url": "https://abcde.execute-api.us-west-2.amazonaws.com/v1/server",
+                "security_token": "not_a_real_token"
+              }
+            ],
+            "filter": [
+              {
+                "statuses": ["FAILURE"]
+              }
+            ],
+            "relationships": [
+              {
+                "account": [{ "id": "account-1" }],
+                "organisation": [{ "id": "company-1" }]
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}
