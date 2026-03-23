@@ -80,13 +80,18 @@ func run(opts migrateOptions) error {
 		return err
 	}
 
+	applyProfiles, err := loadApplyProfilesFromState(opts.StatePath)
+	if err != nil {
+		return err
+	}
+
 	communicationSettings, err := loadCommunicationSettingsFromState(opts.StatePath)
 	if err != nil {
 		return err
 	}
 
-	if len(groups) == 0 && len(profiles) == 0 && len(reportConfigs) == 0 && len(customRules) == 0 && len(communicationSettings) == 0 {
-		return fmt.Errorf("\n\x1b[31mwarning: no conformity_group, conformity_profile, conformity_report_config, conformity_custom_rule, or conformity_communication_setting resources found in state\x1b[0m")
+	if len(groups) == 0 && len(profiles) == 0 && len(reportConfigs) == 0 && len(customRules) == 0 && len(communicationSettings) == 0 && len(applyProfiles) == 0 {
+		return fmt.Errorf("\n\x1b[31mwarning: no conformity_group, conformity_profile, conformity_report_config, conformity_custom_rule, conformity_communication_setting, or conformity_apply_profile resources found in state\x1b[0m")
 	}
 
 	var hclLines []string
@@ -160,6 +165,20 @@ func run(opts migrateOptions) error {
 			appendCustomRuleHCL(&hclLines, item, resourceName)
 
 			importLines = append(importLines, formatImportLine("visionone_crm_custom_rule", resourceName, item.ID, dryRun))
+		}
+	}
+
+	if len(applyProfiles) > 0 {
+		hclLines = append(hclLines, "# Apply Profiles")
+		applyProfileNameCounter := map[string]int{}
+		for _, item := range applyProfiles {
+			resourceName := item.ResourceName
+			if resourceName == "" {
+				resourceName = toTerraformName(item.ProfileID, applyProfileNameCounter, "apply_profile")
+			} else {
+				resourceName = uniqueResourceName(resourceName, applyProfileNameCounter)
+			}
+			appendApplyProfileHCL(&hclLines, item, resourceName)
 		}
 	}
 

@@ -20,6 +20,7 @@ This tool reads your existing Terraform state file and generates:
 - `conformity_group` → `visionone_crm_group`
 - `conformity_report_config` → `visionone_crm_report_configuration`
 - `conformity_custom_rule` → `visionone_crm_custom_check`
+- `conformity_apply_profile` (data source) → `visionone_crm_apply_profile` (data source)
 
 ## Common Scenarios
 
@@ -79,6 +80,10 @@ This ensures your resource references (e.g., `conformity_communication_setting.m
   - `service_now.creation_override` and `service_now.resolution_override` map to `servicenow_configuration.dictionary_overrides` with triggers `creation` and `resolution`.
   - `service_now.close_code` / `service_now.close_notes` (including camelCase variants) map into the `resolution` entry under `servicenow_configuration.dictionary_overrides`.
   - When both `service_now.close_code` / `service_now.close_notes` and `service_now.resolution_override` define the same keys, values in `resolution_override` take precedence.
+- Apply profile mappings:
+  - `profile_id`, `account_ids`, `mode`, and `notes` map directly.
+  - `include.exceptions` maps to `include.exceptions` when present.
+  - The migration emits a `data "visionone_crm_apply_profile"` block and does not add import commands.
 
 ## MS Teams Mapping Notes:
 
