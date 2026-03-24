@@ -80,6 +80,11 @@ func run(opts migrateOptions) error {
 		return err
 	}
 
+	checkSuppressions, err := loadCheckSuppressionsFromState(opts.StatePath)
+	if err != nil {
+		return err
+	}
+
 	applyProfiles, err := loadApplyProfilesFromState(opts.StatePath)
 	if err != nil {
 		return err
@@ -90,8 +95,8 @@ func run(opts migrateOptions) error {
 		return err
 	}
 
-	if len(groups) == 0 && len(profiles) == 0 && len(reportConfigs) == 0 && len(customRules) == 0 && len(communicationSettings) == 0 && len(applyProfiles) == 0 {
-		return fmt.Errorf("\n\x1b[31mwarning: no conformity_group, conformity_profile, conformity_report_config, conformity_custom_rule, conformity_communication_setting, or conformity_apply_profile resources found in state\x1b[0m")
+	if len(groups) == 0 && len(profiles) == 0 && len(reportConfigs) == 0 && len(customRules) == 0 && len(checkSuppressions) == 0 && len(communicationSettings) == 0 && len(applyProfiles) == 0 {
+		return fmt.Errorf("\n\x1b[31mwarning: no conformity_group, conformity_profile, conformity_report_config, conformity_custom_rule, conformity_check_suppression, conformity_communication_setting, or conformity_apply_profile resources found in state\x1b[0m")
 	}
 
 	var hclLines []string
@@ -101,6 +106,7 @@ func run(opts migrateOptions) error {
 	profileNameCounter := map[string]int{}
 	reportConfigNameCounter := map[string]int{}
 	customRuleNameCounter := map[string]int{}
+	checkSuppressionNameCounter := map[string]int{}
 	communicationNameCounter := map[string]int{}
 	mappingLines := []string{}
 	importLines := []string{"# Import existing Vision One resources"}
@@ -165,6 +171,21 @@ func run(opts migrateOptions) error {
 			appendCustomRuleHCL(&hclLines, item, resourceName)
 
 			importLines = append(importLines, formatImportLine("visionone_crm_custom_rule", resourceName, item.ID, dryRun))
+		}
+	}
+
+	if len(checkSuppressions) > 0 {
+		hclLines = append(hclLines, "# Check Suppressions")
+		for _, item := range checkSuppressions {
+			resourceName := item.ResourceName
+			if resourceName == "" {
+				resourceName = toTerraformName(item.RuleID, checkSuppressionNameCounter, "check_suppression")
+			} else {
+				resourceName = uniqueResourceName(resourceName, checkSuppressionNameCounter)
+			}
+			appendCheckSuppressionHCL(&hclLines, item, resourceName)
+
+			importLines = append(importLines, formatImportLine("visionone_crm_check_suppression", resourceName, item.ID, dryRun))
 		}
 	}
 

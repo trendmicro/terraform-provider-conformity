@@ -20,6 +20,7 @@ This tool reads your existing Terraform state file and generates:
 - `conformity_group` → `visionone_crm_group`
 - `conformity_report_config` → `visionone_crm_report_configuration`
 - `conformity_custom_rule` → `visionone_crm_custom_check`
+- `conformity_check_suppression` → `visionone_crm_check_suppression`
 - `conformity_apply_profile` (data source) → `visionone_crm_apply_profile` (data source)
 
 ## Common Scenarios
@@ -65,6 +66,9 @@ This ensures your resource references (e.g., `conformity_communication_setting.m
   - `attributes` map to `attribute` blocks.
   - `rules` map to `event_rule` blocks using `event_type` for description and `operation` for conditions operator.
   - `conditions.value` is formatted to preserve booleans, numbers, nulls, and JSON objects when possible.
+- Check suppression mappings:
+  - `account_id`, `rule_id`, `region`, `resource_id`, and `note` map directly.
+  - `service` is derived from the `rule_id` prefix (text before the dash).
 - Communication settings mappings:
   - `enabled`, `manual` map directly.
   - `relationships.account.id` maps to `account_id`.
