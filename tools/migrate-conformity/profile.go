@@ -40,8 +40,10 @@ type extraSettingItem struct {
 }
 
 type valueItem struct {
-	Value   string
-	Enabled *bool
+	Value          string
+	Enabled        *bool
+	CustomizedTags []string
+	CustomRisk     string
 }
 
 func loadProfilesFromState(path string) ([]profileItem, error) {
@@ -177,14 +179,20 @@ func parseExtraSettings(value interface{}) []extraSettingItem {
 			continue
 		}
 
+		valuesArray := toStringSlice(entry["values_array"])
+		valuesList := parseValues(entry["values"])
+		if typeValue == "choice-multiple-value" && hasCustomizedTags(valuesList) {
+			typeValue = "choice-multiple-value-with-tags"
+		}
+		if typeValue == "choice-multiple-value" && hasCustomizedRiskLevel(valuesList) {
+			typeValue = "choice-multiple-value-with-risk-level"
+		}
+
 		setting := extraSettingItem{
 			Name:  name,
 			Type:  typeValue,
 			Value: toStringValue(entry["value"]),
 		}
-
-		valuesArray := toStringSlice(entry["values_array"])
-		valuesList := parseValues(entry["values"])
 		if len(valuesArray) > 0 {
 			setting.ValueSet = valuesArray
 		} else if isValueSetType(typeValue) && len(valuesList) > 0 {
@@ -220,7 +228,9 @@ func parseValues(value interface{}) []valueItem {
 			continue
 		}
 		val := valueItem{
-			Value: toStringValue(entry["value"]),
+			Value:          toStringValue(entry["value"]),
+			CustomizedTags: parseCustomizedTags(entry["settings"]),
+			CustomRisk:     parseCustomizedRiskLevel(entry["settings"]),
 		}
 		if enabled, ok := entry["enabled"].(bool); ok {
 			val.Enabled = &enabled
@@ -229,6 +239,95 @@ func parseValues(value interface{}) []valueItem {
 	}
 
 	return values
+}
+
+func parseCustomizedTags(value interface{}) []string {
+	items, ok := value.([]interface{})
+	if !ok {
+		return nil
+	}
+
+	var tags []string
+	for _, raw := range items {
+		entry, ok := raw.(map[string]interface{})
+		if !ok {
+			continue
+		}
+		if toStringValue(entry["name"]) != "tags-override" {
+			continue
+		}
+		tags = append(tags, toStringSlice(entry["values_array"])...)
+		if values, ok := entry["values"].([]interface{}); ok {
+			for _, rawValue := range values {
+				valueEntry, ok := rawValue.(map[string]interface{})
+				if !ok {
+					continue
+				}
+				val := toStringValue(valueEntry["value"])
+				if val != "" {
+					tags = append(tags, val)
+				}
+			}
+		}
+	}
+
+	return uniqueStrings(tags)
+}
+
+func parseCustomizedRiskLevel(value interface{}) string {
+	items, ok := value.([]interface{})
+	if !ok {
+		return ""
+	}
+
+	for _, raw := range items {
+		entry, ok := raw.(map[string]interface{})
+		if !ok {
+			continue
+		}
+		name := toStringValue(entry["name"])
+		if name != "selectedSeverity" && name != "selected_severity" && name != "customizedRiskLevel" && name != "customized_risk_level" {
+			continue
+		}
+		values := toStringSlice(entry["values_array"])
+		if len(values) == 0 {
+			if rawValues, ok := entry["values"].([]interface{}); ok {
+				for _, rawValue := range rawValues {
+					valueEntry, ok := rawValue.(map[string]interface{})
+					if !ok {
+						continue
+					}
+					val := toStringValue(valueEntry["value"])
+					if val != "" {
+						values = append(values, val)
+					}
+				}
+			}
+		}
+		if len(values) > 0 {
+			return values[0]
+		}
+	}
+
+	return ""
+}
+
+func hasCustomizedTags(values []valueItem) bool {
+	for _, value := range values {
+		if len(value.CustomizedTags) > 0 {
+			return true
+		}
+	}
+	return false
+}
+
+func hasCustomizedRiskLevel(values []valueItem) bool {
+	for _, value := range values {
+		if value.CustomRisk != "" {
+			return true
+		}
+	}
+	return false
 }
 
 func appendScanRuleHCL(lines *[]string, rule scanRuleItem) {
@@ -271,6 +370,12 @@ func appendScanRuleHCL(lines *[]string, rule scanRuleItem) {
 			}
 			if val.Enabled != nil {
 				*lines = append(*lines, fmt.Sprintf("        enabled = %t", *val.Enabled))
+			}
+			if len(val.CustomizedTags) > 0 {
+				*lines = append(*lines, fmt.Sprintf("        customized_tags = [%s]", formatQuotedList(val.CustomizedTags)))
+			}
+			if val.CustomRisk != "" {
+				*lines = append(*lines, fmt.Sprintf("        customized_risk_level = \"%s\"", escapeHCL(val.CustomRisk)))
 			}
 			*lines = append(*lines, "      }")
 		}

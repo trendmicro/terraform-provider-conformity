@@ -126,3 +126,150 @@ func TestAppendScanRuleHCL(t *testing.T) {
 		t.Fatalf("unexpected HCL output:\n%s", got)
 	}
 }
+
+func TestLoadProfilesFromStateWithCustomizedTags(t *testing.T) {
+	statePath := filepath.Join("testdata", "profile_state_with_tags.json")
+
+	profiles, err := loadProfilesFromState(statePath)
+	if err != nil {
+		t.Fatalf("loadProfilesFromState error: %v", err)
+	}
+	if len(profiles) != 1 {
+		t.Fatalf("expected 1 profile, got %d", len(profiles))
+	}
+
+	rule := profiles[0].ScanRules[0]
+	if len(rule.ExtraSettings) != 1 {
+		t.Fatalf("expected 1 extra setting, got %d", len(rule.ExtraSettings))
+	}
+	setting := rule.ExtraSettings[0]
+	if setting.Type != "choice-multiple-value-with-tags" {
+		t.Fatalf("unexpected type: %s", setting.Type)
+	}
+	if len(setting.Values) != 1 || len(setting.Values[0].CustomizedTags) != 2 {
+		t.Fatalf("unexpected customized tags: %+v", setting.Values)
+	}
+	if setting.Values[0].CustomizedTags[0] != "technical:application" || setting.Values[0].CustomizedTags[1] != "updated:override" {
+		t.Fatalf("unexpected customized tags: %+v", setting.Values[0].CustomizedTags)
+	}
+}
+
+func TestAppendScanRuleHCLWithCustomizedTags(t *testing.T) {
+	rule := scanRuleItem{
+		ID:        "RG-001",
+		Provider:  "aws",
+		Enabled:   true,
+		RiskLevel: "LOW",
+		ExtraSettings: []extraSettingItem{
+			{
+				Name: "resourceTypes",
+				Type: "choice-multiple-value-with-tags",
+				Values: []valueItem{
+					{
+						Value:          "s3-bucket",
+						Enabled:        boolPtr(true),
+						CustomizedTags: []string{"technical:application", "updated:override"},
+					},
+				},
+			},
+		},
+	}
+
+	var lines []string
+	appendScanRuleHCL(&lines, rule)
+
+	expected := strings.Join([]string{
+		"",
+		"  scan_rule {",
+		"    id = \"RG-001\"",
+		"    provider = \"aws\"",
+		"    enabled = true",
+		"    risk_level = \"LOW\"",
+		"    extra_settings {",
+		"      name = \"resourceTypes\"",
+		"      type = \"choice-multiple-value-with-tags\"",
+		"      values {",
+		"        value = \"s3-bucket\"",
+		"        enabled = true",
+		"        customized_tags = [\"technical:application\", \"updated:override\"]",
+		"      }",
+		"    }",
+		"  }",
+	}, "\n")
+
+	if got := strings.Join(lines, "\n"); got != expected {
+		t.Fatalf("unexpected HCL output:\n%s", got)
+	}
+}
+
+func TestLoadProfilesFromStateWithCustomizedRiskLevel(t *testing.T) {
+	statePath := filepath.Join("testdata", "profile_state_with_risk_level.json")
+
+	profiles, err := loadProfilesFromState(statePath)
+	if err != nil {
+		t.Fatalf("loadProfilesFromState error: %v", err)
+	}
+	if len(profiles) != 1 {
+		t.Fatalf("expected 1 profile, got %d", len(profiles))
+	}
+
+	rule := profiles[0].ScanRules[0]
+	if len(rule.ExtraSettings) != 1 {
+		t.Fatalf("expected 1 extra setting, got %d", len(rule.ExtraSettings))
+	}
+	setting := rule.ExtraSettings[0]
+	if setting.Type != "choice-multiple-value-with-risk-level" {
+		t.Fatalf("unexpected type: %s", setting.Type)
+	}
+	if len(setting.Values) != 1 || setting.Values[0].CustomRisk != "HIGH" {
+		t.Fatalf("unexpected customized risk level: %+v", setting.Values)
+	}
+}
+
+func TestAppendScanRuleHCLWithCustomizedRiskLevel(t *testing.T) {
+	rule := scanRuleItem{
+		ID:        "IAM-054",
+		Provider:  "aws",
+		Enabled:   true,
+		RiskLevel: "MEDIUM",
+		ExtraSettings: []extraSettingItem{
+			{
+				Name: "ConfigurationChanges",
+				Type: "choice-multiple-value-with-risk-level",
+				Values: []valueItem{
+					{
+						Value:      "CreateLoginProfile",
+						Enabled:    boolPtr(true),
+						CustomRisk: "HIGH",
+					},
+				},
+			},
+		},
+	}
+
+	var lines []string
+	appendScanRuleHCL(&lines, rule)
+
+	expected := strings.Join([]string{
+		"",
+		"  scan_rule {",
+		"    id = \"IAM-054\"",
+		"    provider = \"aws\"",
+		"    enabled = true",
+		"    risk_level = \"MEDIUM\"",
+		"    extra_settings {",
+		"      name = \"ConfigurationChanges\"",
+		"      type = \"choice-multiple-value-with-risk-level\"",
+		"      values {",
+		"        value = \"CreateLoginProfile\"",
+		"        enabled = true",
+		"        customized_risk_level = \"HIGH\"",
+		"      }",
+		"    }",
+		"  }",
+	}, "\n")
+
+	if got := strings.Join(lines, "\n"); got != expected {
+		t.Fatalf("unexpected HCL output:\n%s", got)
+	}
+}

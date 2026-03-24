@@ -1,0 +1,47 @@
+{
+  "version": 4,
+  "resources": [
+    {
+      "mode": "managed",
+      "type": "conformity_profile",
+      "name": "profile_risk",
+      "instances": [
+        {
+          "attributes": {
+            "id": "profile-risk",
+            "name": "Profile Risk",
+            "included": [
+              {
+                "id": "IAM-054",
+                "provider": "aws",
+                "enabled": true,
+                "risk_level": "MEDIUM",
+                "extra_settings": [
+                  {
+                    "name": "ConfigurationChanges",
+                    "type": "choice-multiple-value",
+                    "values": [
+                      {
+                        "value": "CreateLoginProfile",
+                        "enabled": true,
+                        "settings": [
+                          {
+                            "name": "selectedSeverity",
+                            "type": "choice-single-value",
+                            "values": [
+                              { "value": "HIGH" }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

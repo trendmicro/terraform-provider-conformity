@@ -47,7 +47,8 @@ This ensures your resource references (e.g., `conformity_communication_setting.m
   - `exceptions.tags` and `exceptions.filter_tags` are merged into `filter_tags`.
   - `exceptions.resources` maps to `resource_ids`.
   - Extra settings are converted to `value`, `value_set`, or `values` based on type
-  - Nested Conformity `settings` are not migrated because those nested settings blocks don’t have a clear equivalent in the Vision One extra_settings.values schema. Vision One’s model for extra_settings.values supports fields like value, enabled, customized_tags, and customized_risk_level, but it doesn’t represent arbitrary nested settings (like your settings array under values with its own name/type/values). Without a safe, documented mapping, the tool would either drop data or create invalid payloads.
+  - `settings` blocks named `tags-override` are mapped to `customized_tags` and the extra setting type is upgraded to `choice-multiple-value-with-tags`.
+  - Other nested Conformity `settings` are not migrated because those nested settings blocks don’t have a clear equivalent in the Vision One extra_settings.values schema. Vision One’s model for extra_settings.values supports fields like value, enabled, customized_tags, and customized_risk_level, but it doesn’t represent arbitrary nested settings (like your settings array under values with its own name/type/values). Without a safe, documented mapping, the tool would either drop data or create invalid payloads.
   We can define a custom mapping for those nested settings (for example, flattening them into JSON and sending as value for multiple-object-values types), but we’d need to confirm the API accepts that format for each rule type.
 - Report config mappings:
   - Conformity `configuration.title` maps to `report_title` and `generate_report_type` maps to `report_type`.
