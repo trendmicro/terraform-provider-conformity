@@ -16,9 +16,10 @@ type reportConfigItem struct {
 	ReportTitle                 string
 	ReportType                  string
 	IncludeChecks               bool
-	IncludeAccountNames         bool
 	EmailRecipients             []string
+	EmailRecipientsSet          bool
 	ReportFormatsInEmail        []string
+	ReportFormatsInEmailSet     bool
 	Schedule                    *reportScheduleItem
 	ChecksFilter                *reportFilterItem
 	AppliedComplianceStandardID string
@@ -26,6 +27,7 @@ type reportConfigItem struct {
 }
 
 type reportScheduleItem struct {
+	Enabled   *bool
 	Frequency string
 	Timezone  string
 }
@@ -104,26 +106,43 @@ func parseReportConfigAttributes(attrs map[string]interface{}) reportConfigItem 
 	}
 
 	item.IncludeChecks = toBoolValue(config["include_checks"], false)
-	item.IncludeAccountNames = toBoolValue(config["include_account_names"], true)
 
 	sendEmail := toBoolValue(config["send_email"], false)
+	emails := toStringSlice(config["emails"])
 	if sendEmail {
-		item.EmailRecipients = toStringSlice(config["emails"])
+		item.EmailRecipients = emails
+		item.EmailRecipientsSet = true
+	} else if len(emails) > 0 {
+		item.EmailRecipientsSet = true
+		item.EmailRecipients = []string{}
+	}
+	if _, ok := config["should_email_include_pdf"]; ok {
+		item.ReportFormatsInEmailSet = true
 		item.ReportFormatsInEmail = deriveReportFormats(
-			toBoolValue(config["should_email_include_pdf"], true),
-			toBoolValue(config["should_email_include_csv"], true),
+			toBoolValue(config["should_email_include_pdf"], false),
+			toBoolValue(config["should_email_include_csv"], false),
+		)
+	} else if _, ok := config["should_email_include_csv"]; ok {
+		item.ReportFormatsInEmailSet = true
+		item.ReportFormatsInEmail = deriveReportFormats(
+			toBoolValue(config["should_email_include_pdf"], false),
+			toBoolValue(config["should_email_include_csv"], false),
 		)
 	}
 
-	scheduled := toBoolValue(config["scheduled"], false)
-	if scheduled {
-		frequency := strings.TrimSpace(toStringValue(config["frequency"]))
-		timezone := strings.TrimSpace(toStringValue(config["tz"]))
-		if frequency != "" || timezone != "" {
-			item.Schedule = &reportScheduleItem{
-				Frequency: frequency,
-				Timezone:  timezone,
-			}
+	frequency := strings.TrimSpace(toStringValue(config["frequency"]))
+	timezone := strings.TrimSpace(toStringValue(config["tz"]))
+	if scheduledRaw, ok := config["scheduled"]; ok {
+		enabled := toBoolValue(scheduledRaw, false)
+		item.Schedule = &reportScheduleItem{
+			Enabled:   &enabled,
+			Frequency: frequency,
+			Timezone:  timezone,
+		}
+	} else if frequency != "" || timezone != "" {
+		item.Schedule = &reportScheduleItem{
+			Frequency: frequency,
+			Timezone:  timezone,
 		}
 	}
 
@@ -250,14 +269,17 @@ func appendReportConfigHCL(lines *[]string, item reportConfigItem, resourceName 
 	if item.ReportType != "" {
 		*lines = append(*lines, fmt.Sprintf("  report_type = \"%s\"", escapeHCL(item.ReportType)))
 	}
-	*lines = append(*lines, fmt.Sprintf("  include_checks = %t", item.IncludeChecks))
-	if item.AccountID == "" {
-		*lines = append(*lines, fmt.Sprintf("  include_account_names = %t", item.IncludeAccountNames))
+	if item.IncludeChecks {
+		*lines = append(*lines, fmt.Sprintf("  include_checks = %t", item.IncludeChecks))
 	}
-	if len(item.EmailRecipients) > 0 {
-		*lines = append(*lines, fmt.Sprintf("  email_recipients = [%s]", formatQuotedList(item.EmailRecipients)))
+	if item.EmailRecipientsSet {
+		if len(item.EmailRecipients) == 0 {
+			*lines = append(*lines, "  email_recipients = []")
+		} else {
+			*lines = append(*lines, fmt.Sprintf("  email_recipients = [%s]", formatQuotedList(item.EmailRecipients)))
+		}
 	}
-	if len(item.ReportFormatsInEmail) > 0 {
+	if item.ReportFormatsInEmailSet && len(item.ReportFormatsInEmail) > 0 {
 		*lines = append(*lines, fmt.Sprintf("  report_formats_in_email = [%s]", formatQuotedList(item.ReportFormatsInEmail)))
 	}
 	if item.ReportType == "COMPLIANCE-STANDARD" {
@@ -273,6 +295,9 @@ func appendReportConfigHCL(lines *[]string, item reportConfigItem, resourceName 
 
 	if item.Schedule != nil {
 		*lines = append(*lines, "  schedule {")
+		if item.Schedule.Enabled != nil {
+			*lines = append(*lines, fmt.Sprintf("    enabled = %t", *item.Schedule.Enabled))
+		}
 		if item.Schedule.Frequency != "" {
 			*lines = append(*lines, fmt.Sprintf("    frequency = \"%s\"", escapeHCL(item.Schedule.Frequency)))
 		}

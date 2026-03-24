@@ -23,6 +23,9 @@ func TestLoadReportConfigsFromState(t *testing.T) {
 	if configs[0].Schedule == nil || configs[0].Schedule.Frequency != "* * *" {
 		t.Fatalf("expected schedule on Report A")
 	}
+	if configs[0].Schedule.Enabled == nil || *configs[0].Schedule.Enabled != true {
+		t.Fatalf("expected schedule enabled on Report A")
+	}
 	if configs[0].ChecksFilter == nil || len(configs[0].ChecksFilter.Tags) != 2 {
 		t.Fatalf("expected merged tags on Report A")
 	}
@@ -32,6 +35,9 @@ func TestLoadReportConfigsFromState(t *testing.T) {
 
 	if configs[1].ReportTitle != "Report B" || configs[1].ID != "report-config:two" || configs[1].ResourceName != "report_b" {
 		t.Fatalf("unexpected second report config: %+v", configs[1])
+	}
+	if configs[1].Schedule == nil || configs[1].Schedule.Enabled == nil || *configs[1].Schedule.Enabled != false {
+		t.Fatalf("expected schedule disabled on Report B")
 	}
 	if configs[1].AppliedComplianceStandardID != "NIST4" {
 		t.Fatalf("expected compliance standard ID on Report B")
@@ -49,9 +55,8 @@ func TestAppendReportConfigHCL(t *testing.T) {
 		ID:                  "report-config:one",
 		ReportTitle:         "Report A",
 		ReportType:          "GENERIC",
-		IncludeChecks:       false,
-		IncludeAccountNames: false,
 		Schedule: &reportScheduleItem{
+			Enabled:   boolPtr(true),
 			Frequency: "* * *",
 			Timezone:  "Asia/Manila",
 		},
@@ -81,9 +86,8 @@ func TestAppendReportConfigHCL(t *testing.T) {
 		"resource \"visionone_crm_report_config\" \"report_a\" {",
 		"  report_title = \"Report A\"",
 		"  report_type = \"GENERIC\"",
-		"  include_checks = false",
-		"  include_account_names = false",
 		"  schedule {",
+		"    enabled = true",
 		"    frequency = \"* * *\"",
 		"    timezone = \"Asia/Manila\"",
 		"  }",
