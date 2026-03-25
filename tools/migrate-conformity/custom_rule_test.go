@@ -136,3 +136,21 @@ func TestFormatCustomRuleValue(t *testing.T) {
 		}
 	}
 }
+
+func TestParseCustomRuleAttributes_CategoryOrder(t *testing.T) {
+	attrs := map[string]interface{}{
+		"name":        "Rule",
+		"categories":  []interface{}{"operational-excellence", "security"},
+		"severity":    "HIGH",
+		"enabled":     true,
+		"cloud_provider": "aws",
+	}
+
+	item := parseCustomRuleAttributes(attrs)
+	if len(item.Categories) != 2 {
+		t.Fatalf("expected 2 categories, got %d", len(item.Categories))
+	}
+	if item.Categories[0] != "security" || item.Categories[1] != "operational-excellence" {
+		t.Fatalf("unexpected category order: %+v", item.Categories)
+	}
+}

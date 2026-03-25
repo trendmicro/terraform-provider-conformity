@@ -19,7 +19,7 @@ This tool reads your existing Terraform state file and generates:
 - `conformity_profile` → `visionone_crm_profile`
 - `conformity_group` → `visionone_crm_group`
 - `conformity_report_config` → `visionone_crm_report_configuration`
-- `conformity_custom_rule` → `visionone_crm_custom_check`
+- `conformity_custom_rule` → `visionone_crm_custom_rule` 
 - `conformity_check_suppression` → `visionone_crm_check_suppression`
 - `conformity_apply_profile` (data source) → `visionone_crm_apply_profile` (data source)
 
@@ -51,6 +51,7 @@ This ensures your resource references (e.g., `conformity_communication_setting.m
   - `settings` blocks named `tags-override` are mapped to `customized_tags` and the extra setting type is upgraded to `choice-multiple-value-with-tags`.
   - Other nested Conformity `settings` are not migrated because those nested settings blocks don’t have a clear equivalent in the Vision One extra_settings.values schema. Vision One’s model for extra_settings.values supports fields like value, enabled, customized_tags, and customized_risk_level, but it doesn’t represent arbitrary nested settings (like your settings array under values with its own name/type/values). Without a safe, documented mapping, the tool would either drop data or create invalid payloads.
   We can define a custom mapping for those nested settings (for example, flattening them into JSON and sending as value for multiple-object-values types), but we’d need to confirm the API accepts that format for each rule type.
+  - WARNING: The verification tooling may normalize `choice-multiple-value-with-tags` and `choice-multiple-value-with-risk-level` to `choice-multiple-value` when the API drops empty `customized_tags` or returns `customized_risk_level = "NOT_CUSTOMIZED"`. This can hide a real mismatch if tags/risk are actually set but dropped. Consult the Vision One provider documentation and test your specific rules to confirm how these fields are treated in the API and adjust expectations accordingly.
 - Report config mappings:
   - Conformity `configuration.title` maps to `report_title` and `generate_report_type` maps to `report_type`.
   - `scheduled`, `frequency`, and `tz` map to `schedule.frequency` and `schedule.timezone` when scheduled is true.

@@ -93,9 +93,41 @@ func parseCustomRuleAttributes(attrs map[string]interface{}) customRuleItem {
 	item.Severity = strings.TrimSpace(toStringValue(attrs["severity"]))
 	item.Enabled = toBoolValue(attrs["enabled"], true)
 	item.Categories = toStringSlice(attrs["categories"])
+	if len(item.Categories) > 1 {
+		sortCustomRuleCategories(item.Categories)
+	}
 	item.Attributes = parseCustomRuleAttributesList(attrs["attributes"])
 	item.Rules = parseCustomRuleRules(attrs["rules"])
 	return item
+}
+
+func sortCustomRuleCategories(categories []string) {
+	order := map[string]int{
+		"security":              0,
+		"cost-optimisation":      1,
+		"reliability":            2,
+		"performance-efficiency": 3,
+		"operational-excellence": 4,
+		"sustainability":         5,
+	}
+
+	sort.SliceStable(categories, func(i, j int) bool {
+		iOrder, iOk := order[categories[i]]
+		jOrder, jOk := order[categories[j]]
+		if iOk && jOk {
+			if iOrder == jOrder {
+				return categories[i] < categories[j]
+			}
+			return iOrder < jOrder
+		}
+		if iOk {
+			return true
+		}
+		if jOk {
+			return false
+		}
+		return categories[i] < categories[j]
+	})
 }
 
 func parseCustomRuleAttributesList(value interface{}) []customRuleAttributeItem {
