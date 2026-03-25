@@ -55,6 +55,7 @@ func TestAppendReportConfigHCL(t *testing.T) {
 		ID:                  "report-config:one",
 		ReportTitle:         "Report A",
 		ReportType:          "GENERIC",
+		IncludeAccountNames: boolPtr(true),
 		Schedule: &reportScheduleItem{
 			Enabled:   boolPtr(true),
 			Frequency: "* * *",
@@ -86,6 +87,7 @@ func TestAppendReportConfigHCL(t *testing.T) {
 		"resource \"visionone_crm_report_config\" \"report_a\" {",
 		"  report_title = \"Report A\"",
 		"  report_type = \"GENERIC\"",
+		"  include_account_names = true",
 		"  schedule {",
 		"    enabled = true",
 		"    frequency = \"* * *\"",
@@ -114,6 +116,68 @@ func TestAppendReportConfigHCL(t *testing.T) {
 
 	if got := strings.Join(hclLines, "\n") + "\n"; got != expected {
 		t.Fatalf("unexpected HCL output:\n%s", got)
+	}
+}
+
+func TestAppendReportConfigHCL_EmptyTagsOmitted(t *testing.T) {
+	item := reportConfigItem{
+		ReportTitle:         "Report C",
+		ReportType:          "GENERIC",
+		IncludeAccountNames: boolPtr(true),
+		ChecksFilter: &reportFilterItem{
+			Tags: []string{},
+		},
+	}
+
+	var hclLines []string
+	appendReportConfigHCL(&hclLines, item, "report_c")
+
+	expected := strings.Join([]string{
+		"resource \"visionone_crm_report_config\" \"report_c\" {",
+		"  report_title = \"Report C\"",
+		"  report_type = \"GENERIC\"",
+		"  include_account_names = true",
+		"}",
+		"",
+	}, "\n") + "\n"
+
+	if got := strings.Join(hclLines, "\n") + "\n"; got != expected {
+		t.Fatalf("unexpected HCL output:\n%s", got)
+	}
+}
+
+func TestParseReportConfigAttributes_DefaultIncludeAccountNames(t *testing.T) {
+	attrs := map[string]interface{}{
+		"configuration": []interface{}{
+			map[string]interface{}{
+				"title": "Report D",
+			},
+		},
+	}
+
+	item := parseReportConfigAttributes(attrs)
+	if item.IncludeAccountNames == nil {
+		t.Fatalf("expected IncludeAccountNames to be set")
+	}
+	if *item.IncludeAccountNames != true {
+		t.Fatalf("expected IncludeAccountNames to default true")
+	}
+}
+
+func TestParseReportConfigAttributes_AccountLevelSkipsIncludeAccountNames(t *testing.T) {
+	attrs := map[string]interface{}{
+		"account_id": "account-123",
+		"configuration": []interface{}{
+			map[string]interface{}{
+				"title":                 "Report E",
+				"include_account_names": true,
+			},
+		},
+	}
+
+	item := parseReportConfigAttributes(attrs)
+	if item.IncludeAccountNames != nil {
+		t.Fatalf("expected IncludeAccountNames to be nil for account-level report")
 	}
 }
 

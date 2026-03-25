@@ -21,6 +21,8 @@ func appendGroupsHCL(lines *[]string, importLines *[]string, mappingLines *[]str
 		*lines = append(*lines, fmt.Sprintf("  name = \"%s\"", escapeHCL(item.Name)))
 		if len(item.Tags) > 0 {
 			*lines = append(*lines, fmt.Sprintf("  tags = [%s]", formatTags(item.Tags)))
+		} else if item.TagsSet {
+			*lines = append(*lines, "  tags = []")
 		}
 		*lines = append(*lines, "}")
 		*lines = append(*lines, "")

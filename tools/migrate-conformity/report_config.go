@@ -15,6 +15,7 @@ type reportConfigItem struct {
 	GroupID                     string
 	ReportTitle                 string
 	ReportType                  string
+	IncludeAccountNames         *bool
 	IncludeChecks               bool
 	EmailRecipients             []string
 	EmailRecipientsSet          bool
@@ -105,16 +106,25 @@ func parseReportConfigAttributes(attrs map[string]interface{}) reportConfigItem 
 		item.ReportType = "GENERIC"
 	}
 
+	if item.AccountID == "" {
+		if includeAccountRaw, ok := config["include_account_names"]; ok {
+			includeAccountNames := toBoolValue(includeAccountRaw, true)
+			item.IncludeAccountNames = &includeAccountNames
+		} else {
+			includeAccountNames := true
+			item.IncludeAccountNames = &includeAccountNames
+		}
+	}
+
 	item.IncludeChecks = toBoolValue(config["include_checks"], false)
 
 	sendEmail := toBoolValue(config["send_email"], false)
 	emails := toStringSlice(config["emails"])
-	if sendEmail {
+	if len(emails) > 0 {
 		item.EmailRecipients = emails
 		item.EmailRecipientsSet = true
-	} else if len(emails) > 0 {
+	} else if sendEmail {
 		item.EmailRecipientsSet = true
-		item.EmailRecipients = []string{}
 	}
 	if _, ok := config["should_email_include_pdf"]; ok {
 		item.ReportFormatsInEmailSet = true
@@ -177,8 +187,10 @@ func parseReportConfigFilter(entry map[string]interface{}, reportType string) *r
 		return nil
 	}
 
-	filterTags := toStringSlice(entry["filter_tags"])
-	tags := toStringSlice(entry["tags"])
+	filterTagsValue := entry["filter_tags"]
+	tagsValue := entry["tags"]
+	filterTags := toStringSlice(filterTagsValue)
+	tags := toStringSlice(tagsValue)
 	mergedTags := uniqueStrings(append(filterTags, tags...))
 
 	filter := &reportFilterItem{
@@ -268,6 +280,9 @@ func appendReportConfigHCL(lines *[]string, item reportConfigItem, resourceName 
 	*lines = append(*lines, fmt.Sprintf("  report_title = \"%s\"", escapeHCL(item.ReportTitle)))
 	if item.ReportType != "" {
 		*lines = append(*lines, fmt.Sprintf("  report_type = \"%s\"", escapeHCL(item.ReportType)))
+	}
+	if item.IncludeAccountNames != nil {
+		*lines = append(*lines, fmt.Sprintf("  include_account_names = %t", *item.IncludeAccountNames))
 	}
 	if item.IncludeChecks {
 		*lines = append(*lines, fmt.Sprintf("  include_checks = %t", item.IncludeChecks))

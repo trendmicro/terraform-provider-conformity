@@ -29,7 +29,7 @@ func TestLoadGroupsFromState(t *testing.T) {
 func TestAppendGroupsHCL(t *testing.T) {
 	groups := []groupItem{
 		{ID: "group-1", Name: "Alpha", ResourceName: "alpha", Tags: []string{"prod", "core"}},
-		{ID: "group-2", Name: "Beta", ResourceName: "beta"},
+		{ID: "group-2", Name: "Beta", ResourceName: "beta", TagsSet: true},
 	}
 
 	var hclLines []string
@@ -45,6 +45,7 @@ func TestAppendGroupsHCL(t *testing.T) {
 		"",
 		"resource \"visionone_crm_group\" \"beta\" {",
 		"  name = \"Beta\"",
+		"  tags = []",
 		"}",
 		"",
 	}, "\n") + "\n"

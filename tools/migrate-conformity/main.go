@@ -32,6 +32,7 @@ type groupItem struct {
 	Name         string
 	ResourceName string
 	Tags         []string
+	TagsSet      bool
 }
 
 type migrateOptions struct {
@@ -315,11 +316,13 @@ func loadGroupsFromState(path string) ([]groupItem, error) {
 			if name == "" {
 				continue
 			}
+			tagsValue, tagsOk := attrs["tags"]
 			groups = append(groups, groupItem{
 				ID:           toStringValue(attrs["id"]),
 				Name:         name,
 				ResourceName: resourceNameFromState(res, inst, "group"),
-				Tags:         toStringSlice(attrs["tags"]),
+				Tags:         toStringSlice(tagsValue),
+				TagsSet:      tagsOk,
 			})
 		}
 	}
