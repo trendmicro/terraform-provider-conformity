@@ -184,7 +184,7 @@ func parseExtraSettings(value interface{}) []extraSettingItem {
 		if typeValue == "choice-multiple-value" && hasCustomizedTags(valuesList) {
 			typeValue = "choice-multiple-value-with-tags"
 		}
-		if typeValue == "choice-multiple-value" && (hasCustomizedRiskLevel(valuesList) || name == "ConfigurationChanges") {
+		if typeValue == "choice-multiple-value" && hasCustomizedRiskLevel(valuesList) {
 			typeValue = "choice-multiple-value-with-risk-level"
 		}
 
@@ -202,9 +202,6 @@ func parseExtraSettings(value interface{}) []extraSettingItem {
 				}
 			}
 		} else {
-			if typeValue == "choice-multiple-value-with-risk-level" {
-				applyDefaultCustomRisk(valuesList)
-			}
 			setting.Values = valuesList
 		}
 
@@ -331,14 +328,6 @@ func hasCustomizedRiskLevel(values []valueItem) bool {
 		}
 	}
 	return false
-}
-
-func applyDefaultCustomRisk(values []valueItem) {
-	for i := range values {
-		if values[i].CustomRisk == "" {
-			values[i].CustomRisk = "NOT_CUSTOMIZED"
-		}
-	}
 }
 
 func appendScanRuleHCL(lines *[]string, rule scanRuleItem) {

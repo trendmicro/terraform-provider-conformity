@@ -273,32 +273,3 @@ func TestAppendScanRuleHCLWithCustomizedRiskLevel(t *testing.T) {
 		t.Fatalf("unexpected HCL output:\n%s", got)
 	}
 }
-
-func TestParseExtraSettings_ConfigurationChangesUsesRiskLevelType(t *testing.T) {
-	input := []interface{}{
-		map[string]interface{}{
-			"name": "ConfigurationChanges",
-			"type": "choice-multiple-value",
-			"values": []interface{}{
-				map[string]interface{}{
-					"value": "CreateLoginProfile",
-					"enabled": true,
-				},
-			},
-		},
-	}
-
-	settings := parseExtraSettings(input)
-	if len(settings) != 1 {
-		t.Fatalf("expected 1 setting, got %d", len(settings))
-	}
-	if settings[0].Type != "choice-multiple-value-with-risk-level" {
-		t.Fatalf("unexpected type: %s", settings[0].Type)
-	}
-	if len(settings[0].Values) != 1 {
-		t.Fatalf("expected 1 value, got %d", len(settings[0].Values))
-	}
-	if settings[0].Values[0].CustomRisk != "NOT_CUSTOMIZED" {
-		t.Fatalf("unexpected custom risk: %s", settings[0].Values[0].CustomRisk)
-	}
-}
