@@ -156,7 +156,6 @@ terraform plan
 2. Keep state and configuration backups until migration is complete.
 3. Review generated warnings before running imports.
 4. Run `terraform plan` immediately after imports to validate drift.
-5. Migrate incrementally for large workspaces.
 
 ## Limitations
 

@@ -28,6 +28,7 @@ type scanRuleItem struct {
 
 type ruleExceptionsItem struct {
 	FilterTags  []string
+	Tags        []string
 	ResourceIds []string
 }
 
@@ -138,6 +139,7 @@ func parseExceptions(value interface{}) *ruleExceptionsItem {
 	}
 
 	filterTags := []string{}
+	tags := []string{}
 	resourceIds := []string{}
 	for _, raw := range items {
 		entry, ok := raw.(map[string]interface{})
@@ -145,18 +147,20 @@ func parseExceptions(value interface{}) *ruleExceptionsItem {
 			continue
 		}
 		filterTags = append(filterTags, toStringSlice(entry["filter_tags"])...)
-		filterTags = append(filterTags, toStringSlice(entry["tags"])...)
+		tags = append(tags, toStringSlice(entry["tags"])...)
 		resourceIds = append(resourceIds, toStringSlice(entry["resources"])...)
 	}
 
 	filterTags = uniqueStrings(filterTags)
+	tags = uniqueStrings(tags)
 	resourceIds = uniqueStrings(resourceIds)
-	if len(filterTags) == 0 && len(resourceIds) == 0 {
+	if len(filterTags) == 0 && len(tags) == 0 && len(resourceIds) == 0 {
 		return nil
 	}
 
 	return &ruleExceptionsItem{
 		FilterTags:  filterTags,
+		Tags:        tags,
 		ResourceIds: resourceIds,
 	}
 }
@@ -343,14 +347,19 @@ func appendScanRuleHCL(lines *[]string, rule scanRuleItem) {
 	}
 
 	if rule.Exceptions != nil {
-		*lines = append(*lines, "    exceptions {")
-		if len(rule.Exceptions.FilterTags) > 0 {
-			*lines = append(*lines, fmt.Sprintf("      filter_tags = [%s]", formatQuotedList(rule.Exceptions.FilterTags)))
+		if len(rule.Exceptions.Tags) > 0 {
+			*lines = append(*lines, fmt.Sprintf("    # tags: [%s] // This field was not mapped because it has no effect. Did you mean to use filter_tags here?", formatQuotedList(rule.Exceptions.Tags)))
 		}
-		if len(rule.Exceptions.ResourceIds) > 0 {
-			*lines = append(*lines, fmt.Sprintf("      resource_ids = [%s]", formatQuotedList(rule.Exceptions.ResourceIds)))
+		if len(rule.Exceptions.FilterTags) > 0 || len(rule.Exceptions.ResourceIds) > 0 {
+			*lines = append(*lines, "    exceptions {")
+			if len(rule.Exceptions.FilterTags) > 0 {
+				*lines = append(*lines, fmt.Sprintf("      filter_tags = [%s]", formatQuotedList(rule.Exceptions.FilterTags)))
+			}
+			if len(rule.Exceptions.ResourceIds) > 0 {
+				*lines = append(*lines, fmt.Sprintf("      resource_ids = [%s]", formatQuotedList(rule.Exceptions.ResourceIds)))
+			}
+			*lines = append(*lines, "    }")
 		}
-		*lines = append(*lines, "    }")
 	}
 
 	for _, setting := range rule.ExtraSettings {
