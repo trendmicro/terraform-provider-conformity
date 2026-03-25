@@ -45,6 +45,7 @@ type valueItem struct {
 	Enabled        *bool
 	CustomizedTags []string
 	CustomRisk     string
+	IgnoredSettings []string
 }
 
 func loadProfilesFromState(path string) ([]profileItem, error) {
@@ -231,10 +232,12 @@ func parseValues(value interface{}) []valueItem {
 		if !ok {
 			continue
 		}
+		settings := entry["settings"]
 		val := valueItem{
 			Value:          toStringValue(entry["value"]),
-			CustomizedTags: parseCustomizedTags(entry["settings"]),
-			CustomRisk:     parseCustomizedRiskLevel(entry["settings"]),
+			CustomizedTags: parseCustomizedTags(settings),
+			CustomRisk:     parseCustomizedRiskLevel(settings),
+			IgnoredSettings: parseIgnoredSettings(settings),
 		}
 		if enabled, ok := entry["enabled"].(bool); ok {
 			val.Enabled = &enabled
@@ -316,6 +319,35 @@ func parseCustomizedRiskLevel(value interface{}) string {
 	return ""
 }
 
+func parseIgnoredSettings(value interface{}) []string {
+	items, ok := value.([]interface{})
+	if !ok {
+		return nil
+	}
+
+	ignored := []string{}
+	for _, raw := range items {
+		entry, ok := raw.(map[string]interface{})
+		if !ok {
+			continue
+		}
+		name := toStringValue(entry["name"])
+		if name == "" {
+			continue
+		}
+		switch name {
+		case "tags-override":
+			continue
+		case "selectedSeverity", "selected_severity", "customizedRiskLevel", "customized_risk_level":
+			continue
+		default:
+			ignored = append(ignored, name)
+		}
+	}
+
+	return uniqueStrings(ignored)
+}
+
 func hasCustomizedTags(values []valueItem) bool {
 	for _, value := range values {
 		if len(value.CustomizedTags) > 0 {
@@ -385,6 +417,9 @@ func appendScanRuleHCL(lines *[]string, rule scanRuleItem) {
 			}
 			if val.CustomRisk != "" {
 				*lines = append(*lines, fmt.Sprintf("        customized_risk_level = \"%s\"", escapeHCL(val.CustomRisk)))
+			}
+			if len(val.IgnoredSettings) > 0 {
+				*lines = append(*lines, fmt.Sprintf("        # Unmapped settings: %s", strings.Join(val.IgnoredSettings, ", ")))
 			}
 			*lines = append(*lines, "      }")
 		}
