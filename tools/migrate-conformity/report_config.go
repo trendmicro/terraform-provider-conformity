@@ -110,9 +110,6 @@ func parseReportConfigAttributes(attrs map[string]interface{}) reportConfigItem 
 		if includeAccountRaw, ok := config["include_account_names"]; ok {
 			includeAccountNames := toBoolValue(includeAccountRaw, true)
 			item.IncludeAccountNames = &includeAccountNames
-		} else {
-			includeAccountNames := true
-			item.IncludeAccountNames = &includeAccountNames
 		}
 	}
 
@@ -144,10 +141,12 @@ func parseReportConfigAttributes(attrs map[string]interface{}) reportConfigItem 
 	timezone := strings.TrimSpace(toStringValue(config["tz"]))
 	if scheduledRaw, ok := config["scheduled"]; ok {
 		enabled := toBoolValue(scheduledRaw, false)
-		item.Schedule = &reportScheduleItem{
-			Enabled:   &enabled,
-			Frequency: frequency,
-			Timezone:  timezone,
+		if enabled || frequency != "" || timezone != "" {
+			item.Schedule = &reportScheduleItem{
+				Enabled:   &enabled,
+				Frequency: frequency,
+				Timezone:  timezone,
+			}
 		}
 	} else if frequency != "" || timezone != "" {
 		item.Schedule = &reportScheduleItem{
@@ -191,13 +190,14 @@ func parseReportConfigFilter(entry map[string]interface{}, reportType string) *r
 	tagsValue := entry["tags"]
 	filterTags := toStringSlice(filterTagsValue)
 	tags := toStringSlice(tagsValue)
-	mergedTags := uniqueStrings(append(filterTags, tags...))
+	mergedTags := append([]string{}, tags...)
+	mergedTags = append(mergedTags, filterTags...)
+	mergedTags = uniqueStrings(mergedTags)
 
 	filter := &reportFilterItem{
 		Categories:            toStringSlice(entry["categories"]),
 		ComplianceStandardIds: toStringSlice(entry["compliance_standards"]),
 		Tags:                  mergedTags,
-		Description:           strings.TrimSpace(toStringValue(entry["text"])),
 		NewerThanDays:         toIntValue(entry["newer_than_days"]),
 		OlderThanDays:         toIntValue(entry["older_than_days"]),
 		Providers:             toStringSlice(entry["providers"]),
@@ -211,9 +211,21 @@ func parseReportConfigFilter(entry map[string]interface{}, reportType string) *r
 		Statuses:              toStringSlice(entry["statuses"]),
 	}
 
-	suppressed := toBoolValue(entry["suppressed"], true)
-	if !suppressed {
-		filter.Suppressed = &suppressed
+	mode := strings.TrimSpace(toStringValue(entry["suppressed_filter_mode"]))
+	if suppressedRaw, ok := entry["suppressed"]; ok {
+		suppressed := toBoolValue(suppressedRaw, true)
+		switch mode {
+		case "v2":
+			filter.Suppressed = &suppressed
+		case "v1":
+			if !suppressed {
+				filter.Suppressed = &suppressed
+			}
+		default:
+			if !suppressed {
+				filter.Suppressed = &suppressed
+			}
+		}
 	}
 
 	if reportType == "COMPLIANCE-STANDARD" {
@@ -264,9 +276,10 @@ func deriveControlsType(withChecks, withoutChecks bool) string {
 		return "withChecksOnly"
 	case withoutChecks && !withChecks:
 		return "noChecksOnly"
-	default:
+	case withChecks && withoutChecks:
 		return "all"
 	}
+	return "all"
 }
 
 func appendReportConfigHCL(lines *[]string, item reportConfigItem, resourceName string) {
