@@ -41,11 +41,11 @@ type extraSettingItem struct {
 }
 
 type valueItem struct {
-	Value          string
-	Enabled        *bool
-	CustomizedTags []string
-	CustomRisk     string
-	IgnoredSettings []string
+	Value               string
+	Enabled             *bool
+	CustomizedTags      []string
+	CustomRisk          string
+	IgnoredSettingLines []string
 }
 
 func loadProfilesFromState(path string) ([]profileItem, error) {
@@ -234,10 +234,10 @@ func parseValues(value interface{}) []valueItem {
 		}
 		settings := entry["settings"]
 		val := valueItem{
-			Value:          toStringValue(entry["value"]),
-			CustomizedTags: parseCustomizedTags(settings),
-			CustomRisk:     parseCustomizedRiskLevel(settings),
-			IgnoredSettings: parseIgnoredSettings(settings),
+			Value:               toStringValue(entry["value"]),
+			CustomizedTags:      parseCustomizedTags(settings),
+			CustomRisk:          parseCustomizedRiskLevel(settings),
+			IgnoredSettingLines: formatIgnoredSettings(settings),
 		}
 		if enabled, ok := entry["enabled"].(bool); ok {
 			val.Enabled = &enabled
@@ -319,13 +319,13 @@ func parseCustomizedRiskLevel(value interface{}) string {
 	return ""
 }
 
-func parseIgnoredSettings(value interface{}) []string {
+func formatIgnoredSettings(value interface{}) []string {
 	items, ok := value.([]interface{})
 	if !ok {
 		return nil
 	}
 
-	ignored := []string{}
+	lines := []string{}
 	for _, raw := range items {
 		entry, ok := raw.(map[string]interface{})
 		if !ok {
@@ -341,11 +341,52 @@ func parseIgnoredSettings(value interface{}) []string {
 		case "selectedSeverity", "selected_severity", "customizedRiskLevel", "customized_risk_level":
 			continue
 		default:
-			ignored = append(ignored, name)
+			lines = append(lines, formatIgnoredSettingBlock(entry)...)
 		}
 	}
 
-	return uniqueStrings(ignored)
+	return lines
+}
+
+func formatIgnoredSettingBlock(entry map[string]interface{}) []string {
+	block := []string{}
+	block = append(block, "        # Unmapped setting below. Confirm this works in Vision One before uncommenting.")
+	block = append(block, "        # settings {")
+
+	if name := toStringValue(entry["name"]); name != "" {
+		block = append(block, fmt.Sprintf("        #   name = \"%s\"", escapeHCL(name)))
+	}
+	if settingType := toStringValue(entry["type"]); settingType != "" {
+		block = append(block, fmt.Sprintf("        #   type = \"%s\"", escapeHCL(settingType)))
+	}
+	if value := toStringValue(entry["value"]); value != "" {
+		block = append(block, fmt.Sprintf("        #   value = \"%s\"", escapeHCL(value)))
+	}
+
+	valuesArray := toStringSlice(entry["values_array"])
+	if len(valuesArray) > 0 {
+		block = append(block, fmt.Sprintf("        #   values_array = [%s]", formatQuotedList(valuesArray)))
+	}
+
+	if values, ok := entry["values"].([]interface{}); ok {
+		for _, rawValue := range values {
+			valueEntry, ok := rawValue.(map[string]interface{})
+			if !ok {
+				continue
+			}
+			block = append(block, "        #   values {")
+			if val := toStringValue(valueEntry["value"]); val != "" {
+				block = append(block, fmt.Sprintf("        #     value = \"%s\"", escapeHCL(val)))
+			}
+			if enabled, ok := valueEntry["enabled"].(bool); ok {
+				block = append(block, fmt.Sprintf("        #     enabled = %t", enabled))
+			}
+			block = append(block, "        #   }")
+		}
+	}
+
+	block = append(block, "        # }")
+	return block
 }
 
 func hasCustomizedTags(values []valueItem) bool {
@@ -418,8 +459,8 @@ func appendScanRuleHCL(lines *[]string, rule scanRuleItem) {
 			if val.CustomRisk != "" {
 				*lines = append(*lines, fmt.Sprintf("        customized_risk_level = \"%s\"", escapeHCL(val.CustomRisk)))
 			}
-			if len(val.IgnoredSettings) > 0 {
-				*lines = append(*lines, fmt.Sprintf("        # Unmapped settings: %s", strings.Join(val.IgnoredSettings, ", ")))
+			if len(val.IgnoredSettingLines) > 0 {
+				*lines = append(*lines, val.IgnoredSettingLines...)
 			}
 			*lines = append(*lines, "      }")
 		}
