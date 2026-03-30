@@ -37,8 +37,11 @@ func TestLoadCommunicationSettingsFromState(t *testing.T) {
 	if sms.SmsConfiguration == nil || sms.AccountID != "account-1" {
 		t.Fatalf("unexpected sms setting: %+v", sms)
 	}
-	if sms.ChecksFilter == nil || len(sms.ChecksFilter.Tags) != 2 {
+	if sms.ChecksFilter == nil || len(sms.ChecksFilter.Tags) != 1 {
 		t.Fatalf("unexpected sms filter: %+v", sms.ChecksFilter)
+	}
+	if len(sms.ChecksFilter.IgnoredTags) != 1 || sms.ChecksFilter.IgnoredTags[0] != "tagName" {
+		t.Fatalf("unexpected sms ignored tags: %+v", sms.ChecksFilter.IgnoredTags)
 	}
 
 	slack := byID["comm-3"]

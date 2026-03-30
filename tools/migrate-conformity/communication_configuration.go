@@ -36,6 +36,7 @@ type communicationChecksFilterItem struct {
 	Categories            []string
 	RiskLevels            []string
 	Tags                  []string
+	IgnoredTags           []string
 	ComplianceStandardIDs []string
 	Statuses              []string
 }
@@ -213,8 +214,7 @@ func parseCommunicationFilter(value interface{}) *communicationChecksFilterItem 
 	}
 
 	filterTags := toStringSlice(entry["filter_tags"])
-	tags := toStringSlice(entry["tags"])
-	mergedTags := uniqueStrings(append(filterTags, tags...))
+	ignoredTags := toStringSlice(entry["tags"])
 
 	filter := &communicationChecksFilterItem{
 		Regions:               toStringSlice(entry["regions"]),
@@ -222,7 +222,8 @@ func parseCommunicationFilter(value interface{}) *communicationChecksFilterItem 
 		RuleIDs:               toStringSlice(entry["rule_ids"]),
 		Categories:            toStringSlice(entry["categories"]),
 		RiskLevels:            toStringSlice(entry["risk_levels"]),
-		Tags:                  mergedTags,
+		Tags:                  uniqueStrings(filterTags),
+		IgnoredTags:           uniqueStrings(ignoredTags),
 		ComplianceStandardIDs: toStringSlice(entry["compliances"]),
 		Statuses:              toStringSlice(entry["statuses"]),
 	}
@@ -583,6 +584,9 @@ func appendCommunicationConfigurationHCL(lines *[]string, item communicationSett
 func appendCommunicationFilterHCL(lines *[]string, item communicationSettingItem) {
 	filter := item.ChecksFilter
 	*lines = append(*lines, "  checks_filter = {")
+	if len(filter.IgnoredTags) > 0 {
+		*lines = append(*lines, fmt.Sprintf("    # Note: filter.tags ignored: [%s]", formatQuotedList(filter.IgnoredTags)))
+	}
 	if len(filter.Regions) > 0 {
 		*lines = append(*lines, fmt.Sprintf("    regions = [%s]", formatQuotedList(filter.Regions)))
 	}
@@ -723,7 +727,6 @@ func appendCommunicationMappingLines(mappingLines *[]string, item communicationS
 		}
 		if len(item.ChecksFilter.Tags) > 0 {
 			mapField("filter.filter_tags", "checks_filter.tags")
-			mapField("filter.tags", "checks_filter.tags")
 		}
 		if len(item.ChecksFilter.ComplianceStandardIDs) > 0 {
 			mapField("filter.compliances", "checks_filter.compliance_standard_ids")
