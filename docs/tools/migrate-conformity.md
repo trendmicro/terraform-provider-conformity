@@ -58,7 +58,7 @@ This ensures your resource references (e.g., `conformity_communication_setting.m
   - `scheduled`, `frequency`, and `tz` map to `schedule.frequency` and `schedule.timezone` when scheduled is true.
   - `emails` maps to `email_recipients` only when `send_email` is true; `should_email_include_pdf/csv` map to `report_formats_in_email`.
   - Filter fields map to `checks_filter` (e.g., categories, risk_levels, providers, resource_types, rule_ids).
-  - `filter_tags` maps to `checks_filter.tags` (`tags` is ignored and noted in generated HCL).
+  - `filter_tags` maps to `checks_filter.tags` (`tags` has no effect in the Conformity provider and is ignored and noted in generated HCL).
   - `text` maps to `checks_filter.description` and `resource` maps to `checks_filter.resource_id`.
   - For compliance reports, `report_compliance_standard_id` maps to `applied_compliance_standard_id`, and `with_checks/without_checks` map to `controls_type`.
 - Custom rule mappings:
@@ -74,7 +74,7 @@ This ensures your resource references (e.g., `conformity_communication_setting.m
 - Communication settings mappings:
   - `enabled`, `manual` map directly.
   - `relationships.account.id` maps to `account_id`.
-  - `filter` maps to `checks_filter` (`filter_tags` maps to `tags`; `tags` is ignored and noted in generated HCL).
+  - `filter` maps to `checks_filter` (`filter_tags` maps to `tags`; `tags` has no effect in the Conformity provider and is ignored and noted in generated HCL).
   - `compliances` maps to `compliance_standard_ids`.
   - `email.users` -> `email_configuration.user_ids` (requires `{identifierId}#{companyId}` format).
   - `sms.users` -> `sms_configuration.user_ids` (requires `{identifierId}#{companyId}` format).
