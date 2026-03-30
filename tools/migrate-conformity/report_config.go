@@ -110,6 +110,9 @@ func parseReportConfigAttributes(attrs map[string]interface{}) reportConfigItem 
 		if includeAccountRaw, ok := config["include_account_names"]; ok {
 			includeAccountNames := toBoolValue(includeAccountRaw, true)
 			item.IncludeAccountNames = &includeAccountNames
+		} else {
+			includeAccountNames := true
+			item.IncludeAccountNames = &includeAccountNames
 		}
 	}
 
@@ -141,12 +144,10 @@ func parseReportConfigAttributes(attrs map[string]interface{}) reportConfigItem 
 	timezone := strings.TrimSpace(toStringValue(config["tz"]))
 	if scheduledRaw, ok := config["scheduled"]; ok {
 		enabled := toBoolValue(scheduledRaw, false)
-		if enabled || frequency != "" || timezone != "" {
-			item.Schedule = &reportScheduleItem{
-				Enabled:   &enabled,
-				Frequency: frequency,
-				Timezone:  timezone,
-			}
+		item.Schedule = &reportScheduleItem{
+			Enabled:   &enabled,
+			Frequency: frequency,
+			Timezone:  timezone,
 		}
 	} else if frequency != "" || timezone != "" {
 		item.Schedule = &reportScheduleItem{
