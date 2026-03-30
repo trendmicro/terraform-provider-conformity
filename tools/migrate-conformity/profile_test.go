@@ -32,11 +32,14 @@ func TestLoadProfilesFromState(t *testing.T) {
 	if rule.ID != "R1" || rule.Provider != "aws" || !rule.Enabled || rule.RiskLevel != "HIGH" {
 		t.Fatalf("unexpected scan rule: %+v", rule)
 	}
-	if rule.Exceptions == nil || len(rule.Exceptions.FilterTags) != 2 || len(rule.Exceptions.ResourceIds) != 1 {
+	if rule.Exceptions == nil || len(rule.Exceptions.FilterTags) != 1 || len(rule.Exceptions.Tags) != 1 || len(rule.Exceptions.ResourceIds) != 1 {
 		t.Fatalf("unexpected exceptions: %+v", rule.Exceptions)
 	}
-	if rule.Exceptions.FilterTags[0] != "prod" || rule.Exceptions.FilterTags[1] != "team" {
+	if rule.Exceptions.FilterTags[0] != "prod" {
 		t.Fatalf("unexpected filter tags: %+v", rule.Exceptions.FilterTags)
+	}
+	if rule.Exceptions.Tags[0] != "team" {
+		t.Fatalf("unexpected tags: %+v", rule.Exceptions.Tags)
 	}
 
 	if len(rule.ExtraSettings) != 3 {

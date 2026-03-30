@@ -182,7 +182,7 @@
             "manual": false,
             "sns": [
               {
-                "arn": "arn:aws:sns:us-west-2:123456:CloudConformity-TestDataCreation",
+                "arn": "arn:aws:sns:us-west-2:123456789012:mock-topic",
                 "channel_name": "snsChannel"
               }
             ],
