@@ -37,6 +37,7 @@ type reportFilterItem struct {
 	Categories            []string
 	ComplianceStandardIds []string
 	Tags                  []string
+	IgnoredTags           []string
 	Description           string
 	NewerThanDays         int
 	OlderThanDays         int
@@ -188,17 +189,14 @@ func parseReportConfigFilter(entry map[string]interface{}, reportType string) *r
 	}
 
 	filterTagsValue := entry["filter_tags"]
-	tagsValue := entry["tags"]
 	filterTags := toStringSlice(filterTagsValue)
-	tags := toStringSlice(tagsValue)
-	mergedTags := append([]string{}, tags...)
-	mergedTags = append(mergedTags, filterTags...)
-	mergedTags = uniqueStrings(mergedTags)
+	ignoredTags := toStringSlice(entry["tags"])
 
 	filter := &reportFilterItem{
 		Categories:            toStringSlice(entry["categories"]),
 		ComplianceStandardIds: toStringSlice(entry["compliance_standards"]),
-		Tags:                  mergedTags,
+		Tags:                  uniqueStrings(filterTags),
+		IgnoredTags:           uniqueStrings(ignoredTags),
 		NewerThanDays:         toIntValue(entry["newer_than_days"]),
 		OlderThanDays:         toIntValue(entry["older_than_days"]),
 		Providers:             toStringSlice(entry["providers"]),
@@ -347,6 +345,9 @@ func appendReportConfigHCL(lines *[]string, item reportConfigItem, resourceName 
 func appendReportFilterHCL(lines *[]string, item reportConfigItem) {
 	filter := item.ChecksFilter
 	*lines = append(*lines, "  checks_filter {")
+	if len(filter.IgnoredTags) > 0 {
+		*lines = append(*lines, fmt.Sprintf("    # Note: filter.tags ignored: [%s]", formatQuotedList(filter.IgnoredTags)))
+	}
 	if len(filter.Categories) > 0 {
 		*lines = append(*lines, fmt.Sprintf("    categories = [%s]", formatQuotedList(filter.Categories)))
 	}

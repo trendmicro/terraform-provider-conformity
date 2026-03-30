@@ -26,11 +26,14 @@ func TestLoadReportConfigsFromState(t *testing.T) {
 	if configs[0].Schedule.Enabled == nil || *configs[0].Schedule.Enabled != true {
 		t.Fatalf("expected schedule enabled on Report A")
 	}
-	if configs[0].ChecksFilter == nil || len(configs[0].ChecksFilter.Tags) != 2 {
-		t.Fatalf("expected tags to include filter_tags and tags on Report A")
+	if configs[0].ChecksFilter == nil || len(configs[0].ChecksFilter.Tags) != 1 {
+		t.Fatalf("expected tags to include filter_tags only on Report A")
 	}
-	if configs[0].ChecksFilter.Tags[0] != "team" || configs[0].ChecksFilter.Tags[1] != "prod" {
+	if configs[0].ChecksFilter.Tags[0] != "prod" {
 		t.Fatalf("unexpected tags on Report A: %+v", configs[0].ChecksFilter.Tags)
+	}
+	if len(configs[0].ChecksFilter.IgnoredTags) != 1 || configs[0].ChecksFilter.IgnoredTags[0] != "team" {
+		t.Fatalf("unexpected ignored tags on Report A: %+v", configs[0].ChecksFilter.IgnoredTags)
 	}
 	if configs[0].ChecksFilter == nil || configs[0].ChecksFilter.Suppressed == nil || *configs[0].ChecksFilter.Suppressed != false {
 		t.Fatalf("expected suppressed=false on Report A")
