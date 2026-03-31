@@ -89,25 +89,26 @@ func parseApplyProfileInclude(value interface{}) *applyProfileIncludeItem {
 	return nil
 }
 
-func appendApplyProfileHCL(lines *[]string, item applyProfileItem, resourceName string) {
-	*lines = append(*lines, fmt.Sprintf("data \"visionone_crm_apply_profile\" \"%s\" {", resourceName))
-	*lines = append(*lines, fmt.Sprintf("  profile_id = \"%s\"", escapeHCL(item.ProfileID)))
+func appendApplyProfileHCL(lines []string, item applyProfileItem, resourceName string) []string {
+	lines = append(lines, fmt.Sprintf("data \"visionone_crm_apply_profile\" \"%s\" {", resourceName))
+	lines = append(lines, fmt.Sprintf("  profile_id = \"%s\"", escapeHCL(item.ProfileID)))
 	if len(item.AccountIDs) > 0 {
-		*lines = append(*lines, fmt.Sprintf("  account_ids = [%s]", formatQuotedList(item.AccountIDs)))
+		lines = append(lines, fmt.Sprintf("  account_ids = [%s]", formatQuotedList(item.AccountIDs)))
 	}
 	if item.Mode != "" {
-		*lines = append(*lines, fmt.Sprintf("  mode = \"%s\"", escapeHCL(item.Mode)))
+		lines = append(lines, fmt.Sprintf("  mode = \"%s\"", escapeHCL(item.Mode)))
 	}
 	if item.Notes != "" {
-		*lines = append(*lines, fmt.Sprintf("  notes = \"%s\"", escapeHCL(item.Notes)))
+		lines = append(lines, fmt.Sprintf("  notes = \"%s\"", escapeHCL(item.Notes)))
 	}
 	if item.Include != nil && item.Include.Exceptions != nil {
-		*lines = append(*lines, "  include = {")
-		*lines = append(*lines, fmt.Sprintf("    exceptions = %t", *item.Include.Exceptions))
-		*lines = append(*lines, "  }")
+		lines = append(lines, "  include = {")
+		lines = append(lines, fmt.Sprintf("    exceptions = %t", *item.Include.Exceptions))
+		lines = append(lines, "  }")
 	}
-	*lines = append(*lines, "}")
-	*lines = append(*lines, "")
+	lines = append(lines, "}")
+	lines = append(lines, "")
+	return lines
 }
 
 func appendApplyProfileMappingLines(mappingLines *[]string, item applyProfileItem, targetName string) {

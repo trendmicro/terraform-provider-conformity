@@ -41,7 +41,7 @@ func TestAppendApplyProfileHCL(t *testing.T) {
 	}
 
 	var lines []string
-	appendApplyProfileHCL(&lines, item, "apply_profile")
+	lines = appendApplyProfileHCL(lines, item, "apply_profile")
 
 	expected := strings.Join([]string{
 		"data \"visionone_crm_apply_profile\" \"apply_profile\" {",

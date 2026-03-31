@@ -205,7 +205,7 @@ func run(opts migrateOptions) error {
 			} else {
 				resourceName = uniqueResourceName(resourceName, applyProfileNameCounter)
 			}
-			appendApplyProfileHCL(&hclLines, item, resourceName)
+			hclLines = appendApplyProfileHCL(hclLines, item, resourceName)
 			appendApplyProfileMappingLines(&mappingLines, item, resourceName)
 		}
 	}
