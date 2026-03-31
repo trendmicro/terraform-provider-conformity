@@ -221,7 +221,7 @@ func TestLoadProfilesFromStateWithCustomizedRiskLevel(t *testing.T) {
 		t.Fatalf("expected 1 extra setting, got %d", len(rule.ExtraSettings))
 	}
 	setting := rule.ExtraSettings[0]
-	if setting.Type != "choice-multiple-value-with-risk-level" {
+	if setting.Type != "choice-multiple-value" {
 		t.Fatalf("unexpected type: %s", setting.Type)
 	}
 	if len(setting.Values) != 1 || setting.Values[0].CustomRisk != "HIGH" {
@@ -238,7 +238,7 @@ func TestAppendScanRuleHCLWithCustomizedRiskLevel(t *testing.T) {
 		ExtraSettings: []extraSettingItem{
 			{
 				Name: "ConfigurationChanges",
-				Type: "choice-multiple-value-with-risk-level",
+				Type: "choice-multiple-value",
 				Values: []valueItem{
 					{
 						Value:      "CreateLoginProfile",
@@ -262,11 +262,11 @@ func TestAppendScanRuleHCLWithCustomizedRiskLevel(t *testing.T) {
 		"    risk_level = \"MEDIUM\"",
 		"    extra_settings {",
 		"      name = \"ConfigurationChanges\"",
-		"      type = \"choice-multiple-value-with-risk-level\"",
+		"      type = \"choice-multiple-value\"",
 		"      values {",
 		"        value = \"CreateLoginProfile\"",
 		"        enabled = true",
-		"        customized_risk_level = \"HIGH\"",
+		"        # Note: customized_risk_level \"HIGH\" not mapped; review in Vision One",
 		"      }",
 		"    }",
 		"  }",

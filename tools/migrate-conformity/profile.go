@@ -189,9 +189,6 @@ func parseExtraSettings(value interface{}) []extraSettingItem {
 		if typeValue == "choice-multiple-value" && hasCustomizedTags(valuesList) {
 			typeValue = "choice-multiple-value-with-tags"
 		}
-		if typeValue == "choice-multiple-value" && hasCustomizedRiskLevel(valuesList) {
-			typeValue = "choice-multiple-value-with-risk-level"
-		}
 
 		setting := extraSettingItem{
 			Name:  name,
@@ -293,7 +290,7 @@ func parseCustomizedRiskLevel(value interface{}) string {
 			continue
 		}
 		name := toStringValue(entry["name"])
-		if name != "selectedSeverity" && name != "selected_severity" && name != "customizedRiskLevel" && name != "customized_risk_level" {
+		if name != "selectedSeverity" && name != "selected_severity" && name != "customizedRiskLevel" && name != "customized_risk_level" && name != "event-risk-level" {
 			continue
 		}
 		values := toStringSlice(entry["values_array"])
@@ -457,7 +454,7 @@ func appendScanRuleHCL(lines *[]string, rule scanRuleItem) {
 				*lines = append(*lines, fmt.Sprintf("        customized_tags = [%s]", formatQuotedList(val.CustomizedTags)))
 			}
 			if val.CustomRisk != "" {
-				*lines = append(*lines, fmt.Sprintf("        customized_risk_level = \"%s\"", escapeHCL(val.CustomRisk)))
+				*lines = append(*lines, fmt.Sprintf("        # Note: customized_risk_level \"%s\" not mapped; review in Vision One", escapeHCL(val.CustomRisk)))
 			}
 			if len(val.IgnoredSettingLines) > 0 {
 				*lines = append(*lines, val.IgnoredSettingLines...)
