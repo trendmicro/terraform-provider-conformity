@@ -33,6 +33,10 @@ func appendGroupsHCL(lines *[]string, importLines *[]string, mappingLines *[]str
 				sourceName = resourceName
 			}
 			*mappingLines = append(*mappingLines, formatMappingLine("conformity_group", sourceName, "visionone_crm_group", resourceName))
+			*mappingLines = append(*mappingLines, formatAttributeMappingLine("name", "name"))
+			if len(item.Tags) > 0 || item.TagsSet {
+				*mappingLines = append(*mappingLines, formatAttributeMappingLine("tags", "tags"))
+			}
 		}
 
 		*importLines = append(*importLines, formatImportLine("visionone_crm_group", resourceName, item.ID, dryRun))

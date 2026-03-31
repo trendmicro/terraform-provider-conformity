@@ -87,3 +87,38 @@ func appendCheckSuppressionHCL(lines *[]string, item checkSuppressionItem, resou
 	*lines = append(*lines, "}")
 	*lines = append(*lines, "")
 }
+
+func appendCheckSuppressionMappingLines(mappingLines *[]string, item checkSuppressionItem, targetName string) {
+	if mappingLines == nil {
+		return
+	}
+
+	sourceName := item.ResourceName
+	if sourceName == "" {
+		sourceName = targetName
+	}
+	sourceType := "conformity_check_suppression"
+	targetType := "visionone_crm_check_suppression"
+	*mappingLines = append(*mappingLines, formatMappingLine(sourceType, sourceName, targetType, targetName))
+
+	seen := map[string]struct{}{}
+	appendUnique := func(line string) {
+		if _, ok := seen[line]; ok {
+			return
+		}
+		seen[line] = struct{}{}
+		*mappingLines = append(*mappingLines, line)
+	}
+	mapField := func(sourceAttribute, targetAttribute string) {
+		appendUnique(formatAttributeMappingLine(sourceAttribute, targetAttribute))
+	}
+
+	mapField("account_id", "account_id")
+	mapField("rule_id", "rule_id")
+	mapField("rule_id (prefix)", "service")
+	mapField("region", "region")
+	mapField("resource_id", "resource_id")
+	if item.Note != "" {
+		mapField("note", "note")
+	}
+}

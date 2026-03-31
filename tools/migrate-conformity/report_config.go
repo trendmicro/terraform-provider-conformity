@@ -399,6 +399,90 @@ func appendReportFilterHCL(lines *[]string, item reportConfigItem) {
 	*lines = append(*lines, "  }")
 }
 
+func appendReportConfigMappingLines(mappingLines *[]string, item reportConfigItem, targetName string) {
+	if mappingLines == nil {
+		return
+	}
+
+	sourceName := item.ResourceName
+	if sourceName == "" {
+		sourceName = targetName
+	}
+	sourceType := "conformity_report_config"
+	targetType := "visionone_crm_report_config"
+	*mappingLines = append(*mappingLines, formatMappingLine(sourceType, sourceName, targetType, targetName))
+
+	seen := map[string]struct{}{}
+	appendUnique := func(line string) {
+		if _, ok := seen[line]; ok {
+			return
+		}
+		seen[line] = struct{}{}
+		*mappingLines = append(*mappingLines, line)
+	}
+	mapField := func(sourceAttribute, targetAttribute string) {
+		appendUnique(formatAttributeMappingLine(sourceAttribute, targetAttribute))
+	}
+
+	if item.AccountID != "" {
+		mapField("account_id", "account_id")
+	}
+	if item.GroupID != "" {
+		mapField("group_id", "group_id")
+	}
+	mapField("configuration.title", "report_title")
+	if item.ReportType != "" {
+		mapField("configuration.generate_report_type", "report_type")
+	}
+	if item.IncludeAccountNames != nil {
+		mapField("configuration.include_account_names", "include_account_names")
+	}
+	if item.IncludeChecks {
+		mapField("configuration.include_checks", "include_checks")
+	}
+	if item.EmailRecipientsSet {
+		mapField("configuration.emails", "email_recipients")
+	}
+	if item.ReportFormatsInEmailSet {
+		mapField("configuration.should_email_include_pdf/csv", "report_formats_in_email")
+	}
+	if item.Schedule != nil {
+		if item.Schedule.Enabled != nil {
+			mapField("configuration.scheduled", "schedule.enabled")
+		}
+		if item.Schedule.Frequency != "" {
+			mapField("configuration.frequency", "schedule.frequency")
+		}
+		if item.Schedule.Timezone != "" {
+			mapField("configuration.tz", "schedule.timezone")
+		}
+	}
+	if item.ReportType == "COMPLIANCE-STANDARD" {
+		mapField("filter.report_compliance_standard_id", "applied_compliance_standard_id")
+		mapField("filter.with_checks/without_checks", "controls_type")
+	}
+	if item.ChecksFilter != nil && hasReportFilterValues(item.ChecksFilter) {
+		mapField("filter.categories", "checks_filter.categories")
+		if item.ReportType == "GENERIC" {
+			mapField("filter.compliance_standards", "checks_filter.compliance_standard_ids")
+		}
+		mapField("filter.filter_tags", "checks_filter.tags")
+		mapField("filter.text", "checks_filter.description")
+		mapField("filter.newer_than_days", "checks_filter.newer_than_days")
+		mapField("filter.older_than_days", "checks_filter.older_than_days")
+		mapField("filter.providers", "checks_filter.providers")
+		mapField("filter.regions", "checks_filter.regions")
+		mapField("filter.resource", "checks_filter.resource_id")
+		mapField("filter.resource_search_mode", "checks_filter.resource_search_mode")
+		mapField("filter.resource_types", "checks_filter.resource_types")
+		mapField("filter.risk_levels", "checks_filter.risk_levels")
+		mapField("filter.rule_ids", "checks_filter.rule_ids")
+		mapField("filter.services", "checks_filter.services")
+		mapField("filter.statuses", "checks_filter.statuses")
+		mapField("filter.suppressed", "checks_filter.suppressed")
+	}
+}
+
 func firstListEntry(value interface{}) map[string]interface{} {
 	list, ok := value.([]interface{})
 	if !ok || len(list) == 0 {

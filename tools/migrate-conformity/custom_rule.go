@@ -103,7 +103,7 @@ func parseCustomRuleAttributes(attrs map[string]interface{}) customRuleItem {
 
 func sortCustomRuleCategories(categories []string) {
 	order := map[string]int{
-		"security":              0,
+		"security":               0,
 		"cost-optimisation":      1,
 		"reliability":            2,
 		"performance-efficiency": 3,
@@ -268,6 +268,72 @@ func appendCustomRuleHCL(lines *[]string, item customRuleItem, resourceName stri
 
 	*lines = append(*lines, "}")
 	*lines = append(*lines, "")
+}
+
+func appendCustomRuleMappingLines(mappingLines *[]string, item customRuleItem, targetName string) {
+	if mappingLines == nil {
+		return
+	}
+
+	sourceName := item.ResourceName
+	if sourceName == "" {
+		sourceName = targetName
+	}
+	sourceType := "conformity_custom_rule"
+	targetType := "visionone_crm_custom_rule"
+	*mappingLines = append(*mappingLines, formatMappingLine(sourceType, sourceName, targetType, targetName))
+
+	seen := map[string]struct{}{}
+	appendUnique := func(line string) {
+		if _, ok := seen[line]; ok {
+			return
+		}
+		seen[line] = struct{}{}
+		*mappingLines = append(*mappingLines, line)
+	}
+	mapField := func(sourceAttribute, targetAttribute string) {
+		appendUnique(formatAttributeMappingLine(sourceAttribute, targetAttribute))
+	}
+
+	mapField("name", "name")
+	if item.Description != "" {
+		mapField("description", "description")
+	}
+	if item.CloudProvider != "" {
+		mapField("cloud_provider", "cloud_provider")
+	}
+	if item.Service != "" {
+		mapField("service", "service")
+	}
+	if item.ResourceType != "" {
+		mapField("resource_type", "resource_type")
+	}
+	mapField("enabled", "enabled")
+	if item.Severity != "" {
+		mapField("severity", "risk_level")
+	}
+	if len(item.Categories) > 0 {
+		mapField("categories", "categories")
+	}
+	if item.RemediationNotes != "" {
+		mapField("remediation_notes", "remediation_note")
+	}
+	if len(item.Attributes) > 0 {
+		mapField("attributes", "attribute")
+		mapField("attributes.name", "attribute.name")
+		mapField("attributes.path", "attribute.path")
+		mapField("attributes.required", "attribute.required")
+	}
+	if len(item.Rules) > 0 {
+		mapField("rules", "event_rule")
+		mapField("rules.event_type", "event_rule.description")
+		mapField("rules.operation", "event_rule.conditions.operator")
+		mapField("rules.conditions", "event_rule.conditions.condition")
+		mapField("rules.conditions.operator", "event_rule.conditions.condition.operator")
+		mapField("rules.conditions.fact", "event_rule.conditions.condition.fact")
+		mapField("rules.conditions.path", "event_rule.conditions.condition.path")
+		mapField("rules.conditions.value", "event_rule.conditions.condition.value")
+	}
 }
 
 func formatCustomRuleValue(raw string) string {

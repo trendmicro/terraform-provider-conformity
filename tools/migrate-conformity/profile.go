@@ -467,6 +467,53 @@ func appendScanRuleHCL(lines *[]string, rule scanRuleItem) {
 	*lines = append(*lines, "  }")
 }
 
+func appendProfileMappingLines(mappingLines *[]string, item profileItem, targetName string) {
+	if mappingLines == nil {
+		return
+	}
+
+	sourceName := item.ResourceName
+	if sourceName == "" {
+		sourceName = targetName
+	}
+	sourceType := "conformity_profile"
+	targetType := "visionone_crm_profile"
+	*mappingLines = append(*mappingLines, formatMappingLine(sourceType, sourceName, targetType, targetName))
+
+	seen := map[string]struct{}{}
+	appendUnique := func(line string) {
+		if _, ok := seen[line]; ok {
+			return
+		}
+		seen[line] = struct{}{}
+		*mappingLines = append(*mappingLines, line)
+	}
+	mapField := func(sourceAttribute, targetAttribute string) {
+		appendUnique(formatAttributeMappingLine(sourceAttribute, targetAttribute))
+	}
+
+	mapField("name", "name")
+	if item.Description != "" {
+		mapField("description", "description")
+	}
+	if len(item.ScanRules) > 0 {
+		mapField("included", "scan_rule")
+		mapField("included.id", "scan_rule.id")
+		mapField("included.provider", "scan_rule.provider")
+		mapField("included.enabled", "scan_rule.enabled")
+		mapField("included.risk_level", "scan_rule.risk_level")
+		mapField("included.exceptions.filter_tags", "scan_rule.exceptions.filter_tags")
+		mapField("included.exceptions.resources", "scan_rule.exceptions.resource_ids")
+		mapField("included.extra_settings", "scan_rule.extra_settings")
+		mapField("included.extra_settings.name", "scan_rule.extra_settings.name")
+		mapField("included.extra_settings.type", "scan_rule.extra_settings.type")
+		mapField("included.extra_settings.value", "scan_rule.extra_settings.value")
+		mapField("included.extra_settings.value_set", "scan_rule.extra_settings.value_set")
+		mapField("included.extra_settings.values", "scan_rule.extra_settings.values")
+		mapField("included.extra_settings.settings.tags-override", "scan_rule.extra_settings.values.customized_tags")
+	}
+}
+
 func formatValue(raw string, settingType string) string {
 	if !isNumericType(settingType) {
 		return fmt.Sprintf("\"%s\"", escapeHCL(raw))
