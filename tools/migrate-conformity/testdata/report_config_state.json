@@ -32,7 +32,7 @@
                 "compliance_standards": ["NIST4"],
                 "filter_tags": ["prod"],
                 "tags": ["team"],
-                "text": "find me",
+                "message": "find me",
                 "newer_than_days": 7,
                 "older_than_days": 0,
                 "providers": ["aws"],

@@ -197,6 +197,7 @@ func parseReportConfigFilter(entry map[string]interface{}, reportType string) *r
 		ComplianceStandardIds: toStringSlice(entry["compliance_standards"]),
 		Tags:                  uniqueStrings(filterTags),
 		IgnoredTags:           uniqueStrings(ignoredTags),
+		Description:           strings.TrimSpace(toStringValue(entry["message"])),
 		NewerThanDays:         toIntValue(entry["newer_than_days"]),
 		OlderThanDays:         toIntValue(entry["older_than_days"]),
 		Providers:             toStringSlice(entry["providers"]),
@@ -467,7 +468,7 @@ func appendReportConfigMappingLines(mappingLines *[]string, item reportConfigIte
 			mapField("filter.compliance_standards", "checks_filter.compliance_standard_ids")
 		}
 		mapField("filter.filter_tags", "checks_filter.tags")
-		mapField("filter.text", "checks_filter.description")
+		mapField("filter.message", "checks_filter.description")
 		mapField("filter.newer_than_days", "checks_filter.newer_than_days")
 		mapField("filter.older_than_days", "checks_filter.older_than_days")
 		mapField("filter.providers", "checks_filter.providers")

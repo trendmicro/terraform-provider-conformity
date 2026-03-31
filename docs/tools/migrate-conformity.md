@@ -59,7 +59,7 @@ This ensures your resource references (e.g., `conformity_communication_setting.m
   - `emails` maps to `email_recipients` only when `send_email` is true; `should_email_include_pdf/csv` map to `report_formats_in_email`.
   - Filter fields map to `checks_filter` (e.g., categories, risk_levels, providers, resource_types, rule_ids).
   - `filter_tags` maps to `checks_filter.tags` (`tags` has no effect in the Conformity provider and is ignored and noted in generated HCL).
-  - `text` maps to `checks_filter.description` and `resource` maps to `checks_filter.resource_id`.
+  - `message` maps to `checks_filter.description`, and `text` is dropped; `resource` maps to `checks_filter.resource_id`.
   - For compliance reports, `report_compliance_standard_id` maps to `applied_compliance_standard_id`, and `with_checks/without_checks` map to `controls_type`.
 - Custom rule mappings:
   - `name`, `description`, `cloud_provider`, `service`, `resource_type`, `enabled`, and `categories` map directly.
