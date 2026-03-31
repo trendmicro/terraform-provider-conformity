@@ -240,6 +240,7 @@ func hasCommunicationFilterValues(filter *communicationChecksFilterItem) bool {
 		len(filter.RuleIDs) > 0 ||
 		len(filter.Categories) > 0 ||
 		len(filter.RiskLevels) > 0 ||
+		len(filter.IgnoredTags) > 0 ||
 		len(filter.Tags) > 0 ||
 		len(filter.ComplianceStandardIDs) > 0 ||
 		len(filter.Statuses) > 0
