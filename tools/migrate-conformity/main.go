@@ -37,6 +37,7 @@ type groupItem struct {
 
 type migrateOptions struct {
 	StatePath string
+	OutputDir string
 }
 
 func main() {
@@ -49,10 +50,12 @@ func main() {
 
 func parseFlags() migrateOptions {
 	statePath := flag.String("state", "", "Path to terraform state JSON (terraform state pull > state.json)")
+	outputDir := flag.String("out", "", "Directory to write main.tf (default: current directory)")
 
 	flag.Parse()
 	return migrateOptions{
 		StatePath: strings.TrimSpace(*statePath),
+		OutputDir: strings.TrimSpace(*outputDir),
 	}
 }
 
@@ -112,9 +115,13 @@ func run(opts migrateOptions) error {
 	mappingLines := []string{}
 	importLines := []string{"# Import existing Vision One resources"}
 
-	outputDir, err := os.Getwd()
-	if err != nil {
-		return fmt.Errorf("get current directory: %w", err)
+	outputDir := opts.OutputDir
+	if outputDir == "" {
+		var err error
+		outputDir, err = os.Getwd()
+		if err != nil {
+			return fmt.Errorf("get current directory: %w", err)
+		}
 	}
 
 	dryRun := true

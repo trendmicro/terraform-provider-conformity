@@ -30,7 +30,7 @@ Confirm the state file exists locally before proceeding. If the workspace uses a
 
 ## 2. Choose an output location
 
-Run the tool from the directory where you want `main.tf` written.
+Run the tool from the directory where you want `main.tf` written, or use `-out` to target another folder.
 
 ## 3. Generate migrated resources
 
@@ -41,7 +41,7 @@ go run ./tools/migrate-conformity -state terraform.tfstate
 ## 4. Understand tool arguments
 
 - `-state` (required): Path to a Terraform state JSON file (for example, local `.tfstate` or exported `state.json`).
-- The tool always writes `main.tf` to the current working directory.
+- `-out` (optional): Output directory for `main.tf` (defaults to the current working directory).
 
 ## 5. Review generated output
 
