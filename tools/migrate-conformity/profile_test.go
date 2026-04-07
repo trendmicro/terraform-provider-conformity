@@ -266,7 +266,7 @@ func TestAppendScanRuleHCLWithCustomizedRiskLevel(t *testing.T) {
 		"      values {",
 		"        value = \"CreateLoginProfile\"",
 		"        enabled = true",
-		"        # Note: customized_risk_level \"HIGH\" not mapped; review in Vision One",
+		"        # @TODO review manually `customized_risk_level`: \"HIGH\" not mapped; review in Vision One",
 		"      }",
 		"    }",
 		"  }",

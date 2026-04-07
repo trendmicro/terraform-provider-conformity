@@ -315,7 +315,7 @@ func appendReportConfigHCL(lines *[]string, item reportConfigItem, resourceName 
 		if item.AppliedComplianceStandardID != "" {
 			*lines = append(*lines, fmt.Sprintf("  applied_compliance_standard_id = \"%s\"", escapeHCL(item.AppliedComplianceStandardID)))
 		} else {
-			*lines = append(*lines, "  # TODO: set applied_compliance_standard_id for compliance report")
+			*lines = append(*lines, "  # @TODO review manually `applied_compliance_standard_id`: set this for compliance report")
 		}
 		if item.ControlsType != "" {
 			*lines = append(*lines, fmt.Sprintf("  controls_type = \"%s\"", escapeHCL(item.ControlsType)))
@@ -348,7 +348,7 @@ func appendReportFilterHCL(lines *[]string, item reportConfigItem) {
 	filter := item.ChecksFilter
 	*lines = append(*lines, "  checks_filter {")
 	if len(filter.IgnoredTags) > 0 {
-		*lines = append(*lines, fmt.Sprintf("    # Note: filter.tags ignored: [%s]", formatQuotedList(filter.IgnoredTags)))
+		*lines = append(*lines, fmt.Sprintf("    # @TODO review manually `checks_filter.tags`: source filter.tags was ignored: [%s]", formatQuotedList(filter.IgnoredTags)))
 	}
 	if len(filter.Categories) > 0 {
 		*lines = append(*lines, fmt.Sprintf("    categories = [%s]", formatQuotedList(filter.Categories)))

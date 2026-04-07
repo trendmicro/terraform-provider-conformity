@@ -347,7 +347,7 @@ func formatIgnoredSettings(value interface{}) []string {
 
 func formatIgnoredSettingBlock(entry map[string]interface{}) []string {
 	block := []string{}
-	block = append(block, "        # Unmapped setting below. Confirm this works in Vision One before uncommenting.")
+	block = append(block, "        # @TODO review manually `scan_rule.extra_settings.settings`: unmapped setting below; confirm this works in Vision One before uncommenting")
 	block = append(block, "        # settings {")
 
 	if name := toStringValue(entry["name"]); name != "" {
@@ -418,7 +418,7 @@ func appendScanRuleHCL(lines *[]string, rule scanRuleItem) {
 
 	if rule.Exceptions != nil {
 		if len(rule.Exceptions.Tags) > 0 {
-			*lines = append(*lines, fmt.Sprintf("    # tags: [%s] // This field was not mapped because it has no effect. Did you mean to use filter_tags here?", formatQuotedList(rule.Exceptions.Tags)))
+			*lines = append(*lines, fmt.Sprintf("    # @TODO review manually `scan_rule.exceptions.filter_tags`: source tags [%s] were not mapped; if needed, use filter_tags", formatQuotedList(rule.Exceptions.Tags)))
 		}
 		if len(rule.Exceptions.FilterTags) > 0 || len(rule.Exceptions.ResourceIds) > 0 {
 			*lines = append(*lines, "    exceptions {")
@@ -454,7 +454,7 @@ func appendScanRuleHCL(lines *[]string, rule scanRuleItem) {
 				*lines = append(*lines, fmt.Sprintf("        customized_tags = [%s]", formatQuotedList(val.CustomizedTags)))
 			}
 			if val.CustomRisk != "" {
-				*lines = append(*lines, fmt.Sprintf("        # Note: customized_risk_level \"%s\" not mapped; review in Vision One", escapeHCL(val.CustomRisk)))
+				*lines = append(*lines, fmt.Sprintf("        # @TODO review manually `customized_risk_level`: \"%s\" not mapped; review in Vision One", escapeHCL(val.CustomRisk)))
 			}
 			if len(val.IgnoredSettingLines) > 0 {
 				*lines = append(*lines, val.IgnoredSettingLines...)
