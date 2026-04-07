@@ -37,7 +37,7 @@ func TestAppendCheckSuppressionHCL(t *testing.T) {
 	}
 
 	var lines []string
-	appendCheckSuppressionHCL(&lines, item, "critical")
+	lines = appendCheckSuppressionHCL(lines, item, "critical")
 
 	expected := strings.Join([]string{
 		"resource \"visionone_crm_check_suppression\" \"critical\" {",

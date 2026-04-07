@@ -74,7 +74,7 @@ func TestAppendCustomRuleHCL(t *testing.T) {
 	}
 
 	var lines []string
-	appendCustomRuleHCL(&lines, item, "custom_rule_one")
+	lines = appendCustomRuleHCL(lines, item, "custom_rule_one")
 
 	expected := strings.Join([]string{
 		"resource \"visionone_crm_custom_rule\" \"custom_rule_one\" {",

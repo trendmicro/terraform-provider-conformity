@@ -91,7 +91,7 @@ func TestAppendScanRuleHCL(t *testing.T) {
 	}
 
 	var lines []string
-	appendScanRuleHCL(&lines, rule)
+	lines = appendScanRuleHCL(lines, rule)
 
 	expected := strings.Join([]string{
 		"",
@@ -179,7 +179,7 @@ func TestAppendScanRuleHCLWithCustomizedTags(t *testing.T) {
 	}
 
 	var lines []string
-	appendScanRuleHCL(&lines, rule)
+	lines = appendScanRuleHCL(lines, rule)
 
 	expected := strings.Join([]string{
 		"",
@@ -251,7 +251,7 @@ func TestAppendScanRuleHCLWithCustomizedRiskLevel(t *testing.T) {
 	}
 
 	var lines []string
-	appendScanRuleHCL(&lines, rule)
+	lines = appendScanRuleHCL(lines, rule)
 
 	expected := strings.Join([]string{
 		"",

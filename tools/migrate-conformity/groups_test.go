@@ -34,7 +34,7 @@ func TestAppendGroupsHCL(t *testing.T) {
 
 	var hclLines []string
 	var importLines []string
-	appendGroupsHCL(&hclLines, &importLines, nil, groups, true)
+	hclLines, importLines, _ = appendGroupsHCL(hclLines, importLines, nil, groups, true)
 
 	expectedHCL := strings.Join([]string{
 		"# Groups",

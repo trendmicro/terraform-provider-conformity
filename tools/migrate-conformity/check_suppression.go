@@ -76,21 +76,22 @@ func deriveServiceFromRuleID(ruleID string) string {
 	return strings.TrimSpace(parts[0])
 }
 
-func appendCheckSuppressionHCL(lines *[]string, item checkSuppressionItem, resourceName string) {
-	*lines = append(*lines, fmt.Sprintf("resource \"visionone_crm_check_suppression\" \"%s\" {", resourceName))
-	*lines = append(*lines, fmt.Sprintf("  account_id = \"%s\"", escapeHCL(item.AccountID)))
-	*lines = append(*lines, fmt.Sprintf("  service = \"%s\"", escapeHCL(item.Service)))
-	*lines = append(*lines, fmt.Sprintf("  rule_id = \"%s\"", escapeHCL(item.RuleID)))
-	*lines = append(*lines, fmt.Sprintf("  region = \"%s\"", escapeHCL(item.Region)))
-	*lines = append(*lines, fmt.Sprintf("  resource_id = \"%s\"", escapeHCL(item.ResourceID)))
-	*lines = append(*lines, fmt.Sprintf("  note = \"%s\"", escapeHCL(item.Note)))
-	*lines = append(*lines, "}")
-	*lines = append(*lines, "")
+func appendCheckSuppressionHCL(lines []string, item checkSuppressionItem, resourceName string) []string {
+	lines = append(lines, fmt.Sprintf("resource \"visionone_crm_check_suppression\" \"%s\" {", resourceName))
+	lines = append(lines, fmt.Sprintf("  account_id = \"%s\"", escapeHCL(item.AccountID)))
+	lines = append(lines, fmt.Sprintf("  service = \"%s\"", escapeHCL(item.Service)))
+	lines = append(lines, fmt.Sprintf("  rule_id = \"%s\"", escapeHCL(item.RuleID)))
+	lines = append(lines, fmt.Sprintf("  region = \"%s\"", escapeHCL(item.Region)))
+	lines = append(lines, fmt.Sprintf("  resource_id = \"%s\"", escapeHCL(item.ResourceID)))
+	lines = append(lines, fmt.Sprintf("  note = \"%s\"", escapeHCL(item.Note)))
+	lines = append(lines, "}")
+	lines = append(lines, "")
+	return lines
 }
 
-func appendCheckSuppressionMappingLines(mappingLines *[]string, item checkSuppressionItem, targetName string) {
+func appendCheckSuppressionMappingLines(mappingLines []string, item checkSuppressionItem, targetName string) []string {
 	if mappingLines == nil {
-		return
+		return mappingLines
 	}
 
 	sourceName := item.ResourceName
@@ -99,7 +100,7 @@ func appendCheckSuppressionMappingLines(mappingLines *[]string, item checkSuppre
 	}
 	sourceType := "conformity_check_suppression"
 	targetType := "visionone_crm_check_suppression"
-	*mappingLines = append(*mappingLines, formatMappingLine(sourceType, sourceName, targetType, targetName))
+	mappingLines = append(mappingLines, formatMappingLine(sourceType, sourceName, targetType, targetName))
 
 	seen := map[string]struct{}{}
 	appendUnique := func(line string) {
@@ -107,7 +108,7 @@ func appendCheckSuppressionMappingLines(mappingLines *[]string, item checkSuppre
 			return
 		}
 		seen[line] = struct{}{}
-		*mappingLines = append(*mappingLines, line)
+		mappingLines = append(mappingLines, line)
 	}
 	mapField := func(sourceAttribute, targetAttribute string) {
 		appendUnique(formatAttributeMappingLine(sourceAttribute, targetAttribute))
@@ -121,4 +122,6 @@ func appendCheckSuppressionMappingLines(mappingLines *[]string, item checkSuppre
 	if item.Note != "" {
 		mapField("note", "note")
 	}
+
+	return mappingLines
 }

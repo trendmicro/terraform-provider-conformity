@@ -128,7 +128,7 @@ func TestAppendCommunicationConfigurationHCL_ServiceNowDictionaryOverrides(t *te
 	}
 
 	var lines []string
-	appendCommunicationConfigurationHCL(&lines, item, "servicenow")
+	lines = appendCommunicationConfigurationHCL(lines, item, "servicenow")
 
 	expected := strings.Join([]string{
 		"resource \"visionone_crm_communication_configuration\" \"servicenow\" {",
@@ -232,7 +232,7 @@ func TestParseMsTeamsChannelLabelConflictWarning(t *testing.T) {
 	}
 
 	var lines []string
-	appendCommunicationConfigurationHCL(&lines, item, "ms_teams")
+	lines = appendCommunicationConfigurationHCL(lines, item, "ms_teams")
 	output := strings.Join(lines, "\n")
 	if !strings.Contains(output, "# Warning: MS Teams has both channel_name") {
 		t.Fatalf("expected warning comment in HCL output:\n%s", output)
@@ -293,7 +293,7 @@ func TestAppendCommunicationConfigurationHCL(t *testing.T) {
 	}
 
 	var lines []string
-	appendCommunicationConfigurationHCL(&lines, item, "email")
+	lines = appendCommunicationConfigurationHCL(lines, item, "email")
 
 	expected := strings.Join([]string{
 		"resource \"visionone_crm_communication_configuration\" \"email\" {",

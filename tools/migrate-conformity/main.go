@@ -125,7 +125,7 @@ func run(opts migrateOptions) error {
 	}
 
 	dryRun := true
-	appendGroupsHCL(&hclLines, &importLines, &mappingLines, groups, dryRun)
+	hclLines, importLines, mappingLines = appendGroupsHCL(hclLines, importLines, mappingLines, groups, dryRun)
 
 	if len(profiles) > 0 {
 		hclLines = append(hclLines, "# Profiles")
@@ -143,12 +143,12 @@ func run(opts migrateOptions) error {
 				hclLines = append(hclLines, fmt.Sprintf("  description = \"%s\"", escapeHCL(item.Description)))
 			}
 			for _, rule := range item.ScanRules {
-				appendScanRuleHCL(&hclLines, rule)
+				hclLines = appendScanRuleHCL(hclLines, rule)
 			}
 			hclLines = append(hclLines, "}")
 			hclLines = append(hclLines, "")
 
-			appendProfileMappingLines(&mappingLines, item, resourceName)
+			mappingLines = appendProfileMappingLines(mappingLines, item, resourceName)
 
 			importLines = append(importLines, formatImportLine("visionone_crm_profile", resourceName, item.ID, dryRun))
 		}
@@ -163,8 +163,8 @@ func run(opts migrateOptions) error {
 			} else {
 				resourceName = uniqueResourceName(resourceName, reportConfigNameCounter)
 			}
-			appendReportConfigHCL(&hclLines, item, resourceName)
-			appendReportConfigMappingLines(&mappingLines, item, resourceName)
+			hclLines = appendReportConfigHCL(hclLines, item, resourceName)
+			mappingLines = appendReportConfigMappingLines(mappingLines, item, resourceName)
 
 			importLines = append(importLines, formatImportLine("visionone_crm_report_config", resourceName, item.ID, dryRun))
 		}
@@ -179,8 +179,8 @@ func run(opts migrateOptions) error {
 			} else {
 				resourceName = uniqueResourceName(resourceName, customRuleNameCounter)
 			}
-			appendCustomRuleHCL(&hclLines, item, resourceName)
-			appendCustomRuleMappingLines(&mappingLines, item, resourceName)
+			hclLines = appendCustomRuleHCL(hclLines, item, resourceName)
+			mappingLines = appendCustomRuleMappingLines(mappingLines, item, resourceName)
 
 			importLines = append(importLines, formatImportLine("visionone_crm_custom_rule", resourceName, item.ID, dryRun))
 		}
@@ -195,8 +195,8 @@ func run(opts migrateOptions) error {
 			} else {
 				resourceName = uniqueResourceName(resourceName, checkSuppressionNameCounter)
 			}
-			appendCheckSuppressionHCL(&hclLines, item, resourceName)
-			appendCheckSuppressionMappingLines(&mappingLines, item, resourceName)
+			hclLines = appendCheckSuppressionHCL(hclLines, item, resourceName)
+			mappingLines = appendCheckSuppressionMappingLines(mappingLines, item, resourceName)
 
 			importLines = append(importLines, formatImportLine("visionone_crm_check_suppression", resourceName, item.ID, dryRun))
 		}
@@ -213,7 +213,7 @@ func run(opts migrateOptions) error {
 				resourceName = uniqueResourceName(resourceName, applyProfileNameCounter)
 			}
 			hclLines = appendApplyProfileHCL(hclLines, item, resourceName)
-			appendApplyProfileMappingLines(&mappingLines, item, resourceName)
+			mappingLines = appendApplyProfileMappingLines(mappingLines, item, resourceName)
 		}
 	}
 
@@ -226,8 +226,8 @@ func run(opts migrateOptions) error {
 			} else {
 				resourceName = uniqueResourceName(resourceName, communicationNameCounter)
 			}
-			appendCommunicationConfigurationHCL(&hclLines, item, resourceName)
-			appendCommunicationMappingLines(&mappingLines, item, resourceName)
+			hclLines = appendCommunicationConfigurationHCL(hclLines, item, resourceName)
+			mappingLines = appendCommunicationMappingLines(mappingLines, item, resourceName)
 
 			importLines = append(importLines, formatImportLine("visionone_crm_communication_configuration", resourceName, item.ID, dryRun))
 		}

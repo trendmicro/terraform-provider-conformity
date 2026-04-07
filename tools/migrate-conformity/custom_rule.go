@@ -209,70 +209,71 @@ func parseCustomRuleConditions(value interface{}) []customRuleConditionItem {
 	return conditions
 }
 
-func appendCustomRuleHCL(lines *[]string, item customRuleItem, resourceName string) {
-	*lines = append(*lines, fmt.Sprintf("resource \"visionone_crm_custom_rule\" \"%s\" {", resourceName))
-	*lines = append(*lines, fmt.Sprintf("  name = \"%s\"", escapeHCL(item.Name)))
+func appendCustomRuleHCL(lines []string, item customRuleItem, resourceName string) []string {
+	lines = append(lines, fmt.Sprintf("resource \"visionone_crm_custom_rule\" \"%s\" {", resourceName))
+	lines = append(lines, fmt.Sprintf("  name = \"%s\"", escapeHCL(item.Name)))
 	if item.Description != "" {
-		*lines = append(*lines, fmt.Sprintf("  description = \"%s\"", escapeHCL(item.Description)))
+		lines = append(lines, fmt.Sprintf("  description = \"%s\"", escapeHCL(item.Description)))
 	}
 	if item.Severity != "" {
-		*lines = append(*lines, fmt.Sprintf("  risk_level = \"%s\"", escapeHCL(item.Severity)))
+		lines = append(lines, fmt.Sprintf("  risk_level = \"%s\"", escapeHCL(item.Severity)))
 	}
 	if item.CloudProvider != "" {
-		*lines = append(*lines, fmt.Sprintf("  cloud_provider = \"%s\"", escapeHCL(item.CloudProvider)))
+		lines = append(lines, fmt.Sprintf("  cloud_provider = \"%s\"", escapeHCL(item.CloudProvider)))
 	}
 	if item.Service != "" {
-		*lines = append(*lines, fmt.Sprintf("  service = \"%s\"", escapeHCL(item.Service)))
+		lines = append(lines, fmt.Sprintf("  service = \"%s\"", escapeHCL(item.Service)))
 	}
 	if item.ResourceType != "" {
-		*lines = append(*lines, fmt.Sprintf("  resource_type = \"%s\"", escapeHCL(item.ResourceType)))
+		lines = append(lines, fmt.Sprintf("  resource_type = \"%s\"", escapeHCL(item.ResourceType)))
 	}
-	*lines = append(*lines, fmt.Sprintf("  enabled = %t", item.Enabled))
+	lines = append(lines, fmt.Sprintf("  enabled = %t", item.Enabled))
 	if len(item.Categories) > 0 {
-		*lines = append(*lines, fmt.Sprintf("  categories = [%s]", formatQuotedList(item.Categories)))
+		lines = append(lines, fmt.Sprintf("  categories = [%s]", formatQuotedList(item.Categories)))
 	}
 	if item.RemediationNotes != "" {
-		*lines = append(*lines, fmt.Sprintf("  remediation_note = \"%s\"", escapeHCLMultiline(item.RemediationNotes)))
+		lines = append(lines, fmt.Sprintf("  remediation_note = \"%s\"", escapeHCLMultiline(item.RemediationNotes)))
 	}
 
 	for _, attr := range item.Attributes {
-		*lines = append(*lines, "  attribute {")
-		*lines = append(*lines, fmt.Sprintf("    name = \"%s\"", escapeHCL(attr.Name)))
-		*lines = append(*lines, fmt.Sprintf("    path = \"%s\"", escapeHCL(attr.Path)))
-		*lines = append(*lines, fmt.Sprintf("    required = %t", attr.Required))
-		*lines = append(*lines, "  }")
+		lines = append(lines, "  attribute {")
+		lines = append(lines, fmt.Sprintf("    name = \"%s\"", escapeHCL(attr.Name)))
+		lines = append(lines, fmt.Sprintf("    path = \"%s\"", escapeHCL(attr.Path)))
+		lines = append(lines, fmt.Sprintf("    required = %t", attr.Required))
+		lines = append(lines, "  }")
 	}
 
 	for _, rule := range item.Rules {
-		*lines = append(*lines, "  event_rule {")
-		*lines = append(*lines, fmt.Sprintf("    description = \"%s\"", escapeHCL(rule.Description)))
+		lines = append(lines, "  event_rule {")
+		lines = append(lines, fmt.Sprintf("    description = \"%s\"", escapeHCL(rule.Description)))
 		if rule.Operator != "" || len(rule.Conditions) > 0 {
-			*lines = append(*lines, "    conditions {")
+			lines = append(lines, "    conditions {")
 			if rule.Operator != "" {
-				*lines = append(*lines, fmt.Sprintf("      operator = \"%s\"", escapeHCL(rule.Operator)))
+				lines = append(lines, fmt.Sprintf("      operator = \"%s\"", escapeHCL(rule.Operator)))
 			}
 			for _, condition := range rule.Conditions {
-				*lines = append(*lines, "      condition {")
-				*lines = append(*lines, fmt.Sprintf("        operator = \"%s\"", escapeHCL(condition.Operator)))
-				*lines = append(*lines, fmt.Sprintf("        fact = \"%s\"", escapeHCL(condition.Fact)))
+				lines = append(lines, "      condition {")
+				lines = append(lines, fmt.Sprintf("        operator = \"%s\"", escapeHCL(condition.Operator)))
+				lines = append(lines, fmt.Sprintf("        fact = \"%s\"", escapeHCL(condition.Fact)))
 				if condition.Path != "" {
-					*lines = append(*lines, fmt.Sprintf("        path = \"%s\"", escapeHCL(condition.Path)))
+					lines = append(lines, fmt.Sprintf("        path = \"%s\"", escapeHCL(condition.Path)))
 				}
-				*lines = append(*lines, fmt.Sprintf("        value = %s", formatCustomRuleValue(condition.Value)))
-				*lines = append(*lines, "      }")
+				lines = append(lines, fmt.Sprintf("        value = %s", formatCustomRuleValue(condition.Value)))
+				lines = append(lines, "      }")
 			}
-			*lines = append(*lines, "    }")
+			lines = append(lines, "    }")
 		}
-		*lines = append(*lines, "  }")
+		lines = append(lines, "  }")
 	}
 
-	*lines = append(*lines, "}")
-	*lines = append(*lines, "")
+	lines = append(lines, "}")
+	lines = append(lines, "")
+	return lines
 }
 
-func appendCustomRuleMappingLines(mappingLines *[]string, item customRuleItem, targetName string) {
+func appendCustomRuleMappingLines(mappingLines []string, item customRuleItem, targetName string) []string {
 	if mappingLines == nil {
-		return
+		return mappingLines
 	}
 
 	sourceName := item.ResourceName
@@ -281,7 +282,7 @@ func appendCustomRuleMappingLines(mappingLines *[]string, item customRuleItem, t
 	}
 	sourceType := "conformity_custom_rule"
 	targetType := "visionone_crm_custom_rule"
-	*mappingLines = append(*mappingLines, formatMappingLine(sourceType, sourceName, targetType, targetName))
+	mappingLines = append(mappingLines, formatMappingLine(sourceType, sourceName, targetType, targetName))
 
 	seen := map[string]struct{}{}
 	appendUnique := func(line string) {
@@ -289,7 +290,7 @@ func appendCustomRuleMappingLines(mappingLines *[]string, item customRuleItem, t
 			return
 		}
 		seen[line] = struct{}{}
-		*mappingLines = append(*mappingLines, line)
+		mappingLines = append(mappingLines, line)
 	}
 	mapField := func(sourceAttribute, targetAttribute string) {
 		appendUnique(formatAttributeMappingLine(sourceAttribute, targetAttribute))
@@ -334,6 +335,8 @@ func appendCustomRuleMappingLines(mappingLines *[]string, item customRuleItem, t
 		mapField("rules.conditions.path", "event_rule.conditions.condition.path")
 		mapField("rules.conditions.value", "event_rule.conditions.condition.value")
 	}
+
+	return mappingLines
 }
 
 func formatCustomRuleValue(raw string) string {

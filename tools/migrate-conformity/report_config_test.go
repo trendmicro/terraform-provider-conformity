@@ -86,7 +86,7 @@ func TestAppendReportConfigHCL(t *testing.T) {
 	}
 
 	var hclLines []string
-	appendReportConfigHCL(&hclLines, item, "report_a")
+	hclLines = appendReportConfigHCL(hclLines, item, "report_a")
 
 	expected := strings.Join([]string{
 		"resource \"visionone_crm_report_config\" \"report_a\" {",
@@ -134,7 +134,7 @@ func TestAppendReportConfigHCL_EmptyTagsOmitted(t *testing.T) {
 	}
 
 	var hclLines []string
-	appendReportConfigHCL(&hclLines, item, "report_c")
+	hclLines = appendReportConfigHCL(hclLines, item, "report_c")
 
 	expected := strings.Join([]string{
 		"resource \"visionone_crm_report_config\" \"report_c\" {",
@@ -179,7 +179,7 @@ func TestAppendReportConfigHCL_AccountLevelOmitsIncludeAccountNamesReviewComment
 
 	item := parseReportConfigAttributes(attrs)
 	var hclLines []string
-	appendReportConfigHCL(&hclLines, item, "report_e")
+	hclLines = appendReportConfigHCL(hclLines, item, "report_e")
 
 	got := strings.Join(hclLines, "\n")
 	if strings.Contains(got, "include_account_names") {
@@ -261,7 +261,7 @@ func TestAppendReportFilterHCL_V2SuppressedTrueAddsReviewComment(t *testing.T) {
 	}
 
 	var hclLines []string
-	appendReportConfigHCL(&hclLines, item, "report_g")
+	hclLines = appendReportConfigHCL(hclLines, item, "report_g")
 
 	got := strings.Join(hclLines, "\n")
 	if !strings.Contains(got, "# @TODO review manually `suppressed`: suppressed=true in v2 may come from omitted source field in Conformity state") {

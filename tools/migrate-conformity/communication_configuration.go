@@ -472,152 +472,154 @@ func parseMsTeamsChannelLabel(value interface{}) (string, string) {
 	return channel, ""
 }
 
-func appendCommunicationConfigurationHCL(lines *[]string, item communicationSettingItem, resourceName string) {
-	*lines = append(*lines, fmt.Sprintf("resource \"visionone_crm_communication_configuration\" \"%s\" {", resourceName))
-	*lines = append(*lines, fmt.Sprintf("  enabled = %t", item.Enabled))
+func appendCommunicationConfigurationHCL(lines []string, item communicationSettingItem, resourceName string) []string {
+	lines = append(lines, fmt.Sprintf("resource \"visionone_crm_communication_configuration\" \"%s\" {", resourceName))
+	lines = append(lines, fmt.Sprintf("  enabled = %t", item.Enabled))
 	if item.AccountID != "" {
-		*lines = append(*lines, fmt.Sprintf("  account_id = \"%s\"", escapeHCL(item.AccountID)))
+		lines = append(lines, fmt.Sprintf("  account_id = \"%s\"", escapeHCL(item.AccountID)))
 	}
 	if item.ChannelLabel != "" {
-		*lines = append(*lines, fmt.Sprintf("  channel_label = \"%s\"", escapeHCL(item.ChannelLabel)))
+		lines = append(lines, fmt.Sprintf("  channel_label = \"%s\"", escapeHCL(item.ChannelLabel)))
 	}
 	for _, warning := range item.Warnings {
-		*lines = append(*lines, fmt.Sprintf("  # Warning: %s", warning))
+		lines = append(lines, fmt.Sprintf("  # Warning: %s", warning))
 	}
 	if item.Manual {
-		*lines = append(*lines, "  manual = true")
+		lines = append(lines, "  manual = true")
 	}
 
 	if item.EmailConfiguration != nil {
-		*lines = append(*lines, "  email_configuration = {")
-		*lines = append(*lines, fmt.Sprintf("    user_ids = [%s]", formatQuotedList(item.EmailConfiguration.UserIDs)))
-		*lines = append(*lines, "  }")
-		*lines = append(*lines, "  # TODO: user_ids must be formatted as {identifierId}#{companyId}")
+		lines = append(lines, "  email_configuration = {")
+		lines = append(lines, fmt.Sprintf("    user_ids = [%s]", formatQuotedList(item.EmailConfiguration.UserIDs)))
+		lines = append(lines, "  }")
+		lines = append(lines, "  # TODO: user_ids must be formatted as {identifierId}#{companyId}")
 	}
 	if item.SmsConfiguration != nil {
-		*lines = append(*lines, "  sms_configuration = {")
-		*lines = append(*lines, fmt.Sprintf("    user_ids = [%s]", formatQuotedList(item.SmsConfiguration.UserIDs)))
-		*lines = append(*lines, "  }")
-		*lines = append(*lines, "  # TODO: user_ids must be formatted as {identifierId}#{companyId}")
+		lines = append(lines, "  sms_configuration = {")
+		lines = append(lines, fmt.Sprintf("    user_ids = [%s]", formatQuotedList(item.SmsConfiguration.UserIDs)))
+		lines = append(lines, "  }")
+		lines = append(lines, "  # TODO: user_ids must be formatted as {identifierId}#{companyId}")
 	}
 	if item.MsTeamsConfiguration != nil {
-		*lines = append(*lines, "  ms_teams_configuration = {")
-		*lines = append(*lines, fmt.Sprintf("    url = \"%s\"", escapeHCL(item.MsTeamsConfiguration.URL)))
-		*lines = append(*lines, fmt.Sprintf("    include_introduced_by = %t", item.MsTeamsConfiguration.IncludeIntroducedBy))
-		*lines = append(*lines, fmt.Sprintf("    include_resource = %t", item.MsTeamsConfiguration.IncludeResource))
-		*lines = append(*lines, fmt.Sprintf("    include_tags = %t", item.MsTeamsConfiguration.IncludeTags))
-		*lines = append(*lines, fmt.Sprintf("    include_extra_data = %t", item.MsTeamsConfiguration.IncludeExtraData))
-		*lines = append(*lines, "  }")
+		lines = append(lines, "  ms_teams_configuration = {")
+		lines = append(lines, fmt.Sprintf("    url = \"%s\"", escapeHCL(item.MsTeamsConfiguration.URL)))
+		lines = append(lines, fmt.Sprintf("    include_introduced_by = %t", item.MsTeamsConfiguration.IncludeIntroducedBy))
+		lines = append(lines, fmt.Sprintf("    include_resource = %t", item.MsTeamsConfiguration.IncludeResource))
+		lines = append(lines, fmt.Sprintf("    include_tags = %t", item.MsTeamsConfiguration.IncludeTags))
+		lines = append(lines, fmt.Sprintf("    include_extra_data = %t", item.MsTeamsConfiguration.IncludeExtraData))
+		lines = append(lines, "  }")
 	}
 	if item.SlackConfiguration != nil {
-		*lines = append(*lines, "  slack_configuration = {")
-		*lines = append(*lines, fmt.Sprintf("    url = \"%s\"", escapeHCL(item.SlackConfiguration.URL)))
-		*lines = append(*lines, fmt.Sprintf("    channel = \"%s\"", escapeHCL(item.SlackConfiguration.Channel)))
-		*lines = append(*lines, fmt.Sprintf("    include_introduced_by = %t", item.SlackConfiguration.IncludeIntroducedBy))
-		*lines = append(*lines, fmt.Sprintf("    include_resource = %t", item.SlackConfiguration.IncludeResource))
-		*lines = append(*lines, fmt.Sprintf("    include_tags = %t", item.SlackConfiguration.IncludeTags))
-		*lines = append(*lines, fmt.Sprintf("    include_extra_data = %t", item.SlackConfiguration.IncludeExtraData))
-		*lines = append(*lines, "  }")
+		lines = append(lines, "  slack_configuration = {")
+		lines = append(lines, fmt.Sprintf("    url = \"%s\"", escapeHCL(item.SlackConfiguration.URL)))
+		lines = append(lines, fmt.Sprintf("    channel = \"%s\"", escapeHCL(item.SlackConfiguration.Channel)))
+		lines = append(lines, fmt.Sprintf("    include_introduced_by = %t", item.SlackConfiguration.IncludeIntroducedBy))
+		lines = append(lines, fmt.Sprintf("    include_resource = %t", item.SlackConfiguration.IncludeResource))
+		lines = append(lines, fmt.Sprintf("    include_tags = %t", item.SlackConfiguration.IncludeTags))
+		lines = append(lines, fmt.Sprintf("    include_extra_data = %t", item.SlackConfiguration.IncludeExtraData))
+		lines = append(lines, "  }")
 	}
 	if item.SnsConfiguration != nil {
-		*lines = append(*lines, "  sns_configuration = {")
-		*lines = append(*lines, fmt.Sprintf("    arn = \"%s\"", escapeHCL(item.SnsConfiguration.Arn)))
-		*lines = append(*lines, "  }")
+		lines = append(lines, "  sns_configuration = {")
+		lines = append(lines, fmt.Sprintf("    arn = \"%s\"", escapeHCL(item.SnsConfiguration.Arn)))
+		lines = append(lines, "  }")
 	}
 	if item.PagerDutyConfiguration != nil {
-		*lines = append(*lines, "  pagerduty_configuration = {")
-		*lines = append(*lines, fmt.Sprintf("    service_name = \"%s\"", escapeHCL(item.PagerDutyConfiguration.ServiceName)))
-		*lines = append(*lines, fmt.Sprintf("    service_key = \"%s\"", escapeHCL(item.PagerDutyConfiguration.ServiceKey)))
-		*lines = append(*lines, "  }")
+		lines = append(lines, "  pagerduty_configuration = {")
+		lines = append(lines, fmt.Sprintf("    service_name = \"%s\"", escapeHCL(item.PagerDutyConfiguration.ServiceName)))
+		lines = append(lines, fmt.Sprintf("    service_key = \"%s\"", escapeHCL(item.PagerDutyConfiguration.ServiceKey)))
+		lines = append(lines, "  }")
 	}
 	if item.WebhookConfiguration != nil {
-		*lines = append(*lines, "  webhook_configuration = {")
-		*lines = append(*lines, fmt.Sprintf("    url = \"%s\"", escapeHCL(item.WebhookConfiguration.URL)))
+		lines = append(lines, "  webhook_configuration = {")
+		lines = append(lines, fmt.Sprintf("    url = \"%s\"", escapeHCL(item.WebhookConfiguration.URL)))
 		if item.WebhookConfiguration.SecurityToken != "" {
-			*lines = append(*lines, fmt.Sprintf("    security_token = \"%s\"", escapeHCL(item.WebhookConfiguration.SecurityToken)))
+			lines = append(lines, fmt.Sprintf("    security_token = \"%s\"", escapeHCL(item.WebhookConfiguration.SecurityToken)))
 		}
-		*lines = append(*lines, "  }")
-		*lines = append(*lines, "  # TODO: headers are not available in Conformity; add if needed")
+		lines = append(lines, "  }")
+		lines = append(lines, "  # TODO: headers are not available in Conformity; add if needed")
 	}
 	if item.ServiceNowConfiguration != nil {
-		*lines = append(*lines, "  servicenow_configuration = {")
-		*lines = append(*lines, fmt.Sprintf("    type = \"%s\"", escapeHCL(item.ServiceNowConfiguration.Type)))
-		*lines = append(*lines, fmt.Sprintf("    url = \"%s\"", escapeHCL(item.ServiceNowConfiguration.URL)))
-		*lines = append(*lines, fmt.Sprintf("    username = \"%s\"", escapeHCL(item.ServiceNowConfiguration.Username)))
-		*lines = append(*lines, fmt.Sprintf("    password = \"%s\"", escapeHCL(item.ServiceNowConfiguration.Password)))
+		lines = append(lines, "  servicenow_configuration = {")
+		lines = append(lines, fmt.Sprintf("    type = \"%s\"", escapeHCL(item.ServiceNowConfiguration.Type)))
+		lines = append(lines, fmt.Sprintf("    url = \"%s\"", escapeHCL(item.ServiceNowConfiguration.URL)))
+		lines = append(lines, fmt.Sprintf("    username = \"%s\"", escapeHCL(item.ServiceNowConfiguration.Username)))
+		lines = append(lines, fmt.Sprintf("    password = \"%s\"", escapeHCL(item.ServiceNowConfiguration.Password)))
 		if item.ServiceNowConfiguration.Assignee != "" {
-			*lines = append(*lines, fmt.Sprintf("    assignee = \"%s\"", escapeHCL(item.ServiceNowConfiguration.Assignee)))
+			lines = append(lines, fmt.Sprintf("    assignee = \"%s\"", escapeHCL(item.ServiceNowConfiguration.Assignee)))
 		}
 		if item.ServiceNowConfiguration.Impact != "" {
-			*lines = append(*lines, fmt.Sprintf("    impact = \"%s\"", escapeHCL(item.ServiceNowConfiguration.Impact)))
+			lines = append(lines, fmt.Sprintf("    impact = \"%s\"", escapeHCL(item.ServiceNowConfiguration.Impact)))
 		}
 		if item.ServiceNowConfiguration.Urgency != "" {
-			*lines = append(*lines, fmt.Sprintf("    urgency = \"%s\"", escapeHCL(item.ServiceNowConfiguration.Urgency)))
+			lines = append(lines, fmt.Sprintf("    urgency = \"%s\"", escapeHCL(item.ServiceNowConfiguration.Urgency)))
 		}
 		if len(item.ServiceNowConfiguration.DictionaryOverrides) > 0 {
-			*lines = append(*lines, "    dictionary_overrides = [")
+			lines = append(lines, "    dictionary_overrides = [")
 			for _, dictionaryOverride := range item.ServiceNowConfiguration.DictionaryOverrides {
-				*lines = append(*lines, "      {")
-				*lines = append(*lines, fmt.Sprintf("        trigger = \"%s\"", escapeHCL(dictionaryOverride.Trigger)))
-				*lines = append(*lines, "        key_value_pairs = [")
+				lines = append(lines, "      {")
+				lines = append(lines, fmt.Sprintf("        trigger = \"%s\"", escapeHCL(dictionaryOverride.Trigger)))
+				lines = append(lines, "        key_value_pairs = [")
 				for _, pair := range dictionaryOverride.KeyValuePairs {
-					*lines = append(*lines, "          {")
-					*lines = append(*lines, fmt.Sprintf("            key = \"%s\"", escapeHCL(pair.Key)))
-					*lines = append(*lines, fmt.Sprintf("            value = \"%s\"", escapeHCL(pair.Value)))
-					*lines = append(*lines, "          },")
+					lines = append(lines, "          {")
+					lines = append(lines, fmt.Sprintf("            key = \"%s\"", escapeHCL(pair.Key)))
+					lines = append(lines, fmt.Sprintf("            value = \"%s\"", escapeHCL(pair.Value)))
+					lines = append(lines, "          },")
 				}
-				*lines = append(*lines, "        ]")
-				*lines = append(*lines, "      },")
+				lines = append(lines, "        ]")
+				lines = append(lines, "      },")
 			}
-			*lines = append(*lines, "    ]")
+			lines = append(lines, "    ]")
 		}
-		*lines = append(*lines, "  }")
+		lines = append(lines, "  }")
 	}
 
 	if item.ChecksFilter != nil && hasCommunicationFilterValues(item.ChecksFilter) {
-		appendCommunicationFilterHCL(lines, item)
+		lines = appendCommunicationFilterHCL(lines, item)
 	}
 
-	*lines = append(*lines, "}")
-	*lines = append(*lines, "")
+	lines = append(lines, "}")
+	lines = append(lines, "")
+	return lines
 }
 
-func appendCommunicationFilterHCL(lines *[]string, item communicationSettingItem) {
+func appendCommunicationFilterHCL(lines []string, item communicationSettingItem) []string {
 	filter := item.ChecksFilter
-	*lines = append(*lines, "  checks_filter = {")
+	lines = append(lines, "  checks_filter = {")
 	if len(filter.IgnoredTags) > 0 {
-		*lines = append(*lines, fmt.Sprintf("    # Note: filter.tags ignored: [%s]", formatQuotedList(filter.IgnoredTags)))
+		lines = append(lines, fmt.Sprintf("    # Note: filter.tags ignored: [%s]", formatQuotedList(filter.IgnoredTags)))
 	}
 	if len(filter.Regions) > 0 {
-		*lines = append(*lines, fmt.Sprintf("    regions = [%s]", formatQuotedList(filter.Regions)))
+		lines = append(lines, fmt.Sprintf("    regions = [%s]", formatQuotedList(filter.Regions)))
 	}
 	if len(filter.Services) > 0 {
-		*lines = append(*lines, fmt.Sprintf("    services = [%s]", formatQuotedList(filter.Services)))
+		lines = append(lines, fmt.Sprintf("    services = [%s]", formatQuotedList(filter.Services)))
 	}
 	if len(filter.RuleIDs) > 0 {
-		*lines = append(*lines, fmt.Sprintf("    rule_ids = [%s]", formatQuotedList(filter.RuleIDs)))
+		lines = append(lines, fmt.Sprintf("    rule_ids = [%s]", formatQuotedList(filter.RuleIDs)))
 	}
 	if len(filter.Categories) > 0 {
-		*lines = append(*lines, fmt.Sprintf("    categories = [%s]", formatQuotedList(filter.Categories)))
+		lines = append(lines, fmt.Sprintf("    categories = [%s]", formatQuotedList(filter.Categories)))
 	}
 	if len(filter.RiskLevels) > 0 {
-		*lines = append(*lines, fmt.Sprintf("    risk_levels = [%s]", formatQuotedList(filter.RiskLevels)))
+		lines = append(lines, fmt.Sprintf("    risk_levels = [%s]", formatQuotedList(filter.RiskLevels)))
 	}
 	if len(filter.Tags) > 0 {
-		*lines = append(*lines, fmt.Sprintf("    tags = [%s]", formatQuotedList(filter.Tags)))
+		lines = append(lines, fmt.Sprintf("    tags = [%s]", formatQuotedList(filter.Tags)))
 	}
 	if len(filter.ComplianceStandardIDs) > 0 {
-		*lines = append(*lines, fmt.Sprintf("    compliance_standard_ids = [%s]", formatQuotedList(filter.ComplianceStandardIDs)))
+		lines = append(lines, fmt.Sprintf("    compliance_standard_ids = [%s]", formatQuotedList(filter.ComplianceStandardIDs)))
 	}
 	if (item.SnsConfiguration != nil || item.WebhookConfiguration != nil) && len(filter.Statuses) > 0 {
-		*lines = append(*lines, fmt.Sprintf("    statuses = [%s]", formatQuotedList(filter.Statuses)))
+		lines = append(lines, fmt.Sprintf("    statuses = [%s]", formatQuotedList(filter.Statuses)))
 	}
-	*lines = append(*lines, "  }")
+	lines = append(lines, "  }")
+	return lines
 }
 
-func appendCommunicationMappingLines(mappingLines *[]string, item communicationSettingItem, targetName string) {
+func appendCommunicationMappingLines(mappingLines []string, item communicationSettingItem, targetName string) []string {
 	if mappingLines == nil {
-		return
+		return mappingLines
 	}
 
 	sourceName := item.ResourceName
@@ -626,7 +628,7 @@ func appendCommunicationMappingLines(mappingLines *[]string, item communicationS
 	}
 	sourceType := "conformity_communication_setting"
 	targetType := "visionone_crm_communication_configuration"
-	*mappingLines = append(*mappingLines, formatMappingLine(sourceType, sourceName, targetType, targetName))
+	mappingLines = append(mappingLines, formatMappingLine(sourceType, sourceName, targetType, targetName))
 
 	seen := map[string]struct{}{}
 	appendUnique := func(line string) {
@@ -634,7 +636,7 @@ func appendCommunicationMappingLines(mappingLines *[]string, item communicationS
 			return
 		}
 		seen[line] = struct{}{}
-		*mappingLines = append(*mappingLines, line)
+		mappingLines = append(mappingLines, line)
 	}
 	mapField := func(sourceAttribute, targetAttribute string) {
 		appendUnique(formatAttributeMappingLine(sourceAttribute, targetAttribute))
@@ -736,6 +738,8 @@ func appendCommunicationMappingLines(mappingLines *[]string, item communicationS
 			mapField("filter.statuses", "checks_filter.statuses")
 		}
 	}
+
+	return mappingLines
 }
 
 func firstSetEntry(value interface{}) map[string]interface{} {

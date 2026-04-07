@@ -404,72 +404,73 @@ func hasCustomizedRiskLevel(values []valueItem) bool {
 	return false
 }
 
-func appendScanRuleHCL(lines *[]string, rule scanRuleItem) {
-	*lines = append(*lines, "")
-	*lines = append(*lines, "  scan_rule {")
-	*lines = append(*lines, fmt.Sprintf("    id = \"%s\"", escapeHCL(rule.ID)))
+func appendScanRuleHCL(lines []string, rule scanRuleItem) []string {
+	lines = append(lines, "")
+	lines = append(lines, "  scan_rule {")
+	lines = append(lines, fmt.Sprintf("    id = \"%s\"", escapeHCL(rule.ID)))
 	if rule.Provider != "" {
-		*lines = append(*lines, fmt.Sprintf("    provider = \"%s\"", escapeHCL(rule.Provider)))
+		lines = append(lines, fmt.Sprintf("    provider = \"%s\"", escapeHCL(rule.Provider)))
 	}
-	*lines = append(*lines, fmt.Sprintf("    enabled = %t", rule.Enabled))
+	lines = append(lines, fmt.Sprintf("    enabled = %t", rule.Enabled))
 	if rule.RiskLevel != "" {
-		*lines = append(*lines, fmt.Sprintf("    risk_level = \"%s\"", escapeHCL(rule.RiskLevel)))
+		lines = append(lines, fmt.Sprintf("    risk_level = \"%s\"", escapeHCL(rule.RiskLevel)))
 	}
 
 	if rule.Exceptions != nil {
 		if len(rule.Exceptions.Tags) > 0 {
-			*lines = append(*lines, fmt.Sprintf("    # @TODO review manually `scan_rule.exceptions.filter_tags`: source tags [%s] were not mapped; if needed, use filter_tags", formatQuotedList(rule.Exceptions.Tags)))
+			lines = append(lines, fmt.Sprintf("    # @TODO review manually `scan_rule.exceptions.filter_tags`: source tags [%s] were not mapped; if needed, use filter_tags", formatQuotedList(rule.Exceptions.Tags)))
 		}
 		if len(rule.Exceptions.FilterTags) > 0 || len(rule.Exceptions.ResourceIds) > 0 {
-			*lines = append(*lines, "    exceptions {")
+			lines = append(lines, "    exceptions {")
 			if len(rule.Exceptions.FilterTags) > 0 {
-				*lines = append(*lines, fmt.Sprintf("      filter_tags = [%s]", formatQuotedList(rule.Exceptions.FilterTags)))
+				lines = append(lines, fmt.Sprintf("      filter_tags = [%s]", formatQuotedList(rule.Exceptions.FilterTags)))
 			}
 			if len(rule.Exceptions.ResourceIds) > 0 {
-				*lines = append(*lines, fmt.Sprintf("      resource_ids = [%s]", formatQuotedList(rule.Exceptions.ResourceIds)))
+				lines = append(lines, fmt.Sprintf("      resource_ids = [%s]", formatQuotedList(rule.Exceptions.ResourceIds)))
 			}
-			*lines = append(*lines, "    }")
+			lines = append(lines, "    }")
 		}
 	}
 
 	for _, setting := range rule.ExtraSettings {
-		*lines = append(*lines, "    extra_settings {")
-		*lines = append(*lines, fmt.Sprintf("      name = \"%s\"", escapeHCL(setting.Name)))
-		*lines = append(*lines, fmt.Sprintf("      type = \"%s\"", escapeHCL(setting.Type)))
+		lines = append(lines, "    extra_settings {")
+		lines = append(lines, fmt.Sprintf("      name = \"%s\"", escapeHCL(setting.Name)))
+		lines = append(lines, fmt.Sprintf("      type = \"%s\"", escapeHCL(setting.Type)))
 		if setting.Value != "" {
-			*lines = append(*lines, fmt.Sprintf("      value = %s", formatValue(setting.Value, setting.Type)))
+			lines = append(lines, fmt.Sprintf("      value = %s", formatValue(setting.Value, setting.Type)))
 		}
 		if len(setting.ValueSet) > 0 {
-			*lines = append(*lines, fmt.Sprintf("      value_set = [%s]", formatValueList(setting.ValueSet, setting.Type)))
+			lines = append(lines, fmt.Sprintf("      value_set = [%s]", formatValueList(setting.ValueSet, setting.Type)))
 		}
 		for _, val := range setting.Values {
-			*lines = append(*lines, "      values {")
+			lines = append(lines, "      values {")
 			if val.Value != "" {
-				*lines = append(*lines, fmt.Sprintf("        value = %s", formatValue(val.Value, setting.Type)))
+				lines = append(lines, fmt.Sprintf("        value = %s", formatValue(val.Value, setting.Type)))
 			}
 			if val.Enabled != nil {
-				*lines = append(*lines, fmt.Sprintf("        enabled = %t", *val.Enabled))
+				lines = append(lines, fmt.Sprintf("        enabled = %t", *val.Enabled))
 			}
 			if len(val.CustomizedTags) > 0 {
-				*lines = append(*lines, fmt.Sprintf("        customized_tags = [%s]", formatQuotedList(val.CustomizedTags)))
+				lines = append(lines, fmt.Sprintf("        customized_tags = [%s]", formatQuotedList(val.CustomizedTags)))
 			}
 			if val.CustomRisk != "" {
-				*lines = append(*lines, fmt.Sprintf("        # @TODO review manually `customized_risk_level`: \"%s\" not mapped; review in Vision One", escapeHCL(val.CustomRisk)))
+				lines = append(lines, fmt.Sprintf("        # @TODO review manually `customized_risk_level`: \"%s\" not mapped; review in Vision One", escapeHCL(val.CustomRisk)))
 			}
 			if len(val.IgnoredSettingLines) > 0 {
-				*lines = append(*lines, val.IgnoredSettingLines...)
+				lines = append(lines, val.IgnoredSettingLines...)
 			}
-			*lines = append(*lines, "      }")
+			lines = append(lines, "      }")
 		}
-		*lines = append(*lines, "    }")
+		lines = append(lines, "    }")
 	}
 
-	*lines = append(*lines, "  }")
+	lines = append(lines, "  }")
+	return lines
 }
 
-func appendProfileMappingLines(mappingLines *[]string, item profileItem, targetName string) {
+func appendProfileMappingLines(mappingLines []string, item profileItem, targetName string) []string {
 	if mappingLines == nil {
-		return
+		return mappingLines
 	}
 
 	sourceName := item.ResourceName
@@ -478,7 +479,7 @@ func appendProfileMappingLines(mappingLines *[]string, item profileItem, targetN
 	}
 	sourceType := "conformity_profile"
 	targetType := "visionone_crm_profile"
-	*mappingLines = append(*mappingLines, formatMappingLine(sourceType, sourceName, targetType, targetName))
+	mappingLines = append(mappingLines, formatMappingLine(sourceType, sourceName, targetType, targetName))
 
 	seen := map[string]struct{}{}
 	appendUnique := func(line string) {
@@ -486,7 +487,7 @@ func appendProfileMappingLines(mappingLines *[]string, item profileItem, targetN
 			return
 		}
 		seen[line] = struct{}{}
-		*mappingLines = append(*mappingLines, line)
+		mappingLines = append(mappingLines, line)
 	}
 	mapField := func(sourceAttribute, targetAttribute string) {
 		appendUnique(formatAttributeMappingLine(sourceAttribute, targetAttribute))
@@ -512,6 +513,8 @@ func appendProfileMappingLines(mappingLines *[]string, item profileItem, targetN
 		mapField("included.extra_settings.values", "scan_rule.extra_settings.values")
 		mapField("included.extra_settings.settings.tags-override", "scan_rule.extra_settings.values.customized_tags")
 	}
+
+	return mappingLines
 }
 
 func formatValue(raw string, settingType string) string {

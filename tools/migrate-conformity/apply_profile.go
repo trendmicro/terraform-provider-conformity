@@ -111,9 +111,9 @@ func appendApplyProfileHCL(lines []string, item applyProfileItem, resourceName s
 	return lines
 }
 
-func appendApplyProfileMappingLines(mappingLines *[]string, item applyProfileItem, targetName string) {
+func appendApplyProfileMappingLines(mappingLines []string, item applyProfileItem, targetName string) []string {
 	if mappingLines == nil {
-		return
+		return mappingLines
 	}
 
 	sourceName := item.ResourceName
@@ -122,7 +122,7 @@ func appendApplyProfileMappingLines(mappingLines *[]string, item applyProfileIte
 	}
 	sourceType := "conformity_apply_profile"
 	targetType := "visionone_crm_apply_profile"
-	*mappingLines = append(*mappingLines, formatMappingLine(sourceType, sourceName, targetType, targetName))
+	mappingLines = append(mappingLines, formatMappingLine(sourceType, sourceName, targetType, targetName))
 
 	seen := map[string]struct{}{}
 	appendUnique := func(line string) {
@@ -130,7 +130,7 @@ func appendApplyProfileMappingLines(mappingLines *[]string, item applyProfileIte
 			return
 		}
 		seen[line] = struct{}{}
-		*mappingLines = append(*mappingLines, line)
+		mappingLines = append(mappingLines, line)
 	}
 	mapField := func(sourceAttribute, targetAttribute string) {
 		appendUnique(formatAttributeMappingLine(sourceAttribute, targetAttribute))
@@ -149,4 +149,6 @@ func appendApplyProfileMappingLines(mappingLines *[]string, item applyProfileIte
 	if item.Include != nil && item.Include.Exceptions != nil {
 		mapField("include.exceptions", "include.exceptions")
 	}
+
+	return mappingLines
 }

@@ -2,12 +2,12 @@ package main
 
 import "fmt"
 
-func appendGroupsHCL(lines *[]string, importLines *[]string, mappingLines *[]string, groups []groupItem, dryRun bool) {
+func appendGroupsHCL(lines []string, importLines []string, mappingLines []string, groups []groupItem, dryRun bool) ([]string, []string, []string) {
 	if len(groups) == 0 {
-		return
+		return lines, importLines, mappingLines
 	}
 
-	*lines = append(*lines, "# Groups")
+	lines = append(lines, "# Groups")
 	nameCounter := map[string]int{}
 	for _, item := range groups {
 		resourceName := item.ResourceName
@@ -17,28 +17,30 @@ func appendGroupsHCL(lines *[]string, importLines *[]string, mappingLines *[]str
 			resourceName = uniqueResourceName(resourceName, nameCounter)
 		}
 
-		*lines = append(*lines, fmt.Sprintf("resource \"visionone_crm_group\" \"%s\" {", resourceName))
-		*lines = append(*lines, fmt.Sprintf("  name = \"%s\"", escapeHCL(item.Name)))
+		lines = append(lines, fmt.Sprintf("resource \"visionone_crm_group\" \"%s\" {", resourceName))
+		lines = append(lines, fmt.Sprintf("  name = \"%s\"", escapeHCL(item.Name)))
 		if len(item.Tags) > 0 {
-			*lines = append(*lines, fmt.Sprintf("  tags = [%s]", formatTags(item.Tags)))
+			lines = append(lines, fmt.Sprintf("  tags = [%s]", formatTags(item.Tags)))
 		} else if item.TagsSet {
-			*lines = append(*lines, "  tags = []")
+			lines = append(lines, "  tags = []")
 		}
-		*lines = append(*lines, "}")
-		*lines = append(*lines, "")
+		lines = append(lines, "}")
+		lines = append(lines, "")
 
 		if mappingLines != nil {
 			sourceName := item.ResourceName
 			if sourceName == "" {
 				sourceName = resourceName
 			}
-			*mappingLines = append(*mappingLines, formatMappingLine("conformity_group", sourceName, "visionone_crm_group", resourceName))
-			*mappingLines = append(*mappingLines, formatAttributeMappingLine("name", "name"))
+			mappingLines = append(mappingLines, formatMappingLine("conformity_group", sourceName, "visionone_crm_group", resourceName))
+			mappingLines = append(mappingLines, formatAttributeMappingLine("name", "name"))
 			if len(item.Tags) > 0 || item.TagsSet {
-				*mappingLines = append(*mappingLines, formatAttributeMappingLine("tags", "tags"))
+				mappingLines = append(mappingLines, formatAttributeMappingLine("tags", "tags"))
 			}
 		}
 
-		*importLines = append(*importLines, formatImportLine("visionone_crm_group", resourceName, item.ID, dryRun))
+		importLines = append(importLines, formatImportLine("visionone_crm_group", resourceName, item.ID, dryRun))
 	}
+
+	return lines, importLines, mappingLines
 }

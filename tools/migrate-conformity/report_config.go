@@ -283,130 +283,132 @@ func deriveControlsType(withChecks, withoutChecks bool) string {
 	return "all"
 }
 
-func appendReportConfigHCL(lines *[]string, item reportConfigItem, resourceName string) {
-	*lines = append(*lines, fmt.Sprintf("resource \"visionone_crm_report_config\" \"%s\" {", resourceName))
+func appendReportConfigHCL(lines []string, item reportConfigItem, resourceName string) []string {
+	lines = append(lines, fmt.Sprintf("resource \"visionone_crm_report_config\" \"%s\" {", resourceName))
 	if item.AccountID != "" {
-		*lines = append(*lines, fmt.Sprintf("  account_id = \"%s\"", escapeHCL(item.AccountID)))
+		lines = append(lines, fmt.Sprintf("  account_id = \"%s\"", escapeHCL(item.AccountID)))
 	}
 	if item.GroupID != "" {
-		*lines = append(*lines, fmt.Sprintf("  group_id = \"%s\"", escapeHCL(item.GroupID)))
+		lines = append(lines, fmt.Sprintf("  group_id = \"%s\"", escapeHCL(item.GroupID)))
 	}
-	*lines = append(*lines, fmt.Sprintf("  report_title = \"%s\"", escapeHCL(item.ReportTitle)))
+	lines = append(lines, fmt.Sprintf("  report_title = \"%s\"", escapeHCL(item.ReportTitle)))
 	if item.ReportType != "" {
-		*lines = append(*lines, fmt.Sprintf("  report_type = \"%s\"", escapeHCL(item.ReportType)))
+		lines = append(lines, fmt.Sprintf("  report_type = \"%s\"", escapeHCL(item.ReportType)))
 	}
 	if item.AccountID == "" {
-		*lines = append(*lines, "  # @TODO review manually `include_account_names`: Conformity state is inconsistent for this field")
+		lines = append(lines, "  # @TODO review manually `include_account_names`: Conformity state is inconsistent for this field")
 	}
 	if item.IncludeChecks {
-		*lines = append(*lines, fmt.Sprintf("  include_checks = %t", item.IncludeChecks))
+		lines = append(lines, fmt.Sprintf("  include_checks = %t", item.IncludeChecks))
 	}
 	if item.EmailRecipientsSet {
 		if len(item.EmailRecipients) == 0 {
-			*lines = append(*lines, "  email_recipients = []")
+			lines = append(lines, "  email_recipients = []")
 		} else {
-			*lines = append(*lines, fmt.Sprintf("  email_recipients = [%s]", formatQuotedList(item.EmailRecipients)))
+			lines = append(lines, fmt.Sprintf("  email_recipients = [%s]", formatQuotedList(item.EmailRecipients)))
 		}
 	}
 	if item.ReportFormatsInEmailSet && len(item.ReportFormatsInEmail) > 0 {
-		*lines = append(*lines, fmt.Sprintf("  report_formats_in_email = [%s]", formatQuotedList(item.ReportFormatsInEmail)))
+		lines = append(lines, fmt.Sprintf("  report_formats_in_email = [%s]", formatQuotedList(item.ReportFormatsInEmail)))
 	}
 	if item.ReportType == "COMPLIANCE-STANDARD" {
 		if item.AppliedComplianceStandardID != "" {
-			*lines = append(*lines, fmt.Sprintf("  applied_compliance_standard_id = \"%s\"", escapeHCL(item.AppliedComplianceStandardID)))
+			lines = append(lines, fmt.Sprintf("  applied_compliance_standard_id = \"%s\"", escapeHCL(item.AppliedComplianceStandardID)))
 		} else {
-			*lines = append(*lines, "  # @TODO review manually `applied_compliance_standard_id`: set this for compliance report")
+			lines = append(lines, "  # @TODO review manually `applied_compliance_standard_id`: set this for compliance report")
 		}
 		if item.ControlsType != "" {
-			*lines = append(*lines, fmt.Sprintf("  controls_type = \"%s\"", escapeHCL(item.ControlsType)))
+			lines = append(lines, fmt.Sprintf("  controls_type = \"%s\"", escapeHCL(item.ControlsType)))
 		}
 	}
 
 	if item.Schedule != nil {
-		*lines = append(*lines, "  schedule {")
+		lines = append(lines, "  schedule {")
 		if item.Schedule.Enabled != nil {
-			*lines = append(*lines, fmt.Sprintf("    enabled = %t", *item.Schedule.Enabled))
+			lines = append(lines, fmt.Sprintf("    enabled = %t", *item.Schedule.Enabled))
 		}
 		if item.Schedule.Frequency != "" {
-			*lines = append(*lines, fmt.Sprintf("    frequency = \"%s\"", escapeHCL(item.Schedule.Frequency)))
+			lines = append(lines, fmt.Sprintf("    frequency = \"%s\"", escapeHCL(item.Schedule.Frequency)))
 		}
 		if item.Schedule.Timezone != "" {
-			*lines = append(*lines, fmt.Sprintf("    timezone = \"%s\"", escapeHCL(item.Schedule.Timezone)))
+			lines = append(lines, fmt.Sprintf("    timezone = \"%s\"", escapeHCL(item.Schedule.Timezone)))
 		}
-		*lines = append(*lines, "  }")
+		lines = append(lines, "  }")
 	}
 
 	if item.ChecksFilter != nil && hasReportFilterValues(item.ChecksFilter) {
-		appendReportFilterHCL(lines, item)
+		lines = appendReportFilterHCL(lines, item)
 	}
 
-	*lines = append(*lines, "}")
-	*lines = append(*lines, "")
+	lines = append(lines, "}")
+	lines = append(lines, "")
+	return lines
 }
 
-func appendReportFilterHCL(lines *[]string, item reportConfigItem) {
+func appendReportFilterHCL(lines []string, item reportConfigItem) []string {
 	filter := item.ChecksFilter
-	*lines = append(*lines, "  checks_filter {")
+	lines = append(lines, "  checks_filter {")
 	if len(filter.IgnoredTags) > 0 {
-		*lines = append(*lines, fmt.Sprintf("    # @TODO review manually `checks_filter.tags`: source filter.tags was ignored: [%s]", formatQuotedList(filter.IgnoredTags)))
+		lines = append(lines, fmt.Sprintf("    # @TODO review manually `checks_filter.tags`: source filter.tags was ignored: [%s]", formatQuotedList(filter.IgnoredTags)))
 	}
 	if len(filter.Categories) > 0 {
-		*lines = append(*lines, fmt.Sprintf("    categories = [%s]", formatQuotedList(filter.Categories)))
+		lines = append(lines, fmt.Sprintf("    categories = [%s]", formatQuotedList(filter.Categories)))
 	}
 	if item.ReportType == "GENERIC" && len(filter.ComplianceStandardIds) > 0 {
-		*lines = append(*lines, fmt.Sprintf("    compliance_standard_ids = [%s]", formatQuotedList(filter.ComplianceStandardIds)))
+		lines = append(lines, fmt.Sprintf("    compliance_standard_ids = [%s]", formatQuotedList(filter.ComplianceStandardIds)))
 	}
 	if len(filter.Tags) > 0 {
-		*lines = append(*lines, fmt.Sprintf("    tags = [%s]", formatQuotedList(filter.Tags)))
+		lines = append(lines, fmt.Sprintf("    tags = [%s]", formatQuotedList(filter.Tags)))
 	}
 	if filter.Description != "" {
-		*lines = append(*lines, fmt.Sprintf("    description = \"%s\"", escapeHCL(filter.Description)))
+		lines = append(lines, fmt.Sprintf("    description = \"%s\"", escapeHCL(filter.Description)))
 	}
 	if filter.NewerThanDays > 0 {
-		*lines = append(*lines, fmt.Sprintf("    newer_than_days = %d", filter.NewerThanDays))
+		lines = append(lines, fmt.Sprintf("    newer_than_days = %d", filter.NewerThanDays))
 	}
 	if filter.OlderThanDays > 0 {
-		*lines = append(*lines, fmt.Sprintf("    older_than_days = %d", filter.OlderThanDays))
+		lines = append(lines, fmt.Sprintf("    older_than_days = %d", filter.OlderThanDays))
 	}
 	if len(filter.Providers) > 0 {
-		*lines = append(*lines, fmt.Sprintf("    providers = [%s]", formatQuotedList(filter.Providers)))
+		lines = append(lines, fmt.Sprintf("    providers = [%s]", formatQuotedList(filter.Providers)))
 	}
 	if len(filter.Regions) > 0 {
-		*lines = append(*lines, fmt.Sprintf("    regions = [%s]", formatQuotedList(filter.Regions)))
+		lines = append(lines, fmt.Sprintf("    regions = [%s]", formatQuotedList(filter.Regions)))
 	}
 	if filter.ResourceID != "" {
-		*lines = append(*lines, fmt.Sprintf("    resource_id = \"%s\"", escapeHCL(filter.ResourceID)))
+		lines = append(lines, fmt.Sprintf("    resource_id = \"%s\"", escapeHCL(filter.ResourceID)))
 	}
 	if filter.ResourceSearchMode != "" {
-		*lines = append(*lines, fmt.Sprintf("    resource_search_mode = \"%s\"", escapeHCL(filter.ResourceSearchMode)))
+		lines = append(lines, fmt.Sprintf("    resource_search_mode = \"%s\"", escapeHCL(filter.ResourceSearchMode)))
 	}
 	if len(filter.ResourceTypes) > 0 {
-		*lines = append(*lines, fmt.Sprintf("    resource_types = [%s]", formatQuotedList(filter.ResourceTypes)))
+		lines = append(lines, fmt.Sprintf("    resource_types = [%s]", formatQuotedList(filter.ResourceTypes)))
 	}
 	if len(filter.RiskLevels) > 0 {
-		*lines = append(*lines, fmt.Sprintf("    risk_levels = [%s]", formatQuotedList(filter.RiskLevels)))
+		lines = append(lines, fmt.Sprintf("    risk_levels = [%s]", formatQuotedList(filter.RiskLevels)))
 	}
 	if len(filter.RuleIds) > 0 {
-		*lines = append(*lines, fmt.Sprintf("    rule_ids = [%s]", formatQuotedList(filter.RuleIds)))
+		lines = append(lines, fmt.Sprintf("    rule_ids = [%s]", formatQuotedList(filter.RuleIds)))
 	}
 	if len(filter.Services) > 0 {
-		*lines = append(*lines, fmt.Sprintf("    services = [%s]", formatQuotedList(filter.Services)))
+		lines = append(lines, fmt.Sprintf("    services = [%s]", formatQuotedList(filter.Services)))
 	}
 	if len(filter.Statuses) > 0 {
-		*lines = append(*lines, fmt.Sprintf("    statuses = [%s]", formatQuotedList(filter.Statuses)))
+		lines = append(lines, fmt.Sprintf("    statuses = [%s]", formatQuotedList(filter.Statuses)))
 	}
 	if filter.SuppressedReviewNote {
-		*lines = append(*lines, "    # @TODO review manually `suppressed`: suppressed=true in v2 may come from omitted source field in Conformity state")
+		lines = append(lines, "    # @TODO review manually `suppressed`: suppressed=true in v2 may come from omitted source field in Conformity state")
 	}
 	if filter.Suppressed != nil {
-		*lines = append(*lines, fmt.Sprintf("    suppressed = %t", *filter.Suppressed))
+		lines = append(lines, fmt.Sprintf("    suppressed = %t", *filter.Suppressed))
 	}
-	*lines = append(*lines, "  }")
+	lines = append(lines, "  }")
+	return lines
 }
 
-func appendReportConfigMappingLines(mappingLines *[]string, item reportConfigItem, targetName string) {
+func appendReportConfigMappingLines(mappingLines []string, item reportConfigItem, targetName string) []string {
 	if mappingLines == nil {
-		return
+		return mappingLines
 	}
 
 	sourceName := item.ResourceName
@@ -415,7 +417,7 @@ func appendReportConfigMappingLines(mappingLines *[]string, item reportConfigIte
 	}
 	sourceType := "conformity_report_config"
 	targetType := "visionone_crm_report_config"
-	*mappingLines = append(*mappingLines, formatMappingLine(sourceType, sourceName, targetType, targetName))
+	mappingLines = append(mappingLines, formatMappingLine(sourceType, sourceName, targetType, targetName))
 
 	seen := map[string]struct{}{}
 	appendUnique := func(line string) {
@@ -423,7 +425,7 @@ func appendReportConfigMappingLines(mappingLines *[]string, item reportConfigIte
 			return
 		}
 		seen[line] = struct{}{}
-		*mappingLines = append(*mappingLines, line)
+		mappingLines = append(mappingLines, line)
 	}
 	mapField := func(sourceAttribute, targetAttribute string) {
 		appendUnique(formatAttributeMappingLine(sourceAttribute, targetAttribute))
@@ -483,6 +485,8 @@ func appendReportConfigMappingLines(mappingLines *[]string, item reportConfigIte
 		mapField("filter.statuses", "checks_filter.statuses")
 		mapField("filter.suppressed", "checks_filter.suppressed")
 	}
+
+	return mappingLines
 }
 
 func firstListEntry(value interface{}) map[string]interface{} {
