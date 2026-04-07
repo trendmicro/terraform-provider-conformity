@@ -92,7 +92,7 @@ func TestAppendReportConfigHCL(t *testing.T) {
 		"resource \"visionone_crm_report_config\" \"report_a\" {",
 		"  report_title = \"Report A\"",
 		"  report_type = \"GENERIC\"",
-		"  # include_account_names @TODO: review manually; Conformity state is inconsistent for this field",
+		"  # @TODO review manually `include_account_names`: Conformity state is inconsistent for this field",
 		"  schedule {",
 		"    enabled = true",
 		"    frequency = \"* * *\"",
@@ -140,7 +140,7 @@ func TestAppendReportConfigHCL_EmptyTagsOmitted(t *testing.T) {
 		"resource \"visionone_crm_report_config\" \"report_c\" {",
 		"  report_title = \"Report C\"",
 		"  report_type = \"GENERIC\"",
-		"  # include_account_names @TODO: review manually; Conformity state is inconsistent for this field",
+		"  # @TODO review manually `include_account_names`: Conformity state is inconsistent for this field",
 		"}",
 		"",
 	}, "\n") + "\n"
@@ -230,6 +230,45 @@ func TestParseReportFilterMessage(t *testing.T) {
 				t.Fatalf("unexpected message parse result: got %q, want %q", got, tc.want)
 			}
 		})
+	}
+}
+
+func TestParseReportConfigFilter_V2SuppressedTrueAddsReviewNote(t *testing.T) {
+	filter := parseReportConfigFilter(map[string]interface{}{
+		"suppressed_filter_mode": "v2",
+		"suppressed":             true,
+	}, "GENERIC")
+
+	if filter == nil {
+		t.Fatalf("expected filter to be parsed")
+	}
+	if filter.Suppressed == nil || *filter.Suppressed != true {
+		t.Fatalf("expected suppressed=true for v2 mode")
+	}
+	if !filter.SuppressedReviewNote {
+		t.Fatalf("expected suppressed review note to be set for v2 suppressed=true")
+	}
+}
+
+func TestAppendReportFilterHCL_V2SuppressedTrueAddsReviewComment(t *testing.T) {
+	item := reportConfigItem{
+		ReportTitle: "Report G",
+		ReportType:  "GENERIC",
+		ChecksFilter: &reportFilterItem{
+			Suppressed:           boolPtr(true),
+			SuppressedReviewNote: true,
+		},
+	}
+
+	var hclLines []string
+	appendReportConfigHCL(&hclLines, item, "report_g")
+
+	got := strings.Join(hclLines, "\n")
+	if !strings.Contains(got, "# @TODO review manually `suppressed`: suppressed=true in v2 may come from omitted source field in Conformity state") {
+		t.Fatalf("expected suppressed v2 review comment in generated HCL")
+	}
+	if !strings.Contains(got, "suppressed = true") {
+		t.Fatalf("expected suppressed=true in generated HCL")
 	}
 }
 

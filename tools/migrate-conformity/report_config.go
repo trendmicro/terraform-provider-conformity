@@ -50,6 +50,7 @@ type reportFilterItem struct {
 	Services              []string
 	Statuses              []string
 	Suppressed            *bool
+	SuppressedReviewNote  bool
 }
 
 func loadReportConfigsFromState(path string) ([]reportConfigItem, error) {
@@ -206,6 +207,9 @@ func parseReportConfigFilter(entry map[string]interface{}, reportType string) *r
 		switch mode {
 		case "v2":
 			filter.Suppressed = &suppressed
+			if suppressed {
+				filter.SuppressedReviewNote = true
+			}
 		case "v1":
 			if !suppressed {
 				filter.Suppressed = &suppressed
@@ -292,7 +296,7 @@ func appendReportConfigHCL(lines *[]string, item reportConfigItem, resourceName 
 		*lines = append(*lines, fmt.Sprintf("  report_type = \"%s\"", escapeHCL(item.ReportType)))
 	}
 	if item.AccountID == "" {
-		*lines = append(*lines, "  # include_account_names @TODO: review manually; Conformity state is inconsistent for this field")
+		*lines = append(*lines, "  # @TODO review manually `include_account_names`: Conformity state is inconsistent for this field")
 	}
 	if item.IncludeChecks {
 		*lines = append(*lines, fmt.Sprintf("  include_checks = %t", item.IncludeChecks))
@@ -390,6 +394,9 @@ func appendReportFilterHCL(lines *[]string, item reportConfigItem) {
 	}
 	if len(filter.Statuses) > 0 {
 		*lines = append(*lines, fmt.Sprintf("    statuses = [%s]", formatQuotedList(filter.Statuses)))
+	}
+	if filter.SuppressedReviewNote {
+		*lines = append(*lines, "    # @TODO review manually `suppressed`: suppressed=true in v2 may come from omitted source field in Conformity state")
 	}
 	if filter.Suppressed != nil {
 		*lines = append(*lines, fmt.Sprintf("    suppressed = %t", *filter.Suppressed))
