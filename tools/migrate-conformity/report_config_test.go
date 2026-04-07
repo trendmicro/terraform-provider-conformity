@@ -61,7 +61,6 @@ func TestAppendReportConfigHCL(t *testing.T) {
 		ID:                  "report-config:one",
 		ReportTitle:         "Report A",
 		ReportType:          "GENERIC",
-		IncludeAccountNames: boolPtr(true),
 		Schedule: &reportScheduleItem{
 			Enabled:   boolPtr(true),
 			Frequency: "* * *",
@@ -93,7 +92,7 @@ func TestAppendReportConfigHCL(t *testing.T) {
 		"resource \"visionone_crm_report_config\" \"report_a\" {",
 		"  report_title = \"Report A\"",
 		"  report_type = \"GENERIC\"",
-		"  include_account_names = true",
+		"  # include_account_names @TODO: review manually; Conformity state is inconsistent for this field",
 		"  schedule {",
 		"    enabled = true",
 		"    frequency = \"* * *\"",
@@ -129,7 +128,6 @@ func TestAppendReportConfigHCL_EmptyTagsOmitted(t *testing.T) {
 	item := reportConfigItem{
 		ReportTitle:         "Report C",
 		ReportType:          "GENERIC",
-		IncludeAccountNames: boolPtr(true),
 		ChecksFilter: &reportFilterItem{
 			Tags: []string{},
 		},
@@ -142,7 +140,7 @@ func TestAppendReportConfigHCL_EmptyTagsOmitted(t *testing.T) {
 		"resource \"visionone_crm_report_config\" \"report_c\" {",
 		"  report_title = \"Report C\"",
 		"  report_type = \"GENERIC\"",
-		"  include_account_names = true",
+		"  # include_account_names @TODO: review manually; Conformity state is inconsistent for this field",
 		"}",
 		"",
 	}, "\n") + "\n"
@@ -152,25 +150,23 @@ func TestAppendReportConfigHCL_EmptyTagsOmitted(t *testing.T) {
 	}
 }
 
-func TestParseReportConfigAttributes_DefaultIncludeAccountNames(t *testing.T) {
+func TestParseReportConfigAttributes_DoesNotMapIncludeAccountNames(t *testing.T) {
 	attrs := map[string]interface{}{
 		"configuration": []interface{}{
 			map[string]interface{}{
-				"title": "Report D",
+				"title":                 "Report D",
+				"include_account_names": true,
 			},
 		},
 	}
 
 	item := parseReportConfigAttributes(attrs)
-	if item.IncludeAccountNames == nil {
-		t.Fatalf("expected IncludeAccountNames to be set")
-	}
-	if *item.IncludeAccountNames != true {
-		t.Fatalf("expected IncludeAccountNames to default true")
+	if item.ReportTitle != "Report D" {
+		t.Fatalf("expected report title to be parsed")
 	}
 }
 
-func TestParseReportConfigAttributes_AccountLevelSkipsIncludeAccountNames(t *testing.T) {
+func TestAppendReportConfigHCL_AccountLevelOmitsIncludeAccountNamesReviewComment(t *testing.T) {
 	attrs := map[string]interface{}{
 		"account_id": "account-123",
 		"configuration": []interface{}{
@@ -182,8 +178,15 @@ func TestParseReportConfigAttributes_AccountLevelSkipsIncludeAccountNames(t *tes
 	}
 
 	item := parseReportConfigAttributes(attrs)
-	if item.IncludeAccountNames != nil {
-		t.Fatalf("expected IncludeAccountNames to be nil for account-level report")
+	var hclLines []string
+	appendReportConfigHCL(&hclLines, item, "report_e")
+
+	got := strings.Join(hclLines, "\n")
+	if strings.Contains(got, "include_account_names") {
+		t.Fatalf("expected include_account_names to be omitted from output")
+	}
+	if strings.Contains(got, "review include_account_names manually") {
+		t.Fatalf("expected manual include_account_names review comment to be omitted for account-level report")
 	}
 }
 

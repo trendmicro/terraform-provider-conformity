@@ -15,7 +15,6 @@ type reportConfigItem struct {
 	GroupID                     string
 	ReportTitle                 string
 	ReportType                  string
-	IncludeAccountNames         *bool
 	IncludeChecks               bool
 	EmailRecipients             []string
 	EmailRecipientsSet          bool
@@ -105,16 +104,6 @@ func parseReportConfigAttributes(attrs map[string]interface{}) reportConfigItem 
 	item.ReportType = strings.TrimSpace(toStringValue(config["generate_report_type"]))
 	if item.ReportType == "" {
 		item.ReportType = "GENERIC"
-	}
-
-	if item.AccountID == "" {
-		if includeAccountRaw, ok := config["include_account_names"]; ok {
-			includeAccountNames := toBoolValue(includeAccountRaw, true)
-			item.IncludeAccountNames = &includeAccountNames
-		} else {
-			includeAccountNames := true
-			item.IncludeAccountNames = &includeAccountNames
-		}
 	}
 
 	item.IncludeChecks = toBoolValue(config["include_checks"], false)
@@ -302,8 +291,8 @@ func appendReportConfigHCL(lines *[]string, item reportConfigItem, resourceName 
 	if item.ReportType != "" {
 		*lines = append(*lines, fmt.Sprintf("  report_type = \"%s\"", escapeHCL(item.ReportType)))
 	}
-	if item.IncludeAccountNames != nil {
-		*lines = append(*lines, fmt.Sprintf("  include_account_names = %t", *item.IncludeAccountNames))
+	if item.AccountID == "" {
+		*lines = append(*lines, "  # include_account_names @TODO: review manually; Conformity state is inconsistent for this field")
 	}
 	if item.IncludeChecks {
 		*lines = append(*lines, fmt.Sprintf("  include_checks = %t", item.IncludeChecks))
@@ -442,9 +431,6 @@ func appendReportConfigMappingLines(mappingLines *[]string, item reportConfigIte
 	mapField("configuration.title", "report_title")
 	if item.ReportType != "" {
 		mapField("configuration.generate_report_type", "report_type")
-	}
-	if item.IncludeAccountNames != nil {
-		mapField("configuration.include_account_names", "include_account_names")
 	}
 	if item.IncludeChecks {
 		mapField("configuration.include_checks", "include_checks")
