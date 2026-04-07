@@ -29,6 +29,22 @@ func TestLoadApplyProfilesFromState(t *testing.T) {
 	}
 }
 
+func TestLoadApplyProfilesFromState_SortsByResourceName(t *testing.T) {
+	statePath := filepath.Join("testdata", "apply_profile_state_multiple.json")
+
+	items, err := loadApplyProfilesFromState(statePath)
+	if err != nil {
+		t.Fatalf("loadApplyProfilesFromState error: %v", err)
+	}
+	if len(items) != 2 {
+		t.Fatalf("expected 2 apply profiles, got %d", len(items))
+	}
+
+	if items[0].ResourceName != "a_profile" || items[1].ResourceName != "z_profile" {
+		t.Fatalf("expected sorted resource names [a_profile z_profile], got [%s %s]", items[0].ResourceName, items[1].ResourceName)
+	}
+}
+
 func TestAppendApplyProfileHCL(t *testing.T) {
 	item := applyProfileItem{
 		ProfileID:  "profile-1",

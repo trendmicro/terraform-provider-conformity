@@ -56,6 +56,22 @@ func TestLoadReportConfigsFromState(t *testing.T) {
 	}
 }
 
+func TestLoadReportConfigsFromState_SortsByResourceName(t *testing.T) {
+	statePath := filepath.Join("testdata", "report_config_state_multiple.json")
+
+	configs, err := loadReportConfigsFromState(statePath)
+	if err != nil {
+		t.Fatalf("loadReportConfigsFromState error: %v", err)
+	}
+	if len(configs) != 2 {
+		t.Fatalf("expected 2 report configs, got %d", len(configs))
+	}
+
+	if configs[0].ResourceName != "a_report" || configs[1].ResourceName != "z_report" {
+		t.Fatalf("expected sorted resource names [a_report z_report], got [%s %s]", configs[0].ResourceName, configs[1].ResourceName)
+	}
+}
+
 func TestAppendReportConfigHCL(t *testing.T) {
 	item := reportConfigItem{
 		ID:                  "report-config:one",
