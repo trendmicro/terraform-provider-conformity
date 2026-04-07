@@ -197,7 +197,7 @@ func parseReportConfigFilter(entry map[string]interface{}, reportType string) *r
 		ComplianceStandardIds: toStringSlice(entry["compliance_standards"]),
 		Tags:                  uniqueStrings(filterTags),
 		IgnoredTags:           uniqueStrings(ignoredTags),
-		Description:           strings.TrimSpace(toStringValue(entry["message"])),
+		Description:           parseReportFilterMessage(entry["message"]),
 		NewerThanDays:         toIntValue(entry["newer_than_days"]),
 		OlderThanDays:         toIntValue(entry["older_than_days"]),
 		Providers:             toStringSlice(entry["providers"]),
@@ -233,6 +233,14 @@ func parseReportConfigFilter(entry map[string]interface{}, reportType string) *r
 	}
 
 	return filter
+}
+
+func parseReportFilterMessage(value interface{}) string {
+	message, ok := value.(string)
+	if !ok {
+		return ""
+	}
+	return strings.TrimSpace(message)
 }
 
 func hasReportFilterValues(filter *reportFilterItem) bool {

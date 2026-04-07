@@ -187,6 +187,49 @@ func TestParseReportConfigAttributes_AccountLevelSkipsIncludeAccountNames(t *tes
 	}
 }
 
+func TestParseReportConfigAttributes_MessageFalseDoesNotPopulateChecksFilter(t *testing.T) {
+	attrs := map[string]interface{}{
+		"configuration": []interface{}{
+			map[string]interface{}{
+				"title": "Report F",
+			},
+		},
+		"filter": []interface{}{
+			map[string]interface{}{
+				"message": false,
+			},
+		},
+	}
+
+	item := parseReportConfigAttributes(attrs)
+	if item.ChecksFilter != nil {
+		t.Fatalf("expected ChecksFilter to be nil when filter.message is non-string/empty")
+	}
+}
+
+func TestParseReportFilterMessage(t *testing.T) {
+	tests := []struct {
+		name  string
+		input interface{}
+		want  string
+	}{
+		{name: "string", input: "find me", want: "find me"},
+		{name: "trimmed", input: "  find me  ", want: "find me"},
+		{name: "empty", input: "", want: ""},
+		{name: "bool false", input: false, want: ""},
+		{name: "nil", input: nil, want: ""},
+	}
+
+	for _, tc := range tests {
+		t.Run(tc.name, func(t *testing.T) {
+			got := parseReportFilterMessage(tc.input)
+			if got != tc.want {
+				t.Fatalf("unexpected message parse result: got %q, want %q", got, tc.want)
+			}
+		})
+	}
+}
+
 func boolPtr(val bool) *bool {
 	return &val
 }
