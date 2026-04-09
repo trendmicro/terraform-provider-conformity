@@ -110,11 +110,21 @@ func parseReportConfigAttributes(attrs map[string]interface{}) reportConfigItem 
 	item.IncludeChecks = toBoolValue(config["include_checks"], false)
 
 	sendEmail := toBoolValue(config["send_email"], false)
+	_, hasSendEmail := config["send_email"]
+	_, hasEmails := config["emails"]
 	emails := toStringSlice(config["emails"])
-	if len(emails) > 0 {
+	if hasSendEmail && !sendEmail {
+		if len(emails) == 0 {
+			item.EmailRecipients = nil
+			item.EmailRecipientsSet = true
+		}
+	} else if len(emails) > 0 {
 		item.EmailRecipients = emails
 		item.EmailRecipientsSet = true
 	} else if sendEmail {
+		item.EmailRecipientsSet = true
+	} else if !hasSendEmail && !hasEmails {
+		item.EmailRecipients = nil
 		item.EmailRecipientsSet = true
 	}
 	if _, ok := config["should_email_include_pdf"]; ok {

@@ -226,6 +226,73 @@ func TestParseReportConfigAttributes_MessageFalseDoesNotPopulateChecksFilter(t *
 	}
 }
 
+func TestParseReportConfigAttributes_EmailRecipientsBehavior(t *testing.T) {
+	tests := []struct {
+		name              string
+		config            map[string]interface{}
+		expectSet         bool
+		expectRecipients  []string
+	}{
+		{
+			name: "send_email false with emails set does not force email_recipients",
+			config: map[string]interface{}{
+				"title":      "Report Email 1",
+				"send_email": false,
+				"emails":     []interface{}{"ignored@example.com"},
+			},
+			expectSet:        false,
+			expectRecipients: nil,
+		},
+		{
+			name: "send_email false without emails sets empty email_recipients",
+			config: map[string]interface{}{
+				"title":      "Report Email 2",
+				"send_email": false,
+			},
+			expectSet:        true,
+			expectRecipients: nil,
+		},
+		{
+			name: "missing send_email and emails sets empty email_recipients",
+			config: map[string]interface{}{
+				"title": "Report Email 3",
+			},
+			expectSet:        true,
+			expectRecipients: nil,
+		},
+		{
+			name: "send_email true with emails keeps recipients",
+			config: map[string]interface{}{
+				"title":      "Report Email 4",
+				"send_email": true,
+				"emails":     []interface{}{"scheduled@example.com"},
+			},
+			expectSet:        true,
+			expectRecipients: []string{"scheduled@example.com"},
+		},
+	}
+
+	for _, tc := range tests {
+		t.Run(tc.name, func(t *testing.T) {
+			attrs := map[string]interface{}{
+				"configuration": []interface{}{tc.config},
+			}
+
+			item := parseReportConfigAttributes(attrs)
+
+			if item.EmailRecipientsSet != tc.expectSet {
+				t.Fatalf("unexpected EmailRecipientsSet: got %t, want %t", item.EmailRecipientsSet, tc.expectSet)
+			}
+
+			gotRecipients := strings.Join(item.EmailRecipients, ",")
+			wantRecipients := strings.Join(tc.expectRecipients, ",")
+			if gotRecipients != wantRecipients {
+				t.Fatalf("unexpected EmailRecipients: got %q, want %q", gotRecipients, wantRecipients)
+			}
+		})
+	}
+}
+
 func TestParseReportFilterMessage(t *testing.T) {
 	tests := []struct {
 		name  string
