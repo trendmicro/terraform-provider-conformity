@@ -97,6 +97,8 @@ type communicationServiceNowKeyValuePairItem struct {
 	Value string
 }
 
+const secretPlaceholder = "@TODO replace secret"
+
 func loadCommunicationSettingsFromState(path string) ([]communicationSettingItem, error) {
 	data, err := os.ReadFile(path)
 	if err != nil {
@@ -327,7 +329,7 @@ func parseCommunicationPagerDutyChannel(value interface{}) *communicationPagerDu
 	}
 	serviceName := strings.TrimSpace(toStringValue(entry["service_name"]))
 	serviceKey := strings.TrimSpace(toStringValue(entry["service_key"]))
-	if serviceName == "" || serviceKey == "" {
+	if serviceName == "" {
 		return nil
 	}
 	return &communicationPagerDutyItem{
@@ -360,7 +362,7 @@ func parseCommunicationServiceNowChannel(value interface{}) *communicationServic
 	username := strings.TrimSpace(toStringValue(entry["username"]))
 	password := strings.TrimSpace(toStringValue(entry["password"]))
 	snType := strings.TrimSpace(toStringValue(entry["type"]))
-	if url == "" || username == "" || password == "" || snType == "" {
+	if url == "" || snType == "" {
 		return nil
 	}
 	return &communicationServiceNowItem{
@@ -527,7 +529,11 @@ func appendCommunicationConfigurationHCL(lines []string, item communicationSetti
 	if item.PagerDutyConfiguration != nil {
 		lines = append(lines, "  pagerduty_configuration = {")
 		lines = append(lines, fmt.Sprintf("    service_name = \"%s\"", escapeHCL(item.PagerDutyConfiguration.ServiceName)))
-		lines = append(lines, fmt.Sprintf("    service_key = \"%s\"", escapeHCL(item.PagerDutyConfiguration.ServiceKey)))
+		serviceKey := item.PagerDutyConfiguration.ServiceKey
+		if strings.TrimSpace(serviceKey) == "" {
+			serviceKey = secretPlaceholder
+		}
+		lines = append(lines, fmt.Sprintf("    service_key = \"%s\"", escapeHCL(serviceKey)))
 		lines = append(lines, "  }")
 	}
 	if item.WebhookConfiguration != nil {
@@ -544,7 +550,11 @@ func appendCommunicationConfigurationHCL(lines []string, item communicationSetti
 		lines = append(lines, fmt.Sprintf("    type = \"%s\"", escapeHCL(item.ServiceNowConfiguration.Type)))
 		lines = append(lines, fmt.Sprintf("    url = \"%s\"", escapeHCL(item.ServiceNowConfiguration.URL)))
 		lines = append(lines, fmt.Sprintf("    username = \"%s\"", escapeHCL(item.ServiceNowConfiguration.Username)))
-		lines = append(lines, fmt.Sprintf("    password = \"%s\"", escapeHCL(item.ServiceNowConfiguration.Password)))
+		password := item.ServiceNowConfiguration.Password
+		if strings.TrimSpace(password) == "" {
+			password = secretPlaceholder
+		}
+		lines = append(lines, fmt.Sprintf("    password = \"%s\"", escapeHCL(password)))
 		if item.ServiceNowConfiguration.Assignee != "" {
 			lines = append(lines, fmt.Sprintf("    assignee = \"%s\"", escapeHCL(item.ServiceNowConfiguration.Assignee)))
 		}
@@ -610,7 +620,7 @@ func appendCommunicationFilterHCL(lines []string, item communicationSettingItem)
 	if len(filter.ComplianceStandardIDs) > 0 {
 		lines = append(lines, fmt.Sprintf("    compliance_standard_ids = [%s]", formatQuotedList(filter.ComplianceStandardIDs)))
 	}
-	if (item.SnsConfiguration != nil || item.WebhookConfiguration != nil) && len(filter.Statuses) > 0 {
+	if len(filter.Statuses) > 0 {
 		lines = append(lines, fmt.Sprintf("    statuses = [%s]", formatQuotedList(filter.Statuses)))
 	}
 	lines = append(lines, "  }")
@@ -734,7 +744,7 @@ func appendCommunicationMappingLines(mappingLines []string, item communicationSe
 		if len(item.ChecksFilter.ComplianceStandardIDs) > 0 {
 			mapField("filter.compliances", "checks_filter.compliance_standard_ids")
 		}
-		if len(item.ChecksFilter.Statuses) > 0 && (item.SnsConfiguration != nil || item.WebhookConfiguration != nil) {
+		if len(item.ChecksFilter.Statuses) > 0 {
 			mapField("filter.statuses", "checks_filter.statuses")
 		}
 	}

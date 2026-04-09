@@ -54,6 +54,8 @@ The tool generates `main.tf` containing:
 
 Validate resource names, arguments, and comments before proceeding to further steps and merging them into your target workspace.
 
+Address every generated comment marked with `@TODO` before continuing (for example, replace placeholder secret values and complete any noted manual adjustments).
+
 For schema and attribute parity checks, review the corresponding [Vision One provider Cloud Risk Management resource and data source documentation](https://registry.terraform.io/providers/trendmicro/vision-one/latest/docs).
 
 If account IDs are required during manual adjustments, use [`visionone_crm_account` data source](https://registry.terraform.io/providers/trendmicro/vision-one/latest/docs/data-sources/crm_account) lookups.

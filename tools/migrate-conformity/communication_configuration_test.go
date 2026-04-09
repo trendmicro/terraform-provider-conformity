@@ -182,6 +182,45 @@ func TestAppendCommunicationConfigurationHCL_ServiceNowDictionaryOverrides(t *te
 	}
 }
 
+func TestAppendCommunicationConfigurationHCL_UsesSecretPlaceholderWhenMissing(t *testing.T) {
+	item := communicationSettingItem{
+		ID:        "comm-sec",
+		Enabled:   true,
+		AccountID: "account-1",
+		PagerDutyConfiguration: &communicationPagerDutyItem{
+			ServiceName: "pagerduty-service",
+			ServiceKey:  "",
+		},
+		ServiceNowConfiguration: &communicationServiceNowItem{
+			Type:     "incident",
+			URL:      "https://example.service-now.com",
+			Username: "api-user",
+			Password: "",
+		},
+	}
+
+	output := strings.Join(appendCommunicationConfigurationHCL(nil, item, "comm_sec"), "\n")
+	if !strings.Contains(output, `service_key = "@TODO replace secret"`) {
+		t.Fatalf("expected pagerduty secret placeholder in output:\n%s", output)
+	}
+	if !strings.Contains(output, `password = "@TODO replace secret"`) {
+		t.Fatalf("expected servicenow secret placeholder in output:\n%s", output)
+	}
+}
+
+func TestAppendCommunicationFilterHCL_AlwaysIncludesStatusesWhenPresent(t *testing.T) {
+	item := communicationSettingItem{
+		ChecksFilter: &communicationChecksFilterItem{
+			Statuses: []string{"FAILURE", "SUCCESS"},
+		},
+	}
+
+	output := strings.Join(appendCommunicationConfigurationHCL(nil, item, "generic"), "\n")
+	if !strings.Contains(output, `statuses = ["FAILURE", "SUCCESS"]`) {
+		t.Fatalf("expected statuses in checks_filter output:\n%s", output)
+	}
+}
+
 func TestParseMsTeamsChannelLabelFallback(t *testing.T) {
 	item := parseCommunicationSettingAttributes(map[string]interface{}{
 		"id": "comm-ms",
@@ -269,6 +308,46 @@ func TestParseServiceNowDictionaryOverridesFromLegacyCloseFields(t *testing.T) {
 	}
 	if resolution.KeyValuePairs[1].Key != "close_notes" || resolution.KeyValuePairs[1].Value != "resolved via migration" {
 		t.Fatalf("unexpected second pair: %+v", resolution.KeyValuePairs[1])
+	}
+}
+
+func TestParseCommunicationPagerDutyChannel_AllowsMissingServiceKey(t *testing.T) {
+	channel := parseCommunicationPagerDutyChannel([]interface{}{
+		map[string]interface{}{
+			"service_name": "pagerduty-service",
+			"service_key":  "",
+		},
+	})
+
+	if channel == nil {
+		t.Fatalf("expected pagerduty channel")
+	}
+	if channel.ServiceName != "pagerduty-service" {
+		t.Fatalf("unexpected service name: %s", channel.ServiceName)
+	}
+	if channel.ServiceKey != "" {
+		t.Fatalf("expected empty service key, got %q", channel.ServiceKey)
+	}
+}
+
+func TestParseCommunicationServiceNowChannel_AllowsMissingPassword(t *testing.T) {
+	channel := parseCommunicationServiceNowChannel([]interface{}{
+		map[string]interface{}{
+			"type":     "incident",
+			"url":      "https://example.service-now.com",
+			"username": "api-user",
+			"password": "",
+		},
+	})
+
+	if channel == nil {
+		t.Fatalf("expected service now channel")
+	}
+	if channel.Username != "api-user" {
+		t.Fatalf("unexpected username: %s", channel.Username)
+	}
+	if channel.Password != "" {
+		t.Fatalf("expected empty password, got %q", channel.Password)
 	}
 }
 
