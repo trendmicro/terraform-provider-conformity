@@ -41,7 +41,7 @@ type customRuleConditionItem struct {
 	Operator string
 	Fact     string
 	Path     string
-	Value    string
+	Value    interface{}
 }
 
 func loadCustomRulesFromState(path string) ([]customRuleItem, error) {
@@ -194,7 +194,7 @@ func parseCustomRuleConditions(value interface{}) []customRuleConditionItem {
 		fact := strings.TrimSpace(toStringValue(entry["fact"]))
 		operator := strings.TrimSpace(toStringValue(entry["operator"]))
 		path := strings.TrimSpace(toStringValue(entry["path"]))
-		value := strings.TrimSpace(toStringValue(entry["value"]))
+		value := normalizeCustomRuleConditionValue(entry["value"])
 		if fact == "" || operator == "" {
 			continue
 		}
@@ -207,6 +207,16 @@ func parseCustomRuleConditions(value interface{}) []customRuleConditionItem {
 	}
 
 	return conditions
+}
+
+func normalizeCustomRuleConditionValue(value interface{}) interface{} {
+	if value == nil {
+		return nil
+	}
+	if str, ok := value.(string); ok {
+		return strings.TrimSpace(str)
+	}
+	return value
 }
 
 func appendCustomRuleHCL(lines []string, item customRuleItem, resourceName string) []string {
@@ -339,31 +349,52 @@ func appendCustomRuleMappingLines(mappingLines []string, item customRuleItem, ta
 	return mappingLines
 }
 
-func formatCustomRuleValue(raw string) string {
-	value := strings.TrimSpace(raw)
-	if value == "" {
+func formatCustomRuleValue(raw interface{}) string {
+	if raw == nil {
 		return "\"\""
 	}
 
-	lower := strings.ToLower(value)
-	if lower == "true" || lower == "false" || lower == "null" {
-		return lower
-	}
-	if _, err := strconv.ParseInt(value, 10, 64); err == nil {
-		return value
-	}
-	if _, err := strconv.ParseFloat(value, 64); err == nil {
-		return value
-	}
-
-	if strings.HasPrefix(value, "{") || strings.HasPrefix(value, "[") {
-		var decoded interface{}
-		if err := json.Unmarshal([]byte(value), &decoded); err == nil {
-			return fmt.Sprintf("jsonencode(%s)", value)
+	switch value := raw.(type) {
+	case bool:
+		if value {
+			return "true"
 		}
-	}
+		return "false"
+	case int, int8, int16, int32, int64:
+		return fmt.Sprintf("%v", value)
+	case float32, float64:
+		return fmt.Sprintf("%v", value)
+	case string:
+		value = strings.TrimSpace(value)
+		if value == "" {
+			return "\"\""
+		}
 
-	return fmt.Sprintf("\"%s\"", escapeHCL(value))
+		lower := strings.ToLower(value)
+		if lower == "null" {
+			return "\"\""
+		}
+		if lower == "true" || lower == "false" {
+			return lower
+		}
+		if _, err := strconv.ParseInt(value, 10, 64); err == nil {
+			return value
+		}
+		if _, err := strconv.ParseFloat(value, 64); err == nil {
+			return value
+		}
+
+		if strings.HasPrefix(value, "{") || strings.HasPrefix(value, "[") {
+			var decoded interface{}
+			if err := json.Unmarshal([]byte(value), &decoded); err == nil {
+				return fmt.Sprintf("jsonencode(%s)", value)
+			}
+		}
+
+		return fmt.Sprintf("\"%s\"", escapeHCL(value))
+	default:
+		return fmt.Sprintf("\"%s\"", escapeHCL(strings.TrimSpace(toStringValue(value))))
+	}
 }
 
 func toMapSlice(value interface{}) []map[string]interface{} {

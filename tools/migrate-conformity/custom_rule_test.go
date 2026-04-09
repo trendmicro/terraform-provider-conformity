@@ -123,7 +123,7 @@ func TestFormatCustomRuleValue(t *testing.T) {
 	cases := map[string]string{
 		"true":         "true",
 		"FALSE":        "false",
-		"null":         "null",
+		"null":         "\"\"",
 		"5":            "5",
 		"5.5":          "5.5",
 		"{\"days\":7}": "jsonencode({\"days\":7})",
@@ -134,6 +134,10 @@ func TestFormatCustomRuleValue(t *testing.T) {
 		if got := formatCustomRuleValue(input); got != expected {
 			t.Fatalf("unexpected value for %s: %s", input, got)
 		}
+	}
+
+	if got := formatCustomRuleValue(nil); got != "\"\"" {
+		t.Fatalf("unexpected value for nil: %s", got)
 	}
 }
 
