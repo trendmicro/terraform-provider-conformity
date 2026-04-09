@@ -18,6 +18,7 @@ type reportConfigItem struct {
 	IncludeChecks               bool
 	EmailRecipients             []string
 	EmailRecipientsSet          bool
+	EmailRecipientsReviewNote   bool
 	ReportFormatsInEmail        []string
 	ReportFormatsInEmailSet     bool
 	Schedule                    *reportScheduleItem
@@ -117,6 +118,8 @@ func parseReportConfigAttributes(attrs map[string]interface{}) reportConfigItem 
 		if len(emails) == 0 {
 			item.EmailRecipients = nil
 			item.EmailRecipientsSet = true
+		} else {
+			item.EmailRecipientsReviewNote = true
 		}
 	} else if len(emails) > 0 {
 		item.EmailRecipients = emails
@@ -310,6 +313,9 @@ func appendReportConfigHCL(lines []string, item reportConfigItem, resourceName s
 	}
 	if item.IncludeChecks {
 		lines = append(lines, fmt.Sprintf("  include_checks = %t", item.IncludeChecks))
+	}
+	if item.EmailRecipientsReviewNote {
+		lines = append(lines, "  # @TODO review manually `email_recipients`: source has send_email=false with emails configured; verify whether recipients should remain unset")
 	}
 	if item.EmailRecipientsSet {
 		if len(item.EmailRecipients) == 0 {

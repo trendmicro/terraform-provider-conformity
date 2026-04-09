@@ -232,6 +232,7 @@ func TestParseReportConfigAttributes_EmailRecipientsBehavior(t *testing.T) {
 		config            map[string]interface{}
 		expectSet         bool
 		expectRecipients  []string
+		expectReviewNote  bool
 	}{
 		{
 			name: "send_email false with emails set does not force email_recipients",
@@ -242,6 +243,7 @@ func TestParseReportConfigAttributes_EmailRecipientsBehavior(t *testing.T) {
 			},
 			expectSet:        false,
 			expectRecipients: nil,
+			expectReviewNote: true,
 		},
 		{
 			name: "send_email false without emails sets empty email_recipients",
@@ -251,6 +253,7 @@ func TestParseReportConfigAttributes_EmailRecipientsBehavior(t *testing.T) {
 			},
 			expectSet:        true,
 			expectRecipients: nil,
+			expectReviewNote: false,
 		},
 		{
 			name: "missing send_email and emails sets empty email_recipients",
@@ -259,6 +262,7 @@ func TestParseReportConfigAttributes_EmailRecipientsBehavior(t *testing.T) {
 			},
 			expectSet:        true,
 			expectRecipients: nil,
+			expectReviewNote: false,
 		},
 		{
 			name: "send_email true with emails keeps recipients",
@@ -269,6 +273,7 @@ func TestParseReportConfigAttributes_EmailRecipientsBehavior(t *testing.T) {
 			},
 			expectSet:        true,
 			expectRecipients: []string{"scheduled@example.com"},
+			expectReviewNote: false,
 		},
 	}
 
@@ -289,7 +294,30 @@ func TestParseReportConfigAttributes_EmailRecipientsBehavior(t *testing.T) {
 			if gotRecipients != wantRecipients {
 				t.Fatalf("unexpected EmailRecipients: got %q, want %q", gotRecipients, wantRecipients)
 			}
+
+			if item.EmailRecipientsReviewNote != tc.expectReviewNote {
+				t.Fatalf("unexpected EmailRecipientsReviewNote: got %t, want %t", item.EmailRecipientsReviewNote, tc.expectReviewNote)
+			}
 		})
+	}
+}
+
+func TestAppendReportConfigHCL_EmailRecipientsReviewComment(t *testing.T) {
+	item := reportConfigItem{
+		ReportTitle:               "Report H",
+		ReportType:                "GENERIC",
+		EmailRecipientsReviewNote: true,
+	}
+
+	var hclLines []string
+	hclLines = appendReportConfigHCL(hclLines, item, "report_h")
+
+	got := strings.Join(hclLines, "\n")
+	if !strings.Contains(got, "# @TODO review manually `email_recipients`: source has send_email=false with emails configured; verify whether recipients should remain unset") {
+		t.Fatalf("expected email_recipients manual review comment in generated HCL")
+	}
+	if strings.Contains(got, "email_recipients = [") || strings.Contains(got, "email_recipients = []") {
+		t.Fatalf("did not expect email_recipients attribute when only review note is set")
 	}
 }
 
