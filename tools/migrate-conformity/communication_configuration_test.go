@@ -1,6 +1,7 @@
 package main
 
 import (
+	"os"
 	"path/filepath"
 	"strings"
 	"testing"
@@ -348,6 +349,68 @@ func TestParseCommunicationServiceNowChannel_AllowsMissingPassword(t *testing.T)
 	}
 	if channel.Password != "" {
 		t.Fatalf("expected empty password, got %q", channel.Password)
+	}
+}
+
+func TestApplyCommunicationStatusesFallback_AllChannels(t *testing.T) {
+	tempDir := t.TempDir()
+
+	statePath := filepath.Join(tempDir, "conformity-state.json")
+	if err := os.WriteFile(statePath, []byte("{}"), 0o644); err != nil {
+		t.Fatalf("write state file: %v", err)
+	}
+
+	sourceMainTF := strings.Join([]string{
+		`resource "conformity_communication_setting" "email_alerts" {`,
+		`  email {`,
+		`    users = ["user-1"]`,
+		`  }`,
+		`  filter {`,
+		`    statuses = ["FAILURE", "SUCCESS"]`,
+		`  }`,
+		`}`,
+		``,
+		`resource "conformity_communication_setting" "pagerduty_alerts" {`,
+		`  pager_duty {`,
+		`    service_name = "svc"`,
+		`    service_key  = "key"`,
+		`  }`,
+		`  filter {`,
+		`    statuses = ["FAILURE"]`,
+		`  }`,
+		`}`,
+		``,
+	}, "\n")
+
+	if err := os.WriteFile(filepath.Join(tempDir, "communication_setting.tf"), []byte(sourceMainTF), 0o644); err != nil {
+		t.Fatalf("write source tf file: %v", err)
+	}
+
+	settings := []communicationSettingItem{
+		{
+			ResourceName: "email_alerts",
+			EmailConfiguration: &communicationUserIDsItem{
+				UserIDs: []string{"user-1"},
+			},
+			ChecksFilter: &communicationChecksFilterItem{},
+		},
+		{
+			ResourceName: "pagerduty_alerts",
+			PagerDutyConfiguration: &communicationPagerDutyItem{
+				ServiceName: "svc",
+				ServiceKey:  "key",
+			},
+		},
+	}
+
+	applyCommunicationStatusesFallback(statePath, settings)
+
+	if len(settings[0].ChecksFilter.Statuses) != 2 || settings[0].ChecksFilter.Statuses[0] != "FAILURE" || settings[0].ChecksFilter.Statuses[1] != "SUCCESS" {
+		t.Fatalf("unexpected fallback statuses for email resource: %+v", settings[0].ChecksFilter)
+	}
+
+	if settings[1].ChecksFilter == nil || len(settings[1].ChecksFilter.Statuses) != 1 || settings[1].ChecksFilter.Statuses[0] != "FAILURE" {
+		t.Fatalf("unexpected fallback statuses for pager duty resource: %+v", settings[1].ChecksFilter)
 	}
 }
 

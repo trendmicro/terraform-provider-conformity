@@ -4,6 +4,8 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
+	"path/filepath"
+	"regexp"
 	"sort"
 	"strings"
 )
@@ -133,7 +135,148 @@ func loadCommunicationSettingsFromState(path string) ([]communicationSettingItem
 		return settings[i].ResourceName < settings[j].ResourceName
 	})
 
+	applyCommunicationStatusesFallback(path, settings)
+
 	return settings, nil
+}
+
+func applyCommunicationStatusesFallback(statePath string, settings []communicationSettingItem) {
+	if len(settings) == 0 {
+		return
+	}
+
+	sourcePaths := detectCommunicationSourceTFPaths(statePath)
+	if len(sourcePaths) == 0 {
+		return
+	}
+
+	statusesByResource := map[string][]string{}
+	for _, sourcePath := range sourcePaths {
+		fileStatuses, err := extractCommunicationStatusesFromSource(sourcePath)
+		if err != nil || len(fileStatuses) == 0 {
+			continue
+		}
+		for resourceName, statuses := range fileStatuses {
+			if len(statuses) == 0 {
+				continue
+			}
+			statusesByResource[resourceName] = statuses
+		}
+	}
+
+	if len(statusesByResource) == 0 {
+		return
+	}
+
+	for i := range settings {
+		item := &settings[i]
+		fallback := statusesByResource[item.ResourceName]
+		if len(fallback) == 0 {
+			continue
+		}
+
+		if item.ChecksFilter == nil {
+			item.ChecksFilter = &communicationChecksFilterItem{}
+		}
+
+		if len(item.ChecksFilter.Statuses) == 0 {
+			item.ChecksFilter.Statuses = append([]string(nil), fallback...)
+		}
+	}
+}
+
+func detectCommunicationSourceTFPaths(statePath string) []string {
+	stateDir := filepath.Dir(statePath)
+	directories := []string{stateDir}
+
+	seen := map[string]struct{}{}
+	var tfPaths []string
+
+	for _, dir := range directories {
+		entries, err := os.ReadDir(dir)
+		if err != nil {
+			continue
+		}
+		for _, entry := range entries {
+			if entry.IsDir() || filepath.Ext(entry.Name()) != ".tf" {
+				continue
+			}
+			path := filepath.Join(dir, entry.Name())
+			if _, ok := seen[path]; ok {
+				continue
+			}
+			seen[path] = struct{}{}
+			tfPaths = append(tfPaths, path)
+		}
+	}
+
+	sort.Strings(tfPaths)
+	return tfPaths
+}
+
+func extractCommunicationStatusesFromSource(path string) (map[string][]string, error) {
+	content, err := os.ReadFile(path)
+	if err != nil {
+		return nil, err
+	}
+
+	lines := strings.Split(string(content), "\n")
+	resourceStartRegex := regexp.MustCompile(`^\s*resource\s+"conformity_communication_setting"\s+"([^"]+)"\s*\{`)
+	statusesByResource := map[string][]string{}
+
+	currentName := ""
+	depth := 0
+	resourceLines := []string{}
+
+	for _, line := range lines {
+		if depth == 0 {
+			matches := resourceStartRegex.FindStringSubmatch(line)
+			if len(matches) == 0 {
+				continue
+			}
+			currentName = matches[1]
+			resourceLines = []string{line}
+			depth = strings.Count(line, "{") - strings.Count(line, "}")
+			continue
+		}
+
+		resourceLines = append(resourceLines, line)
+		depth += strings.Count(line, "{")
+		depth -= strings.Count(line, "}")
+
+		if depth == 0 {
+			block := strings.Join(resourceLines, "\n")
+			statuses := extractStatusesFromCommunicationBlock(block)
+			if len(statuses) > 0 {
+				statusesByResource[currentName] = statuses
+			}
+			currentName = ""
+			resourceLines = nil
+		}
+	}
+
+	return statusesByResource, nil
+}
+
+func extractStatusesFromCommunicationBlock(block string) []string {
+	statusesRegex := regexp.MustCompile(`(?s)statuses\s*=\s*\[([^\]]*)\]`)
+	matches := statusesRegex.FindStringSubmatch(block)
+	if len(matches) < 2 {
+		return nil
+	}
+
+	valueRegex := regexp.MustCompile(`"([^"]+)"`)
+	valueMatches := valueRegex.FindAllStringSubmatch(matches[1], -1)
+	if len(valueMatches) == 0 {
+		return nil
+	}
+
+	statuses := make([]string, 0, len(valueMatches))
+	for _, m := range valueMatches {
+		statuses = append(statuses, m[1])
+	}
+
+	return statuses
 }
 
 func parseCommunicationSettingAttributes(attrs map[string]interface{}) communicationSettingItem {
