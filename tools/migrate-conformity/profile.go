@@ -509,7 +509,8 @@ func appendProfileMappingLines(mappingLines []string, item profileItem, targetNa
 		mapField("included.extra_settings.name", "scan_rule.extra_settings.name")
 		mapField("included.extra_settings.type", "scan_rule.extra_settings.type")
 		mapField("included.extra_settings.value", "scan_rule.extra_settings.value")
-		mapField("included.extra_settings.value_set", "scan_rule.extra_settings.value_set")
+		mapField("included.extra_settings.values_array", "scan_rule.extra_settings.value_set")
+		mapField("included.extra_settings.values[*].value", "scan_rule.extra_settings.value_set")
 		mapField("included.extra_settings.values", "scan_rule.extra_settings.values")
 		mapField("included.extra_settings.settings.tags-override", "scan_rule.extra_settings.values.customized_tags")
 	}
