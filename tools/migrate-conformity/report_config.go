@@ -234,6 +234,10 @@ func parseReportConfigFilter(entry map[string]interface{}, reportType string) *r
 		}
 	}
 
+	if mode == "" && filter.Suppressed != nil && !*filter.Suppressed && !hasReportFilterValuesExcludingSuppressed(filter) {
+		filter.Suppressed = nil
+	}
+
 	if reportType == "COMPLIANCE-STANDARD" {
 		filter.ComplianceStandardIds = nil
 	}
@@ -253,6 +257,14 @@ func hasReportFilterValues(filter *reportFilterItem) bool {
 	if filter == nil {
 		return false
 	}
+	return hasReportFilterValuesExcludingSuppressed(filter) ||
+		filter.Suppressed != nil
+}
+
+func hasReportFilterValuesExcludingSuppressed(filter *reportFilterItem) bool {
+	if filter == nil {
+		return false
+	}
 	return len(filter.Categories) > 0 ||
 		len(filter.ComplianceStandardIds) > 0 ||
 		len(filter.Tags) > 0 ||
@@ -267,8 +279,7 @@ func hasReportFilterValues(filter *reportFilterItem) bool {
 		len(filter.RiskLevels) > 0 ||
 		len(filter.RuleIds) > 0 ||
 		len(filter.Services) > 0 ||
-		len(filter.Statuses) > 0 ||
-		filter.Suppressed != nil
+		len(filter.Statuses) > 0
 }
 
 func deriveReportFormats(includePDF, includeCSV bool) []string {

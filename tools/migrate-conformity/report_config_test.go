@@ -74,9 +74,9 @@ func TestLoadReportConfigsFromState_SortsByResourceName(t *testing.T) {
 
 func TestAppendReportConfigHCL(t *testing.T) {
 	item := reportConfigItem{
-		ID:                  "report-config:one",
-		ReportTitle:         "Report A",
-		ReportType:          "GENERIC",
+		ID:          "report-config:one",
+		ReportTitle: "Report A",
+		ReportType:  "GENERIC",
 		Schedule: &reportScheduleItem{
 			Enabled:   boolPtr(true),
 			Frequency: "* * *",
@@ -142,8 +142,8 @@ func TestAppendReportConfigHCL(t *testing.T) {
 
 func TestAppendReportConfigHCL_EmptyTagsOmitted(t *testing.T) {
 	item := reportConfigItem{
-		ReportTitle:         "Report C",
-		ReportType:          "GENERIC",
+		ReportTitle: "Report C",
+		ReportType:  "GENERIC",
 		ChecksFilter: &reportFilterItem{
 			Tags: []string{},
 		},
@@ -226,13 +226,54 @@ func TestParseReportConfigAttributes_MessageFalseDoesNotPopulateChecksFilter(t *
 	}
 }
 
+func TestParseReportConfigAttributes_ImplicitSuppressedFalseOnlyDoesNotPopulateChecksFilter(t *testing.T) {
+	attrs := map[string]interface{}{
+		"configuration": []interface{}{
+			map[string]interface{}{
+				"title": "Report G",
+			},
+		},
+		"filter": []interface{}{
+			map[string]interface{}{
+				"suppressed": false,
+			},
+		},
+	}
+
+	item := parseReportConfigAttributes(attrs)
+	if item.ChecksFilter != nil {
+		t.Fatalf("expected ChecksFilter to be nil when filter only has implicit suppressed=false")
+	}
+}
+
+func TestParseReportConfigAttributes_ExplicitV1SuppressedFalsePopulatesChecksFilter(t *testing.T) {
+	attrs := map[string]interface{}{
+		"configuration": []interface{}{
+			map[string]interface{}{
+				"title": "Report H",
+			},
+		},
+		"filter": []interface{}{
+			map[string]interface{}{
+				"suppressed_filter_mode": "v1",
+				"suppressed":             false,
+			},
+		},
+	}
+
+	item := parseReportConfigAttributes(attrs)
+	if item.ChecksFilter == nil || item.ChecksFilter.Suppressed == nil || *item.ChecksFilter.Suppressed != false {
+		t.Fatalf("expected ChecksFilter.suppressed=false when explicitly configured with suppressed_filter_mode=v1")
+	}
+}
+
 func TestParseReportConfigAttributes_EmailRecipientsBehavior(t *testing.T) {
 	tests := []struct {
-		name              string
-		config            map[string]interface{}
-		expectSet         bool
-		expectRecipients  []string
-		expectReviewNote  bool
+		name             string
+		config           map[string]interface{}
+		expectSet        bool
+		expectRecipients []string
+		expectReviewNote bool
 	}{
 		{
 			name: "send_email false with emails set does not force email_recipients",
