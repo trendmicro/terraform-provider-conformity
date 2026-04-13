@@ -682,9 +682,11 @@ func appendCommunicationConfigurationHCL(lines []string, item communicationSetti
 	if item.WebhookConfiguration != nil {
 		lines = append(lines, "  webhook_configuration = {")
 		lines = append(lines, fmt.Sprintf("    url = \"%s\"", escapeHCL(item.WebhookConfiguration.URL)))
-		if item.WebhookConfiguration.SecurityToken != "" {
-			lines = append(lines, fmt.Sprintf("    security_token = \"%s\"", escapeHCL(item.WebhookConfiguration.SecurityToken)))
+		securityToken := item.WebhookConfiguration.SecurityToken
+		if strings.TrimSpace(securityToken) == "" {
+			securityToken = secretPlaceholder
 		}
+		lines = append(lines, fmt.Sprintf("    # security_token = \"%s\"", escapeHCL(securityToken)))
 		lines = append(lines, "  }")
 		lines = append(lines, "  # TODO: headers are not available in Conformity; add if needed")
 	}
@@ -838,9 +840,7 @@ func appendCommunicationMappingLines(mappingLines []string, item communicationSe
 	}
 	if item.WebhookConfiguration != nil {
 		mapField("webhook.url", "webhook_configuration.url")
-		if item.WebhookConfiguration.SecurityToken != "" {
-			mapField("webhook.security_token", "webhook_configuration.security_token")
-		}
+		mapField("webhook.security_token", "webhook_configuration.security_token")
 	}
 	if item.ServiceNowConfiguration != nil {
 		mapField("service_now.channel_name", "channel_label")

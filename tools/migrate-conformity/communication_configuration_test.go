@@ -188,6 +188,10 @@ func TestAppendCommunicationConfigurationHCL_UsesSecretPlaceholderWhenMissing(t 
 		ID:        "comm-sec",
 		Enabled:   true,
 		AccountID: "account-1",
+		WebhookConfiguration: &communicationWebhookItem{
+			URL:           "https://webhook.example.com",
+			SecurityToken: "",
+		},
 		PagerDutyConfiguration: &communicationPagerDutyItem{
 			ServiceName: "pagerduty-service",
 			ServiceKey:  "",
@@ -206,6 +210,9 @@ func TestAppendCommunicationConfigurationHCL_UsesSecretPlaceholderWhenMissing(t 
 	}
 	if !strings.Contains(output, `password = "@TODO replace secret"`) {
 		t.Fatalf("expected servicenow secret placeholder in output:\n%s", output)
+	}
+	if !strings.Contains(output, `security_token = "@TODO replace secret"`) {
+		t.Fatalf("expected webhook secret placeholder in output:\n%s", output)
 	}
 }
 
