@@ -1,0 +1,53 @@
+{
+  "version": 4,
+  "resources": [
+    {
+      "mode": "managed",
+      "type": "conformity_custom_rule",
+      "name": "rule",
+      "instances": [
+        {
+          "attributes": {
+            "id": "custom-rule-1",
+            "name": "Custom Rule One",
+            "cloud_provider": "aws",
+            "description": "Check encryption",
+            "remediation_notes": "Turn on encryption",
+            "service": "S3",
+            "resource_type": "s3-bucket",
+            "severity": "HIGH",
+            "enabled": true,
+            "categories": ["security"],
+            "attributes": [
+              {
+                "name": "bucketEncryption",
+                "path": "data.BucketEncryption",
+                "required": true
+              }
+            ],
+            "rules": [
+              {
+                "event_type": "S3",
+                "operation": "all",
+                "conditions": [
+                  {
+                    "fact": "bucketEncryption",
+                    "operator": "equal",
+                    "path": "$.Status",
+                    "value": "Enabled"
+                  },
+                  {
+                    "fact": "bucketEncryption",
+                    "operator": "equal",
+                    "path": "$.Kms",
+                    "value": "true"
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

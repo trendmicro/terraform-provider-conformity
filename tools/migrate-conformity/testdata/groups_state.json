@@ -1,0 +1,33 @@
+{
+  "version": 4,
+  "resources": [
+    {
+      "mode": "managed",
+      "type": "conformity_group",
+      "name": "alpha",
+      "instances": [
+        {
+          "attributes": {
+            "id": "group-1",
+            "name": "Alpha",
+            "tags": ["prod", "core"]
+          }
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "conformity_group",
+      "name": "beta",
+      "instances": [
+        {
+          "attributes": {
+            "id": "group-2",
+            "name": "Beta",
+            "tags": []
+          }
+        }
+      ]
+    }
+  ]
+}

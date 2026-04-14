@@ -1,0 +1,41 @@
+{
+  "version": 4,
+  "resources": [
+    {
+      "mode": "managed",
+      "type": "conformity_report_config",
+      "name": "z_report",
+      "instances": [
+        {
+          "attributes": {
+            "id": "report-config:z",
+            "configuration": [
+              {
+                "title": "Report Z",
+                "generate_report_type": "GENERIC"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "conformity_report_config",
+      "name": "a_report",
+      "instances": [
+        {
+          "attributes": {
+            "id": "report-config:a",
+            "configuration": [
+              {
+                "title": "Report A",
+                "generate_report_type": "GENERIC"
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

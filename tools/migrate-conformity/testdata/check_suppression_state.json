@@ -1,0 +1,39 @@
+{
+  "version": 4,
+  "resources": [
+    {
+      "mode": "managed",
+      "type": "conformity_check_suppression",
+      "name": "critical",
+      "instances": [
+        {
+          "attributes": {
+            "id": "ccc:account-1:EC2-074:EC2:us-east-1:sg-123",
+            "account_id": "account-1",
+            "rule_id": "EC2-074",
+            "region": "us-east-1",
+            "resource_id": "sg-123",
+            "note": "maintenance"
+          }
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "conformity_check_suppression",
+      "name": "global",
+      "instances": [
+        {
+          "attributes": {
+            "id": "ccc:account-2:S3-001:S3:global:bucket-1",
+            "account_id": "account-2",
+            "rule_id": "S3-001",
+            "region": "global",
+            "resource_id": "bucket-1",
+            "note": "legacy"
+          }
+        }
+      ]
+    }
+  ]
+}

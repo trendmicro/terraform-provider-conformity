@@ -1,0 +1,37 @@
+{
+  "version": 4,
+  "resources": [
+    {
+      "mode": "data",
+      "type": "conformity_apply_profile",
+      "name": "z_profile",
+      "instances": [
+        {
+          "attributes": {
+            "id": "1710000002",
+            "profile_id": "profile-z",
+            "account_ids": ["account-z"],
+            "mode": "overwrite",
+            "notes": "z profile"
+          }
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "conformity_apply_profile",
+      "name": "a_profile",
+      "instances": [
+        {
+          "attributes": {
+            "id": "1710000001",
+            "profile_id": "profile-a",
+            "account_ids": ["account-a"],
+            "mode": "overwrite",
+            "notes": "a profile"
+          }
+        }
+      ]
+    }
+  ]
+}

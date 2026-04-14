@@ -1,0 +1,48 @@
+{
+  "version": 4,
+  "resources": [
+    {
+      "mode": "managed",
+      "type": "conformity_profile",
+      "name": "profile_tags",
+      "instances": [
+        {
+          "attributes": {
+            "id": "profile-tags",
+            "name": "Profile Tags",
+            "included": [
+              {
+                "id": "RG-001",
+                "provider": "aws",
+                "enabled": true,
+                "risk_level": "LOW",
+                "extra_settings": [
+                  {
+                    "name": "resourceTypes",
+                    "type": "choice-multiple-value",
+                    "values": [
+                      {
+                        "value": "s3-bucket",
+                        "enabled": true,
+                        "settings": [
+                          {
+                            "name": "tags-override",
+                            "type": "multiple-string-values",
+                            "values": [
+                              { "value": "technical:application" },
+                              { "value": "updated:override" }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,51 @@
+{
+  "version": 4,
+  "resources": [
+    {
+      "mode": "managed",
+      "type": "conformity_profile",
+      "name": "profile_one",
+      "instances": [
+        {
+          "attributes": {
+            "id": "profile-1",
+            "name": "Profile One",
+            "description": "Example profile",
+            "included": [
+              {
+                "id": "R1",
+                "provider": "aws",
+                "enabled": true,
+                "risk_level": "HIGH",
+                "exceptions": [
+                  {
+                    "filter_tags": ["prod"],
+                    "tags": ["team"],
+                    "resources": ["res-1"]
+                  }
+                ],
+                "extra_settings": [
+                  {
+                    "name": "threshold",
+                    "type": "single-number-value",
+                    "value": "5"
+                  },
+                  {
+                    "name": "regions",
+                    "type": "regions",
+                    "values_array": ["us-east-1", "us-west-2"]
+                  },
+                  {
+                    "name": "toggle",
+                    "type": "single-string-value",
+                    "values": [{ "value": "foo", "enabled": true }]
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

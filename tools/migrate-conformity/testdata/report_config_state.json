@@ -1,0 +1,91 @@
+{
+  "version": 4,
+  "resources": [
+    {
+      "mode": "managed",
+      "type": "conformity_report_config",
+      "name": "report_a",
+      "instances": [
+        {
+          "attributes": {
+            "id": "report-config:one",
+            "account_id": "",
+            "group_id": "",
+            "configuration": [
+              {
+                "title": "Report A",
+                "generate_report_type": "GENERIC",
+                "include_checks": false,
+                "include_account_names": false,
+                "scheduled": true,
+                "frequency": "* * *",
+                "tz": "Asia/Manila",
+                "send_email": false,
+                "emails": ["a@example.com"],
+                "should_email_include_pdf": true,
+                "should_email_include_csv": true
+              }
+            ],
+            "filter": [
+              {
+                "categories": ["security"],
+                "compliance_standards": ["NIST4"],
+                "filter_tags": ["prod"],
+                "tags": ["team"],
+                "message": "find me",
+                "newer_than_days": 7,
+                "older_than_days": 0,
+                "providers": ["aws"],
+                "regions": ["us-east-1"],
+                "resource": "res-1",
+                "resource_search_mode": "text",
+                "resource_types": ["s3-bucket"],
+                "risk_levels": ["HIGH"],
+                "rule_ids": ["S3-001"],
+                "services": ["S3"],
+                "statuses": ["FAILURE"],
+                "suppressed": false
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "conformity_report_config",
+      "name": "report_b",
+      "instances": [
+        {
+          "attributes": {
+            "id": "report-config:two",
+            "account_id": "",
+            "group_id": "",
+            "configuration": [
+              {
+                "title": "Report B",
+                "generate_report_type": "COMPLIANCE-STANDARD",
+                "include_checks": true,
+                "include_account_names": true,
+                "scheduled": false,
+                "send_email": true,
+                "emails": ["b@example.com"],
+                "should_email_include_pdf": true,
+                "should_email_include_csv": false
+              }
+            ],
+            "filter": [
+              {
+                "categories": ["security"],
+                "report_compliance_standard_id": "NIST4",
+                "with_checks": true,
+                "without_checks": false,
+                "suppressed": true
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}
