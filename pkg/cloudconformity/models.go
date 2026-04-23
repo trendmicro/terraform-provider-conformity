@@ -622,6 +622,7 @@ type GcpProjectsResponse struct {
 type CustomRule struct {
 	ID               string                 `json:"id"`
 	Name             string                 `json:"name"`
+	Slug             string                 `json:"slug,omitempty"`
 	Description      string                 `json:"description"`
 	RemediationNotes string                 `json:"remediationNotes,omitempty"`
 	Service          string                 `json:"service"`
@@ -636,6 +637,7 @@ type CustomRule struct {
 
 type CustomRuleRequest struct {
 	Name             string                 `json:"name"`
+	Slug             string                 `json:"slug,omitempty"`
 	Description      string                 `json:"description"`
 	RemediationNotes string                 `json:"remediationNotes,omitempty"`
 	Service          string                 `json:"service"`
@@ -686,6 +688,7 @@ type CustomRuleResponse struct {
 	ID         string `json:"id"`
 	Attributes struct {
 		Name             string                 `json:"name"`
+		Slug             string                 `json:"slug,omitempty"`
 		Description      string                 `json:"description"`
 		Service          string                 `json:"service"`
 		ResourceType     string                 `json:"resourceType"`
